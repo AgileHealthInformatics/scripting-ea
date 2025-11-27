@@ -1,0 +1,412 @@
+# Chapter 15: AI Refactoring Partner
+
+Writing new scripts from scratch is only part of the automation journey.
+In practice, most of the scripts you will encounter in Enterprise
+Architect are not greenfield creations. They are legacy fragments copied
+from colleagues, utilities downloaded from forums, or quick fixes you
+wrote six months ago and barely remember. Over time, these fragments
+accumulate into a patchwork library that works but is inconsistent,
+risky, and hard to maintain.
+
+Refactoring is the process of improving code without changing its
+intended behaviour. It is about making scripts more readable, more
+consistent, safer, and easier to share. For EA scripting, refactoring
+often means adding missing headers, introducing dry-run flags,
+standardising logging, or converting old VBScript into JScript.
+
+This is where artificial intelligence comes into its own as a
+**refactoring partner**. While AI can generate new scripts, it is
+especially powerful at taking existing ones and restructuring them.
+Given clear instructions, it can modernise syntax, add comments, and
+apply safety patterns. Of course, AI cannot be trusted blindly, but with
+human oversight it becomes a force multiplier for improving script
+quality.
+
+## Why Refactoring Matters in EA Scripting
+
+There are several reasons refactoring is essential:
+
+- **Consistency**: a mixed library of VBScript and JScript makes it hard
+  for teams to share and reuse.
+
+- **Safety**: older scripts may lack dry-run flags or logging, making
+  them risky.
+
+- **Clarity**: many scripts lack headers or comments, leaving future
+  readers confused.
+
+- **Maintainability**: scripts with inconsistent style are harder to
+  debug or adapt.
+
+- **Governance**: in regulated environments, scripts must demonstrate
+  safety and traceability.
+
+Refactoring turns a messy script into a clean, well-documented artefact
+that you can safely run and confidently share.
+
+## The AI Advantage in Refactoring
+
+Traditional refactoring is manual: you read old code, spot issues, and
+rewrite. AI can accelerate this by doing the heavy lifting:
+
+- Translate VBScript into JScript ES3.
+
+- Insert a standard header block with purpose, usage, safety, and update
+  history.
+
+- Replace unsupported features (forEach, let, const) with EA-compatible
+  constructs.
+
+- Add dry-run wrappers around destructive operations.
+
+- Insert comments explaining each step.
+
+You still need to review the output, but AI removes much of the tedium.
+Instead of spending hours rewriting loops, you can focus on reviewing
+safety and correctness.
+
+## Common Refactoring Needs
+
+In EA scripting, the most frequent refactoring needs include:
+
+1.  **VBScript to JScript migration**  
+    Many legacy scripts were written in VBScript. Translating them by
+    hand is slow; AI can do it in seconds.
+
+2.  **Adding safety scaffolding**  
+    Scripts without dry-run or logging are dangerous. AI can wrap
+    actions in if (!DRY_RUN) and add log statements.
+
+3.  **Commenting and documentation**  
+    Many scripts are just raw code. AI can add structured comments that
+    explain purpose and usage.
+
+4.  **Standardising patterns**  
+    Replace ad-hoc loops with a Find/Filter/Apply structure. Replace
+    forward deletion with backward deletion.
+
+5.  **Splitting monoliths**  
+    Some scripts try to do too much at once. AI can help break them into
+    smaller functions with clear responsibilities.
+
+## Risks of AI Refactoring
+
+While AI is powerful, it is not infallible. Risks include:
+
+- **Hallucinated methods**: inserting functions that don’t exist in EA
+  (e.g., .forEach).
+
+- **Over-modernisation**: using ES6 syntax not supported in EA’s JScript
+  ES3 runtime.
+
+- **Silent changes**: accidentally altering behaviour while
+  “refactoring.”
+
+- **Over-commenting**: adding comments that explain the obvious but miss
+  the critical.
+
+That is why human review is non-negotiable. AI can propose changes, but
+you must check every line.
+
+## A Human–AI Workflow for Refactoring
+
+A safe refactoring workflow looks like this:
+
+1.  **Select a script** — choose one that needs improvement (e.g., lacks
+    dry-run, VBScript only).
+
+2.  **Prompt AI clearly** — specify: *“Refactor this into JScript ES3,
+    add DRY_RUN, add comments, keep functionality the same.”*
+
+3.  **Review output** — check loops, updates, stereotypes, and API
+    calls.
+
+4.  **Test in sandbox** — run dry-run mode on a small package.
+
+5.  **Iterate** — adjust prompt or script until correct.
+
+6.  **Adopt as standard** — store the refactored script in Git with
+    version history.
+
+This workflow ensures that AI accelerates without undermining trust.
+
+## AI for Documentation Retrofitting
+
+One of the least glamorous but most valuable uses of AI is adding
+**documentation headers**. You can paste a bare script into AI and ask:
+*“Add a standard EA script header with purpose, usage, assumptions,
+safety, dependencies, and update history.”* AI will generate a block
+that matches the conventions established earlier in this book.
+
+Over time, this makes your library far more navigable. Anyone can open a
+script and know immediately what it does and how to use it.
+
+## Refactoring for Governance
+
+Refactoring is not just a technical hygiene exercise; it supports
+governance. In many organisations, scripts themselves are part of the
+audit trail. Regulators may ask: how do you ensure automation is safe?
+Refactored scripts with dry-run, logs, and headers are evidence of
+governance in action.
+
+AI can help align scripts with these governance requirements, ensuring
+safety features are never omitted.
+
+## Beyond EA: Refactoring Across Languages
+
+Although this chapter focuses on EA’s internal scripting, the same
+principles apply to external automation. AI can refactor Python scripts
+to improve logging, or C# scripts to adopt better patterns. The value of
+AI as a refactoring partner extends across the entire EA automation
+ecosystem.
+
+## The Cultural Impact of Refactoring with AI
+
+When teams see that AI can quickly improve old scripts, they become more
+willing to use and share automation. Instead of hoarding fragile
+snippets, they submit them for refactoring. Over time, this raises the
+baseline quality of the entire script library.
+
+AI thus plays a cultural role: it makes refactoring less of a chore,
+more of a routine practice.
+
+## Examples
+
+### Converting VBScript to JScript
+
+Many older EA repositories contain **VBScript snippets**. These work,
+but are verbose and unfamiliar to modern developers. AI can help you
+convert them to JScript.
+
+#### Original VBScript
+
+``` .VBScript 
+' List all element names in selected package (VBScript)
+!INC Local Scripts.EAConstants-VBScript
+
+sub main()
+    dim pkg
+    set pkg = Repository.GetTreeSelectedPackage()
+    if pkg is nothing then
+        Session.Prompt "Select a package.", promptOK
+        exit sub
+    end if
+
+    dim els, i
+    set els = pkg.Elements
+    for i = 0 to els.Count - 1
+        Session.Output "Element: " & els.GetAt(i).Name
+    next
+end sub
+
+main
+
+```
+
+#### AI-Assisted Conversion (Corrected JScript)
+
+```{.js filename="Example 15.1 - ListElements_JS.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 15.1 - ListElements_JS.js – JScript (ES3)
+// Purpose: Converted from VBScript using AI refactoring
+// Notes: ES3 only, no modern JS features
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) {
+        Session.Prompt("Select a package.", promptOK);
+        return;
+    }
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        Session.Output("Element: " + e.Name);
+    }
+}
+
+main();
+```
+
+### Adding a Structured Header
+
+Scripts often start life as quick hacks. Over time, they become hard to
+reuse because they lack documentation. AI can automatically generate a
+**structured header** in your house style.
+
+#### Before (minimal)
+``` .js
+function main() {
+
+var pkg = Repository.GetTreeSelectedPackage();
+
+if (!pkg) return;
+
+Session.Output("Selected package: " + pkg.Name);
+
+}
+
+main();
+```
+#### After (AI-generated header + corrections)
+```{.js filename="Example 15.2 - ShowSelectedPackage.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 15.2 - ShowSelectedPackage.js – JScript (ES3)
+// Purpose: Output the name of the selected package
+// Usage: Select a package in the Project Browser → run script
+// Assumptions: User selects a package; ES3 runtime only
+// Safety: Read-only, no modifications
+// Dependencies: none
+// Update history: 1.0 initial
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) {
+        Session.Prompt("Please select a package.", promptOK);
+        return;
+    }
+    Session.Output("Selected package: " + pkg.Name);
+}
+
+main();
+```
+
+### Refactoring for Safety (Add DRY_RUN)
+
+AI can retrofit your script with **dry-run and logging**.
+
+#### Original Script (unsafe)
+``` .js
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        els.GetAt(i).Name = "Test_" + els.GetAt(i).Name;
+        els.GetAt(i).Update();
+    }
+    Repository.RefreshModelView(pkg.PackageID);
+}
+main();
+```
+
+#### Refactored with DRY_RUN
+```{.js filename="Example 15.3 - SafeRename.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 15.3 - SafeRename.js – JScript (ES3)
+// Purpose: Prefix all element names with "Test_"
+// Safety: DRY_RUN enabled by default; logs actions
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var PREFIX = "Test_";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var changed=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var newName = PREFIX + e.Name;
+        Session.Output("Would rename: " + e.Name + " → " + newName);
+        if (!DRY_RUN) {
+            e.Name = newName;
+            e.Update();
+            changed++;
+        }
+    }
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(pkg.PackageID);
+    Session.Output("Total processed: " + els.Count + ", Changed: " + changed + ", Dry-run=" + DRY_RUN);
+}
+
+main();
+```
+
+### Breaking Down Monoliths
+
+AI can also split a long monolithic script into **functions**, making it
+easier to maintain.
+
+#### Before (all inline)
+``` .js
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Type == "Requirement" && e.Notes == "") {
+            Session.Output("Requirement missing notes: " + e.Name);
+        }
+    }
+}
+main();
+```
+
+#### After (refactored into functions)
+```{.js filename="Example 15.4 - CheckMissingNotes.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 15.4 - CheckMissingNotes.js – JScript (ES3)
+// Purpose: Report Requirements without notes
+// Refactored to improve maintainability
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = getSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (isRequirementMissingNotes(e)) {
+            Session.Output("Requirement missing notes: " + e.Name);
+        }
+    }
+}
+// Get the currently selected package, with safety check
+function getSelectedPackage() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) {
+        Session.Prompt("Select a package.", promptOK);
+        return null;
+    }
+    return pkg;
+}
+// Check if element is a Requirement with empty notes
+function isRequirementMissingNotes(e) {
+    return e.Type == "Requirement" && trim(e.Notes) == "";
+}
+function trim(str) {
+    if (str == null) return "";
+    return String(str).replace(/^\s+|\s+$/g, "");
+}
+
+main();
+```
+
+## Summary
+
+AI is a powerful refactoring partner:
+
+- **Language conversion**: VBScript → JScript → Python.
+
+- **Documentation**: auto-generate structured headers.
+
+- **Safety**: add DRY_RUN, logs, and RefreshModelView.
+
+- **Maintainability**: break monolithic scripts into functions.
+
+You remain in control: AI does the heavy lifting, but you apply
+corrections to keep everything **valid for EA’s JScript ES3 runtime**.
+
+In the next chapter, we’ll explore **Chapter 15 – AI in Daily
+Workflow**, showing how to build a *prompt library* and integrate
+AI-assisted scripting into your modelling practice.

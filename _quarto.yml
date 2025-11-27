@@ -1,0 +1,58 @@
+execute:
+  cache: false
+
+project:
+  type: book
+  output-dir: docs
+  resources:
+    - images/**
+
+book:
+  title: "Scripting Sparx Enterprise Architect: A Practical Handbook"
+  author: "Tito Castillo"
+  date: "2025"
+
+  chapters:
+    - index.qmd
+    - 02-System.Object[].qmd
+    - 03-System.Object[].qmd
+    - 04-System.Object[].qmd
+    - 05-System.Object[].qmd
+    - 06-System.Object[].qmd
+    - 07-System.Object[].qmd
+    - 08-System.Object[].qmd
+    - 09-System.Object[].qmd
+    - 10-System.Object[].qmd
+    - 11-System.Object[].qmd
+    - 12-System.Object[].qmd
+    - 13-System.Object[].qmd
+    - 14-System.Object[].qmd
+    - 15-System.Object[].qmd
+    - 16-System.Object[].qmd
+    - 17-System.Object[].qmd
+    - 18-System.Object[].qmd
+    - 19-System.Object[].qmd
+    - 20-System.Object[].qmd
+    - 21-System.Object[].qmd
+    - 22-System.Object[].qmd
+    - 23-System.Object[].qmd
+    - 24-System.Object[].qmd
+    - 25-System.Object[].qmd
+    - 26-System.Object[].qmd
+    - 27-System.Object[].qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    include-after-body: includes/cover.html
+    css: styles.css        # ← add this line
+    code-copy: true
+    code-line-numbers: true
+    code-tools: true         # adds copy / expand buttons
+    code-block-bg: true
+    code-block-border-left: true
+    code-block-title: true   # <— enables the “title=” field
+    monofont: "DejaVu Sans Mono"
+    mainfont: "Noto Serif"

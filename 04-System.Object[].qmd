@@ -1,0 +1,193 @@
+# Chapter 3: Getting Started 
+
+Every technical journey begins with first steps, and scripting
+Enterprise Architect is no exception. After seeing the big picture of
+why scripting matters (Chapter 1) and the landscape of options available
+(Chapter 2), it is tempting to jump straight into code. But before you
+do, there is one critical lesson: **safety first**.
+
+Scripting in EA is not like writing macros in a spreadsheet where you
+can undo or close without saving. The EA repository is a live database.
+Every script you run has the power to add, modify, or delete hundreds or
+thousands of elements in a matter of seconds. There is no “undo” button
+for automation. That is why this chapter is dedicated to getting started
+safely. We will cover the principles and practices that protect your
+repository, minimise risk, and give you confidence when you begin
+experimenting with automation.
+
+## The Importance of Backups
+
+The very first safeguard is **backups**. EA repositories come in
+different forms: .qea files, .eapx files, or database connections to SQL
+Server, Oracle, or PostgreSQL. Regardless of the backend, before you run
+any script that modifies content, take a backup.
+
+For file-based repositories, this can be as simple as copying the file
+to another folder. For server-based repositories, use database backup
+routines or export a snapshot to XMI. The principle is the same: always
+have a way back. If your script misbehaves and wipes out a branch of the
+model, you need the comfort of knowing you can restore it.
+
+Experienced script authors often keep a **sandbox repository**: a copy
+of the model used only for testing scripts. This lets you experiment
+freely without fear of damaging the production model. Once your script
+behaves as expected, you can run it against the real repository.
+
+## The Dry-Run Principle
+
+Perhaps the single most important safeguard in scripting is the
+**dry-run flag**. Every modifying script in this book includes a line
+near the top:
+
+``` js
+var DRY_RUN = true;
+```
+
+When DRY_RUN is true, the script logs what it *would* do, but does not
+commit any changes. Only when you flip it to false will the script
+actually update the repository. This gives you a rehearsal phase: you
+see what names would be changed, what tags would be added, what elements
+would be deleted.
+
+This principle of simulation before execution is vital. It is your
+safety net. Many a modeller has regretted running a bulk update script
+without such a safeguard. By adopting dry-run as a discipline, you make
+your scripts trustworthy not only for yourself but also for colleagues
+who may reuse them.
+
+## Logging and Transparency
+
+Logging is your second line of defence. A script that silently modifies
+hundreds of elements without telling you what it did is dangerous. A
+safe script always logs its actions, either to EA’s Output tab, to a CSV
+file, or both.
+
+Logging serves three purposes:
+
+1.  **Feedback** — you see what the script is doing in real time.
+
+2.  **Audit** — you can review afterwards which elements were touched.
+
+3.  **Debugging** — if something goes wrong, logs help you trace the
+    problem.
+
+Good practice is to log to CSV, with columns such as ElementID, Name,
+OldValue, NewValue, Action. That way you can filter and analyse in Excel
+or share the log with others.
+
+## Understanding the Repository Structure
+
+Before you can script safely, you must understand the structure you are
+scripting against. EA is more than diagrams. At the top is the
+**Repository** object. Inside are **Models** (also known as root
+packages). Each model contains **Packages**, and packages contain
+**Elements** and **Diagrams**.
+
+Think of it as a tree:
+```{.text filename="EA Repository object model" code-line-numbers="false"}
+Repository
+├─ Model (root package)
+│ ├─ Package
+│ │ ├─ Elements
+│ │ ├─ Diagrams
+│ │ └─ Sub-packages
+│ └─ Package
+└─ Other models
+```
+At the element level, you have properties (name, type, status) and
+collections (attributes, methods, connectors, tagged values). Connectors
+link elements together. Diagrams show visual instances of elements.
+
+Understanding this hierarchy is essential because every script you write
+will involve traversing these structures. A safe script is one that
+navigates correctly: it knows when it is handling a package versus an
+element, and it never assumes without checking ObjectType.
+
+## Update and Refresh
+
+Another foundational safety concept is the difference between
+**Update()** and **RefreshModelView()**.
+
+- **Update()** commits your change to the repository. Without it, the
+  change is lost.
+
+- **RefreshModelView()** tells EA’s user interface to reload content.
+  Without it, the change may be invisible until you close and reopen EA.
+
+Many beginners forget one or the other. Forgetting Update() means the
+script appears to work but nothing actually changes. Forgetting
+RefreshModelView() means the script did work but you can’t see the
+result.
+
+The safe pattern is:
+
+1.  Modify the object.
+
+2.  Call .Update().
+
+3.  At the end of the script (or per batch), call
+    Repository.RefreshModelView().
+
+## Avoiding Dangerous Patterns
+
+Certain scripting mistakes are particularly hazardous:
+
+- **Forward deletion loops**: deleting items in a forward loop causes
+  index shifts, skipping items. Always delete backwards.
+
+- **Assuming selection type**: don’t assume the user has selected a
+  package; they may have selected a diagram or element. Always check
+  ObjectType.
+
+- **Using names as keys**: element names are not unique. Use GUIDs or
+  IDs for identification.
+
+- **Direct SQL writes**: avoid Repository.Execute("UPDATE…"). This
+  bypasses EA’s business rules and can corrupt the repository. Use SQL
+  only for *reading* (SQLQuery), never for writing.
+
+## Testing on Small Sets
+
+Before applying a script to thousands of elements, test it on a small
+package with a handful of items. This lets you confirm behaviour without
+risking widespread impact. A safe workflow is:
+
+1.  Copy a few elements into a test package.
+
+2.  Run the script with DRY_RUN = true.
+
+3.  Check the log output.
+
+4.  Switch to DRY_RUN = false and run.
+
+5.  Verify the changes.
+
+6.  Only then apply to the full repository.
+
+## Cultural Safety
+
+Safety is not just technical; it is cultural. Teams should adopt norms:
+
+- Never run destructive scripts in production without dry-run first.
+
+- Always share logs of what was changed.
+
+- Keep a shared script library under version control (Git).
+
+- Review scripts with peers before first run.
+
+These norms build trust. Architects and modellers become more willing to
+use automation when they know safeguards are built in.
+
+## Building the Right Habits
+
+The purpose of this chapter is not to scare you, but to build the right
+habits from the start. If you learn to always include a dry-run flag,
+always log, always test on small sets, and always backup, then scripting
+EA becomes an empowering tool rather than a risky gamble.
+
+Think of it like climbing: the harness, helmet, and rope may feel
+restrictive at first, but they enable you to climb higher with
+confidence. In the same way, scripting safety patterns may feel like
+overhead at first, but they let you automate more ambitious tasks
+without fear.

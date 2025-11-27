@@ -1,0 +1,290 @@
+# Chapter 2: Automation Landscape
+
+Before you can write useful scripts, you need to understand the
+landscape. Enterprise Architect gives you several ways to automate its
+behaviour, both from within the tool and from the outside. Each option
+comes with strengths and limitations. Choosing the right one depends on
+your goals, your tolerance for risk, and the skills of your team.
+
+## Built-In Script Engine
+
+Enterprise Architect includes a scripting window where you can create,
+edit, and run scripts directly inside the repository. These scripts are
+stored with the model and organised into groups. They can be invoked
+from menus or context menus, which makes them perfect for quick
+automation tasks or shared governance checks.
+
+The scripting window offers three “languages”: **VBScript, JScript, and
+JavaScript**. At first glance this looks like a generous choice. In
+practice, all three map back to Microsoft’s legacy scripting engines —
+which means you are working with very old language runtimes.
+
+## Scripting options
+
+When creating a script in EA you are prompted to select one of the
+following:
+
+**VBScript**
+
+- Microsoft Visual Basic Scripting Edition.
+
+- Looks and feels like writing macros in Excel or classic Visual Basic.
+
+- Verbose but accessible to non-developers.
+
+- Still supported inside EA, but deprecated by Microsoft in Windows.
+
+- Weak library support; relies heavily on the EA API and ActiveX.
+
+**JScript**
+
+- Microsoft’s implementation of **ECMAScript 3 (1999)**.
+
+- Very similar to early JavaScript, but locked at that level.
+
+- No modern JavaScript features: no let, const, arrow functions, JSON
+  libraries, or array helpers such as map or filter.
+
+- Requires “old school” loops and helper functions for common tasks.
+
+- This is EA’s most commonly used internal scripting option.
+
+**JavaScript** (as labelled in EA)
+
+- Misleading. Selecting “JavaScript” in EA simply invokes the same
+  JScript engine.
+
+- No ES5/ES6+ features, despite the familiar name.
+
+- Treat “JavaScript” and “JScript” as identical inside EA.
+
+**In short:** inside EA you are working with either VBScript or JScript
+(ES3). If you want modern features, you need to step outside.
+
+## External Automation
+
+You are not limited to the internal scripting engine. EA exposes its
+entire object model through a **COM interface**. Any COM-aware language
+can connect and manipulate the repository. This makes it possible to use
+modern languages with modern tooling.
+
+Typical external options include:
+
+- **C#** (the richest support, with type libraries).
+
+- **Python** via pywin32.
+
+- **PowerShell, Perl, Java**, and others via COM bridges.
+
+External automation runs outside EA and does not live in the repository.
+It is well-suited to integration with CI/CD pipelines, registries, Jira,
+Confluence, or analytics platforms.
+
+## “Hello EA” Examples
+
+The following examples illustrate the same simple task: list the names
+of all elements in the package currently selected in the Project
+Browser. Seeing the same logic in three languages highlights their
+differences.
+
+**VBScript** (inside EA)
+```{.vbscript filename="Example 2.1 - HelloEA in VBScript"}
+' -------------------------------------------------------
+' Example 2.1 - HelloEA in VBScript
+' Purpose: Output the names of all elements in the
+' selected package in the Project Browser.
+' -------------------------------------------------------
+!INC Local Scripts.EAConstants-VBScript
+
+sub main()
+
+' Get the selected package
+dim package
+set package = Repository.GetTreeSelectedPackage()
+if package is nothing then
+Session.Prompt "Please select a package in the Project Browser.",
+promptOK
+exit sub
+end if
+
+' Get the collection of elements in the package
+dim elements
+set elements = package.Elements
+' Loop through the collection
+dim i
+for i = 0 to elements.Count - 1
+dim element
+set element = elements.GetAt(i) ' EA collections use GetAt()
+Session.Output "Element: " & element.Name
+next
+end sub
+
+main
+```
+
+**JScript** (inside EA)
+```{.js filename="Example 2.2 - HelloEA in JScript"}
+// -------------------------------------------------------
+// Example 2.2 - HelloEA in JScript
+// Purpose: Output the names of all elements in the
+// selected package in the Project Browser.
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() 
+{
+  // Get the selected package
+  var package = Repository.GetTreeSelectedPackage();
+  if (!package) 
+    {
+    Session.Prompt("Please select a package in the Project Browser.",
+    promptOK);
+    return;
+    }
+
+  // Get the collection of elements in the package
+  var elements = package.Elements;
+  
+  // Loop through the collection
+  for (var i = 0; i \< elements.Count; i++) 
+    {
+    var element = elements.GetAt(i); // EA collections are not arrays
+    Session.Output("Element: " + element.Name);
+    }
+}
+
+main();
+```
+
+**Python** (external via pywin32)
+```{.python filename="Example 2.3 - HelloEA in Python"}
+# -------------------------------------------------------
+# Example 2.3 - HelloEA in Python
+# Purpose: Output the names of all elements in the
+# selected package in the Project Browser.
+# Notes:
+# - Requires EA to be running.
+# - Requires pywin32 package installed.
+# -------------------------------------------------------
+import win32com.client
+
+# Connect to the running EA instance
+ea = win32com.client.Dispatch("EA.App")
+repository = ea.Repository
+# Get the currently selected package
+package = repository.GetTreeSelectedPackage()
+if not package:
+print("Please select a package in the Project Browser.")
+exit(0)
+
+# Get the collection of elements in the package
+elements = package.Elements
+# Loop through the collection
+for i in range(elements.Count):
+element = elements.GetAt(i) \# EA collections expose GetAt()
+print("Element:", element.Name)
+```
+
+## Comparing the Three
+
+- **VBScript** feels like a 1990s macro language. Clear for beginners
+  but verbose.
+
+- **JScript** is terser, familiar to anyone with Java/C-style
+  backgrounds, but limited to ES3 features.
+
+- **Python** is modern, expressive, and integrates with rich libraries —
+  but requires external automation and setup.
+
+## The Role of COM
+
+At the heart of both external automation and add-ins is **COM**
+(Component Object Model). EA exposes its Repository object through COM.
+This is what allows C#, Python, or Java to talk to EA.
+
+COM is old, and sometimes brittle, but it is also the glue that allows
+EA to integrate with the wider world. The Interop.EA.dll assembly is the
+.NET wrapper over this COM interface. For Python, pywin32 plays the same
+role. For Java, jacob or similar libraries provide bindings.
+
+Understanding COM isn’t strictly necessary to write scripts, but it
+explains why **bitness matters** (32-bit EA requires 32-bit Python), why
+**registration matters** (DLLs must be registered), and why debugging
+sometimes feels awkward.
+
+## Choosing the Right Tool
+
+A simple selection matrix helps:
+
+- Quick fixes and governance checks inside EA → JScript.
+
+- For teams with strong Visual Basic heritage → VBScript.
+
+- For data-heavy tasks, JSON, or integration pipelines → external
+  automation (Python or C#).
+
+- For stable, long-lived features → migrate scripts into Add-ins.
+
+## Safety in Each Layer
+
+Each automation option carries its own risks:
+
+- **Internal scripts**: no undo, dangerous if dry-run is not used.
+
+- **External automation**: risk of version mismatch (32/64-bit), risk of
+  corrupting repos if SQL writes are used incorrectly.
+
+- **Add-ins**: risk of startup errors breaking EA menus; heavier
+  debugging burden.
+
+The best safety net in all cases is to **test on a dummy repository
+first**, use **dry-run patterns**, and maintain **version control** for
+your scripts or add-ins.
+
+## Shaping Automation Practice
+
+For many organisations, the EA automation landscape evolves in phases:
+
+1.  **Exploration** — a modeller writes small scripts to rename things
+    or export CSV.
+
+2.  **Consolidation** — a team shares scripts across repositories, with
+    common helpers.
+
+3.  **Integration** — external automation ties EA to Jira, Confluence,
+    Git.
+
+4.  **Productisation** — stable solutions become add-ins with menus and
+    event handlers.
+
+Knowing where you are in this journey helps you decide which option to
+invest in.
+
+Preparing for the Examples
+
+The rest of this chapter will show practical code samples for each
+automation mode: internal scripts in JScript, external COM automation in
+C# and Python, and a glimpse of add-in structure. These examples are
+fully commented, showing how to set up, how to log safely, and how to
+use dry-run modes.
+
+Before diving into the code, remember:
+
+1.  **Internal scripts** are your first tool.
+
+2.  **External automation** connects EA to the wider enterprise.
+
+3.  **Add-ins** formalise solutions into products.
+
+This layered landscape is what makes EA unusually flexible: it can serve
+a single modeller working on a small project, or an enterprise team
+building integrations across systems.
+
+## Looking Ahead
+
+The next chapter dives into **EA API Essentials**. We will explore the
+80/20 of the object model: Repository, Package, Element, Connector,
+Attribute, and TaggedValue. We will also see why methods like Update()
+and RefreshModelView() are so critical. With this foundation, you will
+be ready to write scripts that safely and effectively manipulate your
+models.

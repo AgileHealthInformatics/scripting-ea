@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>15&nbsp; Chapter 14: Prompt Engineering – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./16-System.Object[].html" rel="next">
+<link href="./14-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./15-System.Object[].html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-prompt-engineering-matters" id="toc-why-prompt-engineering-matters" class="nav-link active" data-scroll-target="#why-prompt-engineering-matters"><span class="header-section-number">15.1</span> Why Prompt Engineering Matters</a>
+  <ul class="collapse">
+  <li><a href="#the-anatomy-of-a-good-prompt" id="toc-the-anatomy-of-a-good-prompt" class="nav-link" data-scroll-target="#the-anatomy-of-a-good-prompt"><span class="header-section-number">15.1.1</span> The Anatomy of a Good Prompt</a></li>
+  <li><a href="#iterative-prompting" id="toc-iterative-prompting" class="nav-link" data-scroll-target="#iterative-prompting"><span class="header-section-number">15.1.2</span> Iterative Prompting</a></li>
+  <li><a href="#prompt-templates" id="toc-prompt-templates" class="nav-link" data-scroll-target="#prompt-templates"><span class="header-section-number">15.1.3</span> Prompt Templates</a></li>
+  <li><a href="#guardrails-in-prompts" id="toc-guardrails-in-prompts" class="nav-link" data-scroll-target="#guardrails-in-prompts"><span class="header-section-number">15.1.4</span> Guardrails in Prompts</a></li>
+  <li><a href="#prompting-for-externals" id="toc-prompting-for-externals" class="nav-link" data-scroll-target="#prompting-for-externals"><span class="header-section-number">15.1.5</span> Prompting for Externals</a></li>
+  <li><a href="#common-prompting-mistakes" id="toc-common-prompting-mistakes" class="nav-link" data-scroll-target="#common-prompting-mistakes"><span class="header-section-number">15.1.6</span> Common Prompting Mistakes</a></li>
+  </ul></li>
+  <li><a href="#prompt-engineering-as-team-practice" id="toc-prompt-engineering-as-team-practice" class="nav-link" data-scroll-target="#prompt-engineering-as-team-practice"><span class="header-section-number">15.2</span> Prompt Engineering as Team Practice</a></li>
+  <li><a href="#ai-literacy-for-modellers" id="toc-ai-literacy-for-modellers" class="nav-link" data-scroll-target="#ai-literacy-for-modellers"><span class="header-section-number">15.3</span> AI Literacy for Modellers</a></li>
+  <li><a href="#prompt-template" id="toc-prompt-template" class="nav-link" data-scroll-target="#prompt-template"><span class="header-section-number">15.4</span> Prompt Template</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">15.5</span> Examples</a>
+  <ul class="collapse">
+  <li><a href="#list-all-requirements" id="toc-list-all-requirements" class="nav-link" data-scroll-target="#list-all-requirements"><span class="header-section-number">15.5.1</span> List All Requirements</a></li>
+  <li><a href="#bulk-prefix-naming" id="toc-bulk-prefix-naming" class="nav-link" data-scroll-target="#bulk-prefix-naming"><span class="header-section-number">15.5.2</span> Bulk Prefix Naming</a></li>
+  <li><a href="#add-a-tagged-value-with-defaults" id="toc-add-a-tagged-value-with-defaults" class="nav-link" data-scroll-target="#add-a-tagged-value-with-defaults"><span class="header-section-number">15.5.3</span> Add a Tagged Value with Defaults</a></li>
+  <li><a href="#safe-delete" id="toc-safe-delete" class="nav-link" data-scroll-target="#safe-delete"><span class="header-section-number">15.5.4</span> Safe Delete</a></li>
+  </ul></li>
+  <li><a href="#best-practices-for-prompts" id="toc-best-practices-for-prompts" class="nav-link" data-scroll-target="#best-practices-for-prompts"><span class="header-section-number">15.6</span> Best Practices for Prompts</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">15.7</span> Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In the previous chapter, we saw how artificial intelligence can reduce the blank-page barrier and accelerate scripting. But to get real value from AI, you must learn how to <strong>ask properly</strong>. AI is like a very fast but sometimes careless assistant. If you give vague instructions, it will give vague or even dangerous results. If you provide precise, structured prompts, it can generate highly usable code. This practice of crafting inputs deliberately is called <strong>prompt engineering</strong>.</p>
+<p>Prompt engineering is not about writing long, elaborate instructions. It is about giving AI just enough context, constraints, and examples so that the output is aligned with your needs. For Enterprise Architect scripting, that means telling AI about the limitations of JScript ES3, reminding it to use Update() and RefreshModelView(), and insisting on a DRY_RUN flag.</p>
+<p>This chapter introduces the art of prompt engineering for EA scripting. It shows why generic prompts fail, what makes EA-specific prompts different, and how to refine AI outputs safely. It also explains how to build a library of reusable prompts, so you don’t have to reinvent the wheel every time you need a script.</p>
+<section id="why-prompt-engineering-matters" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="why-prompt-engineering-matters"><span class="header-section-number">15.1</span> Why Prompt Engineering Matters</h2>
+<p>AI models are generalists. They have been trained on vast amounts of code and text, but they do not “know” Enterprise Architect in detail. That means they will often produce code that looks plausible but does not run in EA. For example, they may suggest forEach on a collection, or JSON.parse, or modern JavaScript features that EA’s engine does not support.</p>
+<p>Without careful prompting, you get output that looks fine but fails immediately. With careful prompting, you get output that respects EA’s constraints and includes safety features. Prompt engineering makes the difference between AI as a gimmick and AI as a practical assistant.</p>
+<section id="the-anatomy-of-a-good-prompt" class="level3" data-number="15.1.1">
+<h3 data-number="15.1.1" class="anchored" data-anchor-id="the-anatomy-of-a-good-prompt"><span class="header-section-number">15.1.1</span> The Anatomy of a Good Prompt</h3>
+<p>A good prompt for EA scripting usually contains:</p>
+<ol type="1">
+<li><p><strong>Context</strong>: make clear you are scripting inside Enterprise Architect using JScript ES3.</p></li>
+<li><p><strong>Task</strong>: what you want the script to do (e.g., rename requirements, export tags).</p></li>
+<li><p><strong>Constraints</strong>: what not to use (no let, no const, no forEach).</p></li>
+<li><p><strong>Safety</strong>: require DRY_RUN, logging, and comments.</p></li>
+<li><p><strong>Format</strong>: ask for a complete runnable script with comments, not just fragments.</p></li>
+</ol>
+<p>For example:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write a JScript ES3 script for Sparx Enterprise Architect that traverses the selected package, finds all Requirement elements, and prefixes their names with “REQ_”. Use .Count and .GetAt(i) loops, not modern JS features. Include a DRY_RUN flag set to true by default, call Update() for changes, and refresh the package at the end. Comment every step.</p>
+</div>
+</div>
+<p>This is a prompt that sets context, constraints, safety, and format.</p>
+</section>
+<section id="iterative-prompting" class="level3" data-number="15.1.2">
+<h3 data-number="15.1.2" class="anchored" data-anchor-id="iterative-prompting"><span class="header-section-number">15.1.2</span> Iterative Prompting</h3>
+<p>Prompt engineering is rarely one-and-done. Often the first output will be close but not perfect. That is normal. The trick is to <strong>iterate</strong>:</p>
+<ol type="1">
+<li><p>Run the script in dry-run mode.</p></li>
+<li><p>If it fails, feed the error message back into AI: <em>“The error says ‘forEach is not a function’. Rewrite using .Count and .GetAt().”</em></p></li>
+<li><p>If it runs but misbehaves, clarify: <em>“The script renamed packages as well as requirements. Please filter only Elements of type Requirement.”</em></p></li>
+<li><p>Keep refining until the script is safe and correct.</p></li>
+</ol>
+<p>This iterative loop is part of prompt engineering. You don’t expect perfection in one shot; you treat AI as a partner who improves with feedback.</p>
+</section>
+<section id="prompt-templates" class="level3" data-number="15.1.3">
+<h3 data-number="15.1.3" class="anchored" data-anchor-id="prompt-templates"><span class="header-section-number">15.1.3</span> Prompt Templates</h3>
+<p>Over time, you will notice you reuse similar prompts. Instead of writing them from scratch each time, build <strong>prompt templates</strong>. For example:</p>
+<ul>
+<li><p><strong>Traversal template</strong>: “Write a JScript ES3 script that traverses all elements in the selected package. Use .Count and .GetAt(). For each element, [do something]. Include DRY_RUN and logging.”</p></li>
+<li><p><strong>Tagged value template</strong>: “Write a JScript ES3 script that checks all elements of stereotype X in the selected package and ensures they have a tagged value Y with value Z. Add if missing. Include DRY_RUN, logging, and RefreshModelView.”</p></li>
+<li><p><strong>Export template</strong>: “Write a JScript ES3 script that exports all elements in the selected package to CSV. Include ElementID, GUID, Name, Type, and Stereotype. Use FileSystemObject, ANSI safe. Comment every step.”</p></li>
+</ul>
+<p>By maintaining these prompt templates, you save time and improve consistency.</p>
+</section>
+<section id="guardrails-in-prompts" class="level3" data-number="15.1.4">
+<h3 data-number="15.1.4" class="anchored" data-anchor-id="guardrails-in-prompts"><span class="header-section-number">15.1.4</span> Guardrails in Prompts</h3>
+<p>Because EA is unforgiving (no undo, no rollback), guardrails are essential. Your prompt should explicitly require:</p>
+<ul>
+<li><p>DRY_RUN flag.</p></li>
+<li><p>Update() on changes.</p></li>
+<li><p>RefreshModelView() at the end.</p></li>
+<li><p>Comments explaining each step.</p></li>
+<li><p>Backward deletion loops when deleting.</p></li>
+<li><p>Logs to Output or CSV.</p></li>
+</ul>
+<p>Think of these as non-negotiable. If AI fails to include them, ask it to add them.</p>
+</section>
+<section id="prompting-for-externals" class="level3" data-number="15.1.5">
+<h3 data-number="15.1.5" class="anchored" data-anchor-id="prompting-for-externals"><span class="header-section-number">15.1.5</span> Prompting for Externals</h3>
+<p>Prompt engineering also applies when you use AI for external automation. For example, you might ask for a Python script with pywin32 that connects to EA. The same principles apply: specify language, COM, bitness, safety, and logging.</p>
+<p>For instance:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><em>Write a Python 3 script using pywin32 to connect to EA. Traverse the selected package and print element names. Ensure it checks bitness (32-bit Python), and include error handling.</em></p>
+</div>
+</div>
+<p>By being explicit, you avoid generic Python that won’t attach to EA.</p>
+</section>
+<section id="common-prompting-mistakes" class="level3" data-number="15.1.6">
+<h3 data-number="15.1.6" class="anchored" data-anchor-id="common-prompting-mistakes"><span class="header-section-number">15.1.6</span> Common Prompting Mistakes</h3>
+<p>New users often make the following mistakes:</p>
+<ul>
+<li><p><strong>Being vague</strong>: <em>“Write a script to rename elements.”</em> (AI invents code with forEach.)</p></li>
+<li><p><strong>Forgetting context</strong>: not mentioning EA or JScript, so AI writes browser JavaScript.</p></li>
+<li><p><strong>Skipping safety</strong>: AI writes a script that modifies elements without dry-run.</p></li>
+<li><p><strong>Accepting first output blindly</strong>: running unsafe code in production.</p></li>
+</ul>
+<p>Each of these can be avoided by careful prompting and iteration.</p>
+</section>
+</section>
+<section id="prompt-engineering-as-team-practice" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="prompt-engineering-as-team-practice"><span class="header-section-number">15.2</span> Prompt Engineering as Team Practice</h2>
+<p>Prompt engineering is not just an individual skill. Teams can share prompt libraries alongside script libraries. For example, store templates in Git: one folder for prompts, one for scripts. This allows consistency across a team and accelerates onboarding for new members.</p>
+<p>Teams can also develop <strong>governance prompts</strong>: standard ways of asking AI to generate scripts that align with organisational policies.</p>
+</section>
+<section id="ai-literacy-for-modellers" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="ai-literacy-for-modellers"><span class="header-section-number">15.3</span> AI Literacy for Modellers</h2>
+<p>Not every modeller will become a script writer. But every modeller can benefit from AI literacy. Even if you don’t run the scripts yourself, being able to ask AI for “the shape” of a script, review the comments, and discuss it with colleagues adds value. Prompt engineering is therefore not only for coders; it is part of the wider skillset of modern architecture teams.</p>
+</section>
+<section id="prompt-template" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="prompt-template"><span class="header-section-number">15.4</span> Prompt Template</h2>
+<p>Here’s a reliable template you can use when asking AI to generate an EA script:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write a script for Sparx Enterprise Architect using JScript (ES3 only, no ES6 features).</p>
+<p>Constraints:</p>
+<p>- Use var (no let/const)</p>
+<p>- EA collections use .Count and .GetAt(i)</p>
+<p>- Use Session.Output for logging (not console.log)</p>
+<p>- Always call Update() after modifying objects</p>
+<p>- Include a DRY_RUN flag and verbose comments</p>
+<p>Task: [state the specific automation you want]</p>
+</div>
+</div>
+</section>
+<section id="examples" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="examples"><span class="header-section-number">15.5</span> Examples</h2>
+<section id="list-all-requirements" class="level3" data-number="15.5.1">
+<h3 data-number="15.5.1" class="anchored" data-anchor-id="list-all-requirements"><span class="header-section-number">15.5.1</span> List All Requirements</h3>
+<section id="prompt" class="level4" data-number="15.5.1.1">
+<h4 data-number="15.5.1.1" class="anchored" data-anchor-id="prompt"><span class="header-section-number">15.5.1.1</span> Prompt</h4>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Write an EA JScript that lists all requirements in a selected package. ES3 only, no modern JS features. Include DRY_RUN and comments.”</p>
+</div>
+</div>
+</section>
+<section id="raw-ai-output-often-wrong" class="level4" data-number="15.5.1.2">
+<h4 data-number="15.5.1.2" class="anchored" data-anchor-id="raw-ai-output-often-wrong"><span class="header-section-number">15.5.1.2</span> Raw AI Output (often wrong)</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// [x] Incorrect AI output</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">let</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="cf">if</span> (<span class="op">!</span>pkg) { <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">"Select a package"</span>)<span class="op">;</span> }</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">forEach</span>(e <span class="op">=</span>\<span class="op">&gt;</span> <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(e<span class="op">.</span><span class="at">Name</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Problems:</p>
+<ul>
+<li><p>let and arrow functions unsupported (ES3 only).</p></li>
+<li><p>pkg.Elements is an EA collection, not an array (forEach will fail).</p></li>
+<li><p>console.log doesn’t exist in EA (use Session.Output).</p></li>
+</ul>
+</section>
+<section id="corrected-script" class="level4" data-number="15.5.1.3">
+<h4 data-number="15.5.1.3" class="anchored" data-anchor-id="corrected-script"><span class="header-section-number">15.5.1.3</span> Corrected Script</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 14.1 - ListRequirements.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Example 14.1 - ListRequirements.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">// Example 14.1 - ListRequirements.js – JScript (ES3)</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">// Purpose: List all Requirement elements in selected package</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">// Safety: DRY_RUN pattern included (though not needed for read-only)</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> <span class="co">// Included for consistency</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) {</span>
+<span id="cb2-13"><a href="#cb2-13"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package first."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>    }</span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb2-19"><a href="#cb2-19"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Type</span> <span class="op">==</span> <span class="st">"Requirement"</span>) {</span>
+<span id="cb2-21"><a href="#cb2-21"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Requirement: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" (ID="</span> <span class="op">+</span> e<span class="op">.</span><span class="at">ElementID</span> <span class="op">+</span> <span class="st">")"</span>)<span class="op">;</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>        }</span>
+<span id="cb2-23"><a href="#cb2-23"></a>    }</span>
+<span id="cb2-24"><a href="#cb2-24"></a>}</span>
+<span id="cb2-25"><a href="#cb2-25"></a></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="bulk-prefix-naming" class="level3" data-number="15.5.2">
+<h3 data-number="15.5.2" class="anchored" data-anchor-id="bulk-prefix-naming"><span class="header-section-number">15.5.2</span> Bulk Prefix Naming</h3>
+<section id="prompt-1" class="level4" data-number="15.5.2.1">
+<h4 data-number="15.5.2.1" class="anchored" data-anchor-id="prompt-1"><span class="header-section-number">15.5.2.1</span> Prompt</h4>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Write an EA JScript that renames all elements in a package by adding prefix ‘SYS_’. ES3 only, no modern JS features. Include DRY_RUN, logging, and RefreshModelView.”</p>
+</div>
+</div>
+</section>
+<section id="corrected-script-1" class="level4" data-number="15.5.2.2">
+<h4 data-number="15.5.2.2" class="anchored" data-anchor-id="corrected-script-1"><span class="header-section-number">15.5.2.2</span> Corrected Script</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>14.2 - BulkPrefixRename.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="14.2 - BulkPrefixRename.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">// Example 14.2 - BulkPrefixRename.js – JScript (ES3)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">// Purpose: Add 'SYS_' prefix to element names in a selected package</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">// Safety: DRY_RUN prevents accidental renaming</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb3-9"><a href="#cb3-9"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="kw">var</span> PREFIX <span class="op">=</span> <span class="st">"SYS_"</span><span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a></span>
+<span id="cb3-12"><a href="#cb3-12"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) { Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb3-14"><a href="#cb3-14"></a></span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>    <span class="kw">var</span> changed<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb3-18"><a href="#cb3-18"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Name</span><span class="op">.</span><span class="fu">indexOf</span>(PREFIX) <span class="op">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb3-20"><a href="#cb3-20"></a>            <span class="kw">var</span> newName <span class="op">=</span> PREFIX <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span><span class="op">;</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would rename: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" → "</span> <span class="op">+</span> newName)<span class="op">;</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a>            <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) {</span>
+<span id="cb3-23"><a href="#cb3-23"></a>                e<span class="op">.</span><span class="at">Name</span> <span class="op">=</span> newName<span class="op">;</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a>                e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a>                changed<span class="op">++;</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a>            }</span>
+<span id="cb3-27"><a href="#cb3-27"></a>        }</span>
+<span id="cb3-28"><a href="#cb3-28"></a>    }</span>
+<span id="cb3-29"><a href="#cb3-29"></a>    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN <span class="op">&amp;&amp;</span> changed<span class="op">&gt;</span><span class="dv">0</span>) Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb3-30"><a href="#cb3-30"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Processed "</span> <span class="op">+</span> els<span class="op">.</span><span class="at">Count</span> <span class="op">+</span> <span class="st">" elements, changed "</span> <span class="op">+</span> changed)<span class="op">;</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a>}</span>
+<span id="cb3-32"><a href="#cb3-32"></a></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="add-a-tagged-value-with-defaults" class="level3" data-number="15.5.3">
+<h3 data-number="15.5.3" class="anchored" data-anchor-id="add-a-tagged-value-with-defaults"><span class="header-section-number">15.5.3</span> Add a Tagged Value with Defaults</h3>
+<section id="prompt-2" class="level4" data-number="15.5.3.1">
+<h4 data-number="15.5.3.1" class="anchored" data-anchor-id="prompt-2"><span class="header-section-number">15.5.3.1</span> Prompt</h4>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Write an EA JScript that ensures all elements in a package have a tagged value ‘Owner=ArchitectureTeam’. ES3 only, no modern JS features. DRY_RUN and comments required.”</p>
+</div>
+</div>
+</section>
+<section id="corrected-script-2" class="level4" data-number="15.5.3.2">
+<h4 data-number="15.5.3.2" class="anchored" data-anchor-id="corrected-script-2"><span class="header-section-number">15.5.3.2</span> Corrected Script</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 14.3 - EnsureTag_Owner.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Example 14.3 - EnsureTag_Owner.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">// Example 14.3 - EnsureTag_Owner.js – JScript (ES3)</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">// Purpose: Add/update tagged value 'Owner=ArchitectureTeam' for all elements</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">// Safety: DRY_RUN flag enabled</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="kw">var</span> TAG_NAME <span class="op">=</span> <span class="st">"Owner"</span><span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="kw">var</span> TAG_VALUE <span class="op">=</span> <span class="st">"ArchitectureTeam"</span><span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a></span>
+<span id="cb4-16"><a href="#cb4-16"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb4-18"><a href="#cb4-18"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a>        <span class="kw">var</span> tags <span class="op">=</span> e<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a>        <span class="kw">var</span> found <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a></span>
+<span id="cb4-22"><a href="#cb4-22"></a>        <span class="cf">for</span> (<span class="kw">var</span> j<span class="op">=</span><span class="dv">0</span><span class="op">;</span> j<span class="op">&lt;</span>tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb4-23"><a href="#cb4-23"></a>            <span class="kw">var</span> t <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(j)<span class="op">;</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a>            <span class="cf">if</span> (t<span class="op">.</span><span class="at">Name</span> <span class="op">==</span> TAG_NAME) {</span>
+<span id="cb4-25"><a href="#cb4-25"></a>                found <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>                <span class="cf">if</span> (t<span class="op">.</span><span class="at">Value</span> <span class="op">!=</span> TAG_VALUE) {</span>
+<span id="cb4-27"><a href="#cb4-27"></a>                    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would update tag for "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb4-28"><a href="#cb4-28"></a>                    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) { t<span class="op">.</span><span class="at">Value</span> <span class="op">=</span> TAG_VALUE<span class="op">;</span> t<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> }</span>
+<span id="cb4-29"><a href="#cb4-29"></a>                }</span>
+<span id="cb4-30"><a href="#cb4-30"></a>            }</span>
+<span id="cb4-31"><a href="#cb4-31"></a>        }</span>
+<span id="cb4-32"><a href="#cb4-32"></a></span>
+<span id="cb4-33"><a href="#cb4-33"></a>        <span class="cf">if</span> (<span class="op">!</span>found) {</span>
+<span id="cb4-34"><a href="#cb4-34"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would add tag for "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a>            <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) {</span>
+<span id="cb4-36"><a href="#cb4-36"></a>                <span class="kw">var</span> nt <span class="op">=</span> tags<span class="op">.</span><span class="fu">AddNew</span>(TAG_NAME<span class="op">,</span> TAG_VALUE)<span class="op">;</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a>                nt<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a>            }</span>
+<span id="cb4-39"><a href="#cb4-39"></a>        }</span>
+<span id="cb4-40"><a href="#cb4-40"></a>    }</span>
+<span id="cb4-41"><a href="#cb4-41"></a>    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb4-42"><a href="#cb4-42"></a>}</span>
+<span id="cb4-43"><a href="#cb4-43"></a></span>
+<span id="cb4-44"><a href="#cb4-44"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="safe-delete" class="level3" data-number="15.5.4">
+<h3 data-number="15.5.4" class="anchored" data-anchor-id="safe-delete"><span class="header-section-number">15.5.4</span> Safe Delete</h3>
+<section id="prompt-3" class="level4" data-number="15.5.4.1">
+<h4 data-number="15.5.4.1" class="anchored" data-anchor-id="prompt-3"><span class="header-section-number">15.5.4.1</span> Prompt</h4>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Write an EA JScript that deletes all UseCase elements in a package. ES3 only, DRY_RUN by default, with logging.”</p>
+</div>
+</div>
+<p>Corrected Script</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1"></a>“Write an EA JScript that deletes all UseCase elements <span class="kw">in</span> a <span class="im">package</span><span class="op">.</span> <span class="at">ES3</span> only<span class="op">,</span> DRY_RUN by <span class="im">default</span><span class="op">,</span> <span class="cf">with</span> logging<span class="op">.</span><span class="at">”</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>Corrected Script</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">// Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">// Purpose: Delete all UseCase elements in a package</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">// Safety: DRY_RUN by default; logs each candidate</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="kw">var</span> TYPE_FILTER <span class="op">=</span> <span class="st">"UseCase"</span><span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a></span>
+<span id="cb5-17"><a href="#cb5-17"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a>    <span class="kw">var</span> deleted<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span>els<span class="op">.</span><span class="at">Count</span><span class="op">-</span><span class="dv">1</span><span class="op">;</span> i<span class="op">&gt;=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">--</span>) { <span class="co">// iterate backwards</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Type</span> <span class="op">==</span> TYPE_FILTER) {</span>
+<span id="cb5-22"><a href="#cb5-22"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would delete: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a>            <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) {</span>
+<span id="cb5-24"><a href="#cb5-24"></a>                els<span class="op">.</span><span class="fu">DeleteAt</span>(i<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span> <span class="co">// false = don’t refresh each time</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a>                deleted<span class="op">++;</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a>            }</span>
+<span id="cb5-27"><a href="#cb5-27"></a>        }</span>
+<span id="cb5-28"><a href="#cb5-28"></a>    }</span>
+<span id="cb5-29"><a href="#cb5-29"></a>    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN <span class="op">&amp;&amp;</span> deleted<span class="op">&gt;</span><span class="dv">0</span>) Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb5-30"><a href="#cb5-30"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Candidates: "</span> <span class="op">+</span> els<span class="op">.</span><span class="at">Count</span> <span class="op">+</span> <span class="st">" Deleted: "</span> <span class="op">+</span> deleted <span class="op">+</span> <span class="st">" Dry-run="</span> <span class="op">+</span> DRY_RUN)<span class="op">;</span></span>
+<span id="cb5-31"><a href="#cb5-31"></a>}</span>
+<span id="cb5-32"><a href="#cb5-32"></a></span>
+<span id="cb5-33"><a href="#cb5-33"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+</section>
+<section id="best-practices-for-prompts" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="best-practices-for-prompts"><span class="header-section-number">15.6</span> Best Practices for Prompts</h2>
+<ul>
+<li><p>Always say: “EA JScript (ES3 only, no modern JS features)”.</p></li>
+<li><p>Always request: DRY_RUN flag, verbose comments, and RefreshModelView.</p></li>
+<li><p>If you want imports/exports: say “use ActiveX FileSystemObject”, not fs or modern Node.js.</p></li>
+<li><p>If you need CSV/Excel: say “use COM automation for Excel”, not external modules.</p></li>
+<li><p>Keep prompts specific: “list all Requirements in a package” vs “list elements”.</p></li>
+</ul>
+</section>
+<section id="summary" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">15.7</span> Summary</h2>
+<p>Prompt engineering is about <strong>teaching the AI your constraints</strong>. By making your requests precise (JScript ES3, DRY_RUN, .Count/.GetAt(i)), you ensure the generated scripts run correctly in EA. AI will often hallucinate modern JS features; your job is to correct them systematically using the patterns in this chapter.</p>
+<p>In the next chapter, we’ll explore <strong>Chapter 14 – AI as a Refactoring Partner</strong>: using AI to <em>improve existing scripts</em> by converting between languages, adding documentation headers, or reorganising code for readability and maintainability.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./14-System.Object[].html" class="pagination-link" aria-label="Chapter 13: Why AI Helps">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./16-System.Object[].html" class="pagination-link" aria-label="Chapter 15: AI Refactoring Partner">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu"># Chapter 14: Prompt Engineering</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>In the previous chapter, we saw how artificial intelligence can reduce</span>
+<span id="cb6-4"><a href="#cb6-4"></a>the blank-page barrier and accelerate scripting. But to get real value</span>
+<span id="cb6-5"><a href="#cb6-5"></a>from AI, you must learn how to **ask properly**. AI is like a very fast</span>
+<span id="cb6-6"><a href="#cb6-6"></a>but sometimes careless assistant. If you give vague instructions, it</span>
+<span id="cb6-7"><a href="#cb6-7"></a>will give vague or even dangerous results. If you provide precise,</span>
+<span id="cb6-8"><a href="#cb6-8"></a>structured prompts, it can generate highly usable code. This practice of</span>
+<span id="cb6-9"><a href="#cb6-9"></a>crafting inputs deliberately is called **prompt engineering**.</span>
+<span id="cb6-10"><a href="#cb6-10"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a>Prompt engineering is not about writing long, elaborate instructions. It</span>
+<span id="cb6-12"><a href="#cb6-12"></a>is about giving AI just enough context, constraints, and examples so</span>
+<span id="cb6-13"><a href="#cb6-13"></a>that the output is aligned with your needs. For Enterprise Architect</span>
+<span id="cb6-14"><a href="#cb6-14"></a>scripting, that means telling AI about the limitations of JScript ES3,</span>
+<span id="cb6-15"><a href="#cb6-15"></a>reminding it to use Update() and RefreshModelView(), and insisting on a</span>
+<span id="cb6-16"><a href="#cb6-16"></a>DRY_RUN flag.</span>
+<span id="cb6-17"><a href="#cb6-17"></a></span>
+<span id="cb6-18"><a href="#cb6-18"></a>This chapter introduces the art of prompt engineering for EA scripting.</span>
+<span id="cb6-19"><a href="#cb6-19"></a>It shows why generic prompts fail, what makes EA-specific prompts</span>
+<span id="cb6-20"><a href="#cb6-20"></a>different, and how to refine AI outputs safely. It also explains how to</span>
+<span id="cb6-21"><a href="#cb6-21"></a>build a library of reusable prompts, so you don’t have to reinvent the</span>
+<span id="cb6-22"><a href="#cb6-22"></a>wheel every time you need a script.</span>
+<span id="cb6-23"><a href="#cb6-23"></a></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="fu">## Why Prompt Engineering Matters</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a></span>
+<span id="cb6-26"><a href="#cb6-26"></a>AI models are generalists. They have been trained on vast amounts of</span>
+<span id="cb6-27"><a href="#cb6-27"></a>code and text, but they do not “know” Enterprise Architect in detail.</span>
+<span id="cb6-28"><a href="#cb6-28"></a>That means they will often produce code that looks plausible but does</span>
+<span id="cb6-29"><a href="#cb6-29"></a>not run in EA. For example, they may suggest forEach on a collection, or</span>
+<span id="cb6-30"><a href="#cb6-30"></a>JSON.parse, or modern JavaScript features that EA’s engine does not</span>
+<span id="cb6-31"><a href="#cb6-31"></a>support.</span>
+<span id="cb6-32"><a href="#cb6-32"></a></span>
+<span id="cb6-33"><a href="#cb6-33"></a>Without careful prompting, you get output that looks fine but fails</span>
+<span id="cb6-34"><a href="#cb6-34"></a>immediately. With careful prompting, you get output that respects EA’s</span>
+<span id="cb6-35"><a href="#cb6-35"></a>constraints and includes safety features. Prompt engineering makes the</span>
+<span id="cb6-36"><a href="#cb6-36"></a>difference between AI as a gimmick and AI as a practical assistant.</span>
+<span id="cb6-37"><a href="#cb6-37"></a></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="fu">### The Anatomy of a Good Prompt</span></span>
+<span id="cb6-39"><a href="#cb6-39"></a></span>
+<span id="cb6-40"><a href="#cb6-40"></a>A good prompt for EA scripting usually contains:</span>
+<span id="cb6-41"><a href="#cb6-41"></a></span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="ss">1.  </span>**Context**: make clear you are scripting inside Enterprise</span>
+<span id="cb6-43"><a href="#cb6-43"></a>    Architect using JScript ES3.</span>
+<span id="cb6-44"><a href="#cb6-44"></a></span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="ss">2.  </span>**Task**: what you want the script to do (e.g., rename requirements,</span>
+<span id="cb6-46"><a href="#cb6-46"></a>    export tags).</span>
+<span id="cb6-47"><a href="#cb6-47"></a></span>
+<span id="cb6-48"><a href="#cb6-48"></a><span class="ss">3.  </span>**Constraints**: what not to use (no let, no const, no forEach).</span>
+<span id="cb6-49"><a href="#cb6-49"></a></span>
+<span id="cb6-50"><a href="#cb6-50"></a><span class="ss">4.  </span>**Safety**: require DRY_RUN, logging, and comments.</span>
+<span id="cb6-51"><a href="#cb6-51"></a></span>
+<span id="cb6-52"><a href="#cb6-52"></a><span class="ss">5.  </span>**Format**: ask for a complete runnable script with comments, not</span>
+<span id="cb6-53"><a href="#cb6-53"></a>    just fragments.</span>
+<span id="cb6-54"><a href="#cb6-54"></a></span>
+<span id="cb6-55"><a href="#cb6-55"></a>For example:</span>
+<span id="cb6-56"><a href="#cb6-56"></a></span>
+<span id="cb6-57"><a href="#cb6-57"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-58"><a href="#cb6-58"></a>Write a JScript ES3 script for Sparx Enterprise Architect that traverses</span>
+<span id="cb6-59"><a href="#cb6-59"></a>the selected package, finds all Requirement elements, and prefixes their</span>
+<span id="cb6-60"><a href="#cb6-60"></a>names with “REQ<span class="sc">\_</span>”. Use .Count and .GetAt(i) loops, not modern JS</span>
+<span id="cb6-61"><a href="#cb6-61"></a>features. Include a DRY_RUN flag set to true by default, call Update()</span>
+<span id="cb6-62"><a href="#cb6-62"></a>for changes, and refresh the package at the end. Comment every step.</span>
+<span id="cb6-63"><a href="#cb6-63"></a>::: </span>
+<span id="cb6-64"><a href="#cb6-64"></a></span>
+<span id="cb6-65"><a href="#cb6-65"></a>This is a prompt that sets context, constraints, safety, and format.</span>
+<span id="cb6-66"><a href="#cb6-66"></a></span>
+<span id="cb6-67"><a href="#cb6-67"></a><span class="fu">### Iterative Prompting</span></span>
+<span id="cb6-68"><a href="#cb6-68"></a></span>
+<span id="cb6-69"><a href="#cb6-69"></a>Prompt engineering is rarely one-and-done. Often the first output will</span>
+<span id="cb6-70"><a href="#cb6-70"></a>be close but not perfect. That is normal. The trick is to **iterate**:</span>
+<span id="cb6-71"><a href="#cb6-71"></a></span>
+<span id="cb6-72"><a href="#cb6-72"></a><span class="ss">1.  </span>Run the script in dry-run mode.</span>
+<span id="cb6-73"><a href="#cb6-73"></a></span>
+<span id="cb6-74"><a href="#cb6-74"></a><span class="ss">2.  </span>If it fails, feed the error message back into AI: *“The error says</span>
+<span id="cb6-75"><a href="#cb6-75"></a>    ‘forEach is not a function’. Rewrite using .Count and .GetAt().”*</span>
+<span id="cb6-76"><a href="#cb6-76"></a></span>
+<span id="cb6-77"><a href="#cb6-77"></a><span class="ss">3.  </span>If it runs but misbehaves, clarify: *“The script renamed packages as</span>
+<span id="cb6-78"><a href="#cb6-78"></a>    well as requirements. Please filter only Elements of type</span>
+<span id="cb6-79"><a href="#cb6-79"></a>    Requirement.”*</span>
+<span id="cb6-80"><a href="#cb6-80"></a></span>
+<span id="cb6-81"><a href="#cb6-81"></a><span class="ss">4.  </span>Keep refining until the script is safe and correct.</span>
+<span id="cb6-82"><a href="#cb6-82"></a></span>
+<span id="cb6-83"><a href="#cb6-83"></a>This iterative loop is part of prompt engineering. You don’t expect</span>
+<span id="cb6-84"><a href="#cb6-84"></a>perfection in one shot; you treat AI as a partner who improves with</span>
+<span id="cb6-85"><a href="#cb6-85"></a>feedback.</span>
+<span id="cb6-86"><a href="#cb6-86"></a></span>
+<span id="cb6-87"><a href="#cb6-87"></a><span class="fu">### Prompt Templates</span></span>
+<span id="cb6-88"><a href="#cb6-88"></a></span>
+<span id="cb6-89"><a href="#cb6-89"></a>Over time, you will notice you reuse similar prompts. Instead of writing</span>
+<span id="cb6-90"><a href="#cb6-90"></a>them from scratch each time, build **prompt templates**. For example:</span>
+<span id="cb6-91"><a href="#cb6-91"></a></span>
+<span id="cb6-92"><a href="#cb6-92"></a><span class="ss">- </span>**Traversal template**: “Write a JScript ES3 script that traverses all</span>
+<span id="cb6-93"><a href="#cb6-93"></a>  elements in the selected package. Use .Count and .GetAt(). For each</span>
+<span id="cb6-94"><a href="#cb6-94"></a>  element, <span class="sc">\[</span>do something<span class="sc">\]</span>. Include DRY_RUN and logging.”</span>
+<span id="cb6-95"><a href="#cb6-95"></a></span>
+<span id="cb6-96"><a href="#cb6-96"></a><span class="ss">- </span>**Tagged value template**: “Write a JScript ES3 script that checks all</span>
+<span id="cb6-97"><a href="#cb6-97"></a>  elements of stereotype X in the selected package and ensures they have</span>
+<span id="cb6-98"><a href="#cb6-98"></a>  a tagged value Y with value Z. Add if missing. Include DRY_RUN,</span>
+<span id="cb6-99"><a href="#cb6-99"></a>  logging, and RefreshModelView.”</span>
+<span id="cb6-100"><a href="#cb6-100"></a></span>
+<span id="cb6-101"><a href="#cb6-101"></a><span class="ss">- </span>**Export template**: “Write a JScript ES3 script that exports all</span>
+<span id="cb6-102"><a href="#cb6-102"></a>  elements in the selected package to CSV. Include ElementID, GUID,</span>
+<span id="cb6-103"><a href="#cb6-103"></a>  Name, Type, and Stereotype. Use FileSystemObject, ANSI safe. Comment</span>
+<span id="cb6-104"><a href="#cb6-104"></a>  every step.”</span>
+<span id="cb6-105"><a href="#cb6-105"></a></span>
+<span id="cb6-106"><a href="#cb6-106"></a>By maintaining these prompt templates, you save time and improve</span>
+<span id="cb6-107"><a href="#cb6-107"></a>consistency.</span>
+<span id="cb6-108"><a href="#cb6-108"></a></span>
+<span id="cb6-109"><a href="#cb6-109"></a><span class="fu">### Guardrails in Prompts</span></span>
+<span id="cb6-110"><a href="#cb6-110"></a></span>
+<span id="cb6-111"><a href="#cb6-111"></a>Because EA is unforgiving (no undo, no rollback), guardrails are</span>
+<span id="cb6-112"><a href="#cb6-112"></a>essential. Your prompt should explicitly require:</span>
+<span id="cb6-113"><a href="#cb6-113"></a></span>
+<span id="cb6-114"><a href="#cb6-114"></a><span class="ss">- </span>DRY_RUN flag.</span>
+<span id="cb6-115"><a href="#cb6-115"></a></span>
+<span id="cb6-116"><a href="#cb6-116"></a><span class="ss">- </span>Update() on changes.</span>
+<span id="cb6-117"><a href="#cb6-117"></a></span>
+<span id="cb6-118"><a href="#cb6-118"></a><span class="ss">- </span>RefreshModelView() at the end.</span>
+<span id="cb6-119"><a href="#cb6-119"></a></span>
+<span id="cb6-120"><a href="#cb6-120"></a><span class="ss">- </span>Comments explaining each step.</span>
+<span id="cb6-121"><a href="#cb6-121"></a></span>
+<span id="cb6-122"><a href="#cb6-122"></a><span class="ss">- </span>Backward deletion loops when deleting.</span>
+<span id="cb6-123"><a href="#cb6-123"></a></span>
+<span id="cb6-124"><a href="#cb6-124"></a><span class="ss">- </span>Logs to Output or CSV.</span>
+<span id="cb6-125"><a href="#cb6-125"></a></span>
+<span id="cb6-126"><a href="#cb6-126"></a>Think of these as non-negotiable. If AI fails to include them, ask it to</span>
+<span id="cb6-127"><a href="#cb6-127"></a>add them.</span>
+<span id="cb6-128"><a href="#cb6-128"></a></span>
+<span id="cb6-129"><a href="#cb6-129"></a><span class="fu">### Prompting for Externals</span></span>
+<span id="cb6-130"><a href="#cb6-130"></a></span>
+<span id="cb6-131"><a href="#cb6-131"></a>Prompt engineering also applies when you use AI for external automation.</span>
+<span id="cb6-132"><a href="#cb6-132"></a>For example, you might ask for a Python script with pywin32 that</span>
+<span id="cb6-133"><a href="#cb6-133"></a>connects to EA. The same principles apply: specify language, COM,</span>
+<span id="cb6-134"><a href="#cb6-134"></a>bitness, safety, and logging.</span>
+<span id="cb6-135"><a href="#cb6-135"></a></span>
+<span id="cb6-136"><a href="#cb6-136"></a>For instance:</span>
+<span id="cb6-137"><a href="#cb6-137"></a></span>
+<span id="cb6-138"><a href="#cb6-138"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-139"><a href="#cb6-139"></a>*Write a Python 3 script using pywin32 to connect to EA. Traverse the</span>
+<span id="cb6-140"><a href="#cb6-140"></a>selected package and print element names. Ensure it checks bitness</span>
+<span id="cb6-141"><a href="#cb6-141"></a>(32-bit Python), and include error handling.*</span>
+<span id="cb6-142"><a href="#cb6-142"></a>::: </span>
+<span id="cb6-143"><a href="#cb6-143"></a></span>
+<span id="cb6-144"><a href="#cb6-144"></a>By being explicit, you avoid generic Python that won’t attach to EA.</span>
+<span id="cb6-145"><a href="#cb6-145"></a></span>
+<span id="cb6-146"><a href="#cb6-146"></a><span class="fu">### Common Prompting Mistakes</span></span>
+<span id="cb6-147"><a href="#cb6-147"></a></span>
+<span id="cb6-148"><a href="#cb6-148"></a>New users often make the following mistakes:</span>
+<span id="cb6-149"><a href="#cb6-149"></a></span>
+<span id="cb6-150"><a href="#cb6-150"></a><span class="ss">- </span>**Being vague**: *“Write a script to rename elements.”* (AI invents</span>
+<span id="cb6-151"><a href="#cb6-151"></a>  code with forEach.)</span>
+<span id="cb6-152"><a href="#cb6-152"></a></span>
+<span id="cb6-153"><a href="#cb6-153"></a><span class="ss">- </span>**Forgetting context**: not mentioning EA or JScript, so AI writes</span>
+<span id="cb6-154"><a href="#cb6-154"></a>  browser JavaScript.</span>
+<span id="cb6-155"><a href="#cb6-155"></a></span>
+<span id="cb6-156"><a href="#cb6-156"></a><span class="ss">- </span>**Skipping safety**: AI writes a script that modifies elements without</span>
+<span id="cb6-157"><a href="#cb6-157"></a>  dry-run.</span>
+<span id="cb6-158"><a href="#cb6-158"></a></span>
+<span id="cb6-159"><a href="#cb6-159"></a><span class="ss">- </span>**Accepting first output blindly**: running unsafe code in production.</span>
+<span id="cb6-160"><a href="#cb6-160"></a></span>
+<span id="cb6-161"><a href="#cb6-161"></a>Each of these can be avoided by careful prompting and iteration.</span>
+<span id="cb6-162"><a href="#cb6-162"></a></span>
+<span id="cb6-163"><a href="#cb6-163"></a><span class="fu">## Prompt Engineering as Team Practice</span></span>
+<span id="cb6-164"><a href="#cb6-164"></a></span>
+<span id="cb6-165"><a href="#cb6-165"></a>Prompt engineering is not just an individual skill. Teams can share</span>
+<span id="cb6-166"><a href="#cb6-166"></a>prompt libraries alongside script libraries. For example, store</span>
+<span id="cb6-167"><a href="#cb6-167"></a>templates in Git: one folder for prompts, one for scripts. This allows</span>
+<span id="cb6-168"><a href="#cb6-168"></a>consistency across a team and accelerates onboarding for new members.</span>
+<span id="cb6-169"><a href="#cb6-169"></a></span>
+<span id="cb6-170"><a href="#cb6-170"></a>Teams can also develop **governance prompts**: standard ways of asking</span>
+<span id="cb6-171"><a href="#cb6-171"></a>AI to generate scripts that align with organisational policies.</span>
+<span id="cb6-172"><a href="#cb6-172"></a></span>
+<span id="cb6-173"><a href="#cb6-173"></a><span class="fu">## AI Literacy for Modellers</span></span>
+<span id="cb6-174"><a href="#cb6-174"></a></span>
+<span id="cb6-175"><a href="#cb6-175"></a>Not every modeller will become a script writer. But every modeller can</span>
+<span id="cb6-176"><a href="#cb6-176"></a>benefit from AI literacy. Even if you don’t run the scripts yourself,</span>
+<span id="cb6-177"><a href="#cb6-177"></a>being able to ask AI for “the shape” of a script, review the comments,</span>
+<span id="cb6-178"><a href="#cb6-178"></a>and discuss it with colleagues adds value. Prompt engineering is</span>
+<span id="cb6-179"><a href="#cb6-179"></a>therefore not only for coders; it is part of the wider skillset of</span>
+<span id="cb6-180"><a href="#cb6-180"></a>modern architecture teams.</span>
+<span id="cb6-181"><a href="#cb6-181"></a></span>
+<span id="cb6-182"><a href="#cb6-182"></a><span class="fu">## Prompt Template</span></span>
+<span id="cb6-183"><a href="#cb6-183"></a></span>
+<span id="cb6-184"><a href="#cb6-184"></a>Here’s a reliable template you can use when asking AI to generate an EA</span>
+<span id="cb6-185"><a href="#cb6-185"></a>script:</span>
+<span id="cb6-186"><a href="#cb6-186"></a></span>
+<span id="cb6-187"><a href="#cb6-187"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-188"><a href="#cb6-188"></a>Write a script for Sparx Enterprise Architect using JScript (ES3 only,</span>
+<span id="cb6-189"><a href="#cb6-189"></a>no ES6 features).</span>
+<span id="cb6-190"><a href="#cb6-190"></a></span>
+<span id="cb6-191"><a href="#cb6-191"></a>Constraints:</span>
+<span id="cb6-192"><a href="#cb6-192"></a></span>
+<span id="cb6-193"><a href="#cb6-193"></a><span class="sc">\-</span> Use var (no let/const)</span>
+<span id="cb6-194"><a href="#cb6-194"></a></span>
+<span id="cb6-195"><a href="#cb6-195"></a><span class="sc">\-</span> EA collections use .Count and .GetAt(i)</span>
+<span id="cb6-196"><a href="#cb6-196"></a></span>
+<span id="cb6-197"><a href="#cb6-197"></a><span class="sc">\-</span> Use Session.Output for logging (not console.log)</span>
+<span id="cb6-198"><a href="#cb6-198"></a></span>
+<span id="cb6-199"><a href="#cb6-199"></a><span class="sc">\-</span> Always call Update() after modifying objects</span>
+<span id="cb6-200"><a href="#cb6-200"></a></span>
+<span id="cb6-201"><a href="#cb6-201"></a><span class="sc">\-</span> Include a DRY_RUN flag and verbose comments</span>
+<span id="cb6-202"><a href="#cb6-202"></a></span>
+<span id="cb6-203"><a href="#cb6-203"></a>Task: <span class="sc">\[</span>state the specific automation you want<span class="sc">\]</span></span>
+<span id="cb6-204"><a href="#cb6-204"></a>::: </span>
+<span id="cb6-205"><a href="#cb6-205"></a></span>
+<span id="cb6-206"><a href="#cb6-206"></a><span class="fu">## Examples</span></span>
+<span id="cb6-207"><a href="#cb6-207"></a></span>
+<span id="cb6-208"><a href="#cb6-208"></a><span class="fu">### List All Requirements</span></span>
+<span id="cb6-209"><a href="#cb6-209"></a></span>
+<span id="cb6-210"><a href="#cb6-210"></a><span class="fu">#### Prompt</span></span>
+<span id="cb6-211"><a href="#cb6-211"></a></span>
+<span id="cb6-212"><a href="#cb6-212"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-213"><a href="#cb6-213"></a>“Write an EA JScript that lists all requirements in a selected package.</span>
+<span id="cb6-214"><a href="#cb6-214"></a>ES3 only, no modern JS features. Include DRY_RUN and comments.”</span>
+<span id="cb6-215"><a href="#cb6-215"></a>::: </span>
+<span id="cb6-216"><a href="#cb6-216"></a></span>
+<span id="cb6-217"><a href="#cb6-217"></a><span class="fu">#### Raw AI Output (often wrong)</span></span>
+<span id="cb6-218"><a href="#cb6-218"></a><span class="in">``` .js</span></span>
+<span id="cb6-219"><a href="#cb6-219"></a><span class="co">// [x] Incorrect AI output</span></span>
+<span id="cb6-220"><a href="#cb6-220"></a></span>
+<span id="cb6-221"><a href="#cb6-221"></a><span class="kw">let</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb6-222"><a href="#cb6-222"></a></span>
+<span id="cb6-223"><a href="#cb6-223"></a><span class="cf">if</span> (<span class="op">!</span>pkg) { <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">"Select a package"</span>)<span class="op">;</span> }</span>
+<span id="cb6-224"><a href="#cb6-224"></a></span>
+<span id="cb6-225"><a href="#cb6-225"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">forEach</span>(e <span class="op">=</span>\<span class="op">&gt;</span> <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(e<span class="op">.</span><span class="at">Name</span>))<span class="op">;</span></span>
+<span id="cb6-226"><a href="#cb6-226"></a><span class="in">```</span></span>
+<span id="cb6-227"><a href="#cb6-227"></a>Problems:</span>
+<span id="cb6-228"><a href="#cb6-228"></a></span>
+<span id="cb6-229"><a href="#cb6-229"></a><span class="ss">- </span>let and arrow functions unsupported (ES3 only).</span>
+<span id="cb6-230"><a href="#cb6-230"></a></span>
+<span id="cb6-231"><a href="#cb6-231"></a><span class="ss">- </span>pkg.Elements is an EA collection, not an array (forEach will fail).</span>
+<span id="cb6-232"><a href="#cb6-232"></a></span>
+<span id="cb6-233"><a href="#cb6-233"></a><span class="ss">- </span>console.log doesn’t exist in EA (use Session.Output).</span>
+<span id="cb6-234"><a href="#cb6-234"></a></span>
+<span id="cb6-235"><a href="#cb6-235"></a><span class="fu">#### Corrected Script</span></span>
+<span id="cb6-236"><a href="#cb6-236"></a><span class="in">```{.js filename="Example 14.1 - ListRequirements.js – JScript (ES3)"}</span></span>
+<span id="cb6-237"><a href="#cb6-237"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-238"><a href="#cb6-238"></a><span class="co">// Example 14.1 - ListRequirements.js – JScript (ES3)</span></span>
+<span id="cb6-239"><a href="#cb6-239"></a><span class="co">// Purpose: List all Requirement elements in selected package</span></span>
+<span id="cb6-240"><a href="#cb6-240"></a><span class="co">// Safety: DRY_RUN pattern included (though not needed for read-only)</span></span>
+<span id="cb6-241"><a href="#cb6-241"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-242"><a href="#cb6-242"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb6-243"><a href="#cb6-243"></a></span>
+<span id="cb6-244"><a href="#cb6-244"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb6-245"><a href="#cb6-245"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> <span class="co">// Included for consistency</span></span>
+<span id="cb6-246"><a href="#cb6-246"></a></span>
+<span id="cb6-247"><a href="#cb6-247"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb6-248"><a href="#cb6-248"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) {</span>
+<span id="cb6-249"><a href="#cb6-249"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package first."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb6-250"><a href="#cb6-250"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-251"><a href="#cb6-251"></a>    }</span>
+<span id="cb6-252"><a href="#cb6-252"></a></span>
+<span id="cb6-253"><a href="#cb6-253"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb6-254"><a href="#cb6-254"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb6-255"><a href="#cb6-255"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-256"><a href="#cb6-256"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Type</span> <span class="op">==</span> <span class="st">"Requirement"</span>) {</span>
+<span id="cb6-257"><a href="#cb6-257"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Requirement: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" (ID="</span> <span class="op">+</span> e<span class="op">.</span><span class="at">ElementID</span> <span class="op">+</span> <span class="st">")"</span>)<span class="op">;</span></span>
+<span id="cb6-258"><a href="#cb6-258"></a>        }</span>
+<span id="cb6-259"><a href="#cb6-259"></a>    }</span>
+<span id="cb6-260"><a href="#cb6-260"></a>}</span>
+<span id="cb6-261"><a href="#cb6-261"></a></span>
+<span id="cb6-262"><a href="#cb6-262"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb6-263"><a href="#cb6-263"></a><span class="in">```</span></span>
+<span id="cb6-264"><a href="#cb6-264"></a></span>
+<span id="cb6-265"><a href="#cb6-265"></a><span class="fu">### Bulk Prefix Naming</span></span>
+<span id="cb6-266"><a href="#cb6-266"></a></span>
+<span id="cb6-267"><a href="#cb6-267"></a><span class="fu">#### Prompt</span></span>
+<span id="cb6-268"><a href="#cb6-268"></a></span>
+<span id="cb6-269"><a href="#cb6-269"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-270"><a href="#cb6-270"></a>“Write an EA JScript that renames all elements in a package by adding</span>
+<span id="cb6-271"><a href="#cb6-271"></a>prefix ‘SYS<span class="sc">\_</span>’. ES3 only, no modern JS features. Include DRY_RUN,</span>
+<span id="cb6-272"><a href="#cb6-272"></a>logging, and RefreshModelView.”</span>
+<span id="cb6-273"><a href="#cb6-273"></a>::: </span>
+<span id="cb6-274"><a href="#cb6-274"></a></span>
+<span id="cb6-275"><a href="#cb6-275"></a><span class="fu">#### Corrected Script</span></span>
+<span id="cb6-276"><a href="#cb6-276"></a><span class="in">```{.js filename="14.2 - BulkPrefixRename.js – JScript (ES3)"}</span></span>
+<span id="cb6-277"><a href="#cb6-277"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-278"><a href="#cb6-278"></a><span class="co">// Example 14.2 - BulkPrefixRename.js – JScript (ES3)</span></span>
+<span id="cb6-279"><a href="#cb6-279"></a><span class="co">// Purpose: Add 'SYS_' prefix to element names in a selected package</span></span>
+<span id="cb6-280"><a href="#cb6-280"></a><span class="co">// Safety: DRY_RUN prevents accidental renaming</span></span>
+<span id="cb6-281"><a href="#cb6-281"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-282"><a href="#cb6-282"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb6-283"><a href="#cb6-283"></a></span>
+<span id="cb6-284"><a href="#cb6-284"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb6-285"><a href="#cb6-285"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb6-286"><a href="#cb6-286"></a>    <span class="kw">var</span> PREFIX <span class="op">=</span> <span class="st">"SYS_"</span><span class="op">;</span></span>
+<span id="cb6-287"><a href="#cb6-287"></a></span>
+<span id="cb6-288"><a href="#cb6-288"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb6-289"><a href="#cb6-289"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) { Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb6-290"><a href="#cb6-290"></a></span>
+<span id="cb6-291"><a href="#cb6-291"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb6-292"><a href="#cb6-292"></a>    <span class="kw">var</span> changed<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-293"><a href="#cb6-293"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb6-294"><a href="#cb6-294"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-295"><a href="#cb6-295"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Name</span><span class="op">.</span><span class="fu">indexOf</span>(PREFIX) <span class="op">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb6-296"><a href="#cb6-296"></a>            <span class="kw">var</span> newName <span class="op">=</span> PREFIX <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span><span class="op">;</span></span>
+<span id="cb6-297"><a href="#cb6-297"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would rename: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" → "</span> <span class="op">+</span> newName)<span class="op">;</span></span>
+<span id="cb6-298"><a href="#cb6-298"></a>            <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) {</span>
+<span id="cb6-299"><a href="#cb6-299"></a>                e<span class="op">.</span><span class="at">Name</span> <span class="op">=</span> newName<span class="op">;</span></span>
+<span id="cb6-300"><a href="#cb6-300"></a>                e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb6-301"><a href="#cb6-301"></a>                changed<span class="op">++;</span></span>
+<span id="cb6-302"><a href="#cb6-302"></a>            }</span>
+<span id="cb6-303"><a href="#cb6-303"></a>        }</span>
+<span id="cb6-304"><a href="#cb6-304"></a>    }</span>
+<span id="cb6-305"><a href="#cb6-305"></a>    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN <span class="op">&amp;&amp;</span> changed<span class="op">&gt;</span><span class="dv">0</span>) Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb6-306"><a href="#cb6-306"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Processed "</span> <span class="op">+</span> els<span class="op">.</span><span class="at">Count</span> <span class="op">+</span> <span class="st">" elements, changed "</span> <span class="op">+</span> changed)<span class="op">;</span></span>
+<span id="cb6-307"><a href="#cb6-307"></a>}</span>
+<span id="cb6-308"><a href="#cb6-308"></a></span>
+<span id="cb6-309"><a href="#cb6-309"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb6-310"><a href="#cb6-310"></a><span class="in">```</span></span>
+<span id="cb6-311"><a href="#cb6-311"></a></span>
+<span id="cb6-312"><a href="#cb6-312"></a><span class="fu">### Add a Tagged Value with Defaults</span></span>
+<span id="cb6-313"><a href="#cb6-313"></a></span>
+<span id="cb6-314"><a href="#cb6-314"></a><span class="fu">#### Prompt</span></span>
+<span id="cb6-315"><a href="#cb6-315"></a></span>
+<span id="cb6-316"><a href="#cb6-316"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-317"><a href="#cb6-317"></a>“Write an EA JScript that ensures all elements in a package have a</span>
+<span id="cb6-318"><a href="#cb6-318"></a>tagged value ‘Owner=ArchitectureTeam’. ES3 only, no modern JS features.</span>
+<span id="cb6-319"><a href="#cb6-319"></a>DRY_RUN and comments required.”</span>
+<span id="cb6-320"><a href="#cb6-320"></a>::: </span>
+<span id="cb6-321"><a href="#cb6-321"></a></span>
+<span id="cb6-322"><a href="#cb6-322"></a><span class="fu">#### Corrected Script</span></span>
+<span id="cb6-323"><a href="#cb6-323"></a><span class="in">```{.js filename="Example 14.3 - EnsureTag_Owner.js – JScript (ES3)"}</span></span>
+<span id="cb6-324"><a href="#cb6-324"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-325"><a href="#cb6-325"></a><span class="co">// Example 14.3 - EnsureTag_Owner.js – JScript (ES3)</span></span>
+<span id="cb6-326"><a href="#cb6-326"></a><span class="co">// Purpose: Add/update tagged value 'Owner=ArchitectureTeam' for all elements</span></span>
+<span id="cb6-327"><a href="#cb6-327"></a><span class="co">// Safety: DRY_RUN flag enabled</span></span>
+<span id="cb6-328"><a href="#cb6-328"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-329"><a href="#cb6-329"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb6-330"><a href="#cb6-330"></a></span>
+<span id="cb6-331"><a href="#cb6-331"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb6-332"><a href="#cb6-332"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb6-333"><a href="#cb6-333"></a>    <span class="kw">var</span> TAG_NAME <span class="op">=</span> <span class="st">"Owner"</span><span class="op">;</span></span>
+<span id="cb6-334"><a href="#cb6-334"></a>    <span class="kw">var</span> TAG_VALUE <span class="op">=</span> <span class="st">"ArchitectureTeam"</span><span class="op">;</span></span>
+<span id="cb6-335"><a href="#cb6-335"></a></span>
+<span id="cb6-336"><a href="#cb6-336"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb6-337"><a href="#cb6-337"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-338"><a href="#cb6-338"></a></span>
+<span id="cb6-339"><a href="#cb6-339"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb6-340"><a href="#cb6-340"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb6-341"><a href="#cb6-341"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-342"><a href="#cb6-342"></a>        <span class="kw">var</span> tags <span class="op">=</span> e<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb6-343"><a href="#cb6-343"></a>        <span class="kw">var</span> found <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb6-344"><a href="#cb6-344"></a></span>
+<span id="cb6-345"><a href="#cb6-345"></a>        <span class="cf">for</span> (<span class="kw">var</span> j<span class="op">=</span><span class="dv">0</span><span class="op">;</span> j<span class="op">&lt;</span>tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb6-346"><a href="#cb6-346"></a>            <span class="kw">var</span> t <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(j)<span class="op">;</span></span>
+<span id="cb6-347"><a href="#cb6-347"></a>            <span class="cf">if</span> (t<span class="op">.</span><span class="at">Name</span> <span class="op">==</span> TAG_NAME) {</span>
+<span id="cb6-348"><a href="#cb6-348"></a>                found <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb6-349"><a href="#cb6-349"></a>                <span class="cf">if</span> (t<span class="op">.</span><span class="at">Value</span> <span class="op">!=</span> TAG_VALUE) {</span>
+<span id="cb6-350"><a href="#cb6-350"></a>                    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would update tag for "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb6-351"><a href="#cb6-351"></a>                    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) { t<span class="op">.</span><span class="at">Value</span> <span class="op">=</span> TAG_VALUE<span class="op">;</span> t<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> }</span>
+<span id="cb6-352"><a href="#cb6-352"></a>                }</span>
+<span id="cb6-353"><a href="#cb6-353"></a>            }</span>
+<span id="cb6-354"><a href="#cb6-354"></a>        }</span>
+<span id="cb6-355"><a href="#cb6-355"></a></span>
+<span id="cb6-356"><a href="#cb6-356"></a>        <span class="cf">if</span> (<span class="op">!</span>found) {</span>
+<span id="cb6-357"><a href="#cb6-357"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would add tag for "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb6-358"><a href="#cb6-358"></a>            <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) {</span>
+<span id="cb6-359"><a href="#cb6-359"></a>                <span class="kw">var</span> nt <span class="op">=</span> tags<span class="op">.</span><span class="fu">AddNew</span>(TAG_NAME<span class="op">,</span> TAG_VALUE)<span class="op">;</span></span>
+<span id="cb6-360"><a href="#cb6-360"></a>                nt<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb6-361"><a href="#cb6-361"></a>            }</span>
+<span id="cb6-362"><a href="#cb6-362"></a>        }</span>
+<span id="cb6-363"><a href="#cb6-363"></a>    }</span>
+<span id="cb6-364"><a href="#cb6-364"></a>    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb6-365"><a href="#cb6-365"></a>}</span>
+<span id="cb6-366"><a href="#cb6-366"></a></span>
+<span id="cb6-367"><a href="#cb6-367"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb6-368"><a href="#cb6-368"></a><span class="in">```</span></span>
+<span id="cb6-369"><a href="#cb6-369"></a><span class="fu">### Safe Delete</span></span>
+<span id="cb6-370"><a href="#cb6-370"></a></span>
+<span id="cb6-371"><a href="#cb6-371"></a><span class="fu">#### Prompt</span></span>
+<span id="cb6-372"><a href="#cb6-372"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb6-373"><a href="#cb6-373"></a>“Write an EA JScript that deletes all UseCase elements in a package. ES3</span>
+<span id="cb6-374"><a href="#cb6-374"></a>only, DRY_RUN by default, with logging.”</span>
+<span id="cb6-375"><a href="#cb6-375"></a>:::</span>
+<span id="cb6-376"><a href="#cb6-376"></a>Corrected Script</span>
+<span id="cb6-377"><a href="#cb6-377"></a><span class="in">```{.js filename="Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)"}</span></span>
+<span id="cb6-378"><a href="#cb6-378"></a>“Write an EA JScript that deletes all UseCase elements <span class="kw">in</span> a <span class="im">package</span><span class="op">.</span> <span class="at">ES3</span> only<span class="op">,</span> DRY_RUN by <span class="im">default</span><span class="op">,</span> <span class="cf">with</span> logging<span class="op">.</span><span class="at">”</span></span>
+<span id="cb6-379"><a href="#cb6-379"></a>Corrected Script</span>
+<span id="cb6-380"><a href="#cb6-380"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-381"><a href="#cb6-381"></a><span class="co">// Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)</span></span>
+<span id="cb6-382"><a href="#cb6-382"></a><span class="co">// Purpose: Delete all UseCase elements in a package</span></span>
+<span id="cb6-383"><a href="#cb6-383"></a><span class="co">// Safety: DRY_RUN by default; logs each candidate</span></span>
+<span id="cb6-384"><a href="#cb6-384"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-385"><a href="#cb6-385"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb6-386"><a href="#cb6-386"></a></span>
+<span id="cb6-387"><a href="#cb6-387"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb6-388"><a href="#cb6-388"></a>    <span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb6-389"><a href="#cb6-389"></a>    <span class="kw">var</span> TYPE_FILTER <span class="op">=</span> <span class="st">"UseCase"</span><span class="op">;</span></span>
+<span id="cb6-390"><a href="#cb6-390"></a></span>
+<span id="cb6-391"><a href="#cb6-391"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb6-392"><a href="#cb6-392"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-393"><a href="#cb6-393"></a></span>
+<span id="cb6-394"><a href="#cb6-394"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb6-395"><a href="#cb6-395"></a>    <span class="kw">var</span> deleted<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-396"><a href="#cb6-396"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span>els<span class="op">.</span><span class="at">Count</span><span class="op">-</span><span class="dv">1</span><span class="op">;</span> i<span class="op">&gt;=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">--</span>) { <span class="co">// iterate backwards</span></span>
+<span id="cb6-397"><a href="#cb6-397"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-398"><a href="#cb6-398"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Type</span> <span class="op">==</span> TYPE_FILTER) {</span>
+<span id="cb6-399"><a href="#cb6-399"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Would delete: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb6-400"><a href="#cb6-400"></a>            <span class="cf">if</span> (<span class="op">!</span>DRY_RUN) {</span>
+<span id="cb6-401"><a href="#cb6-401"></a>                els<span class="op">.</span><span class="fu">DeleteAt</span>(i<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span> <span class="co">// false = don’t refresh each time</span></span>
+<span id="cb6-402"><a href="#cb6-402"></a>                deleted<span class="op">++;</span></span>
+<span id="cb6-403"><a href="#cb6-403"></a>            }</span>
+<span id="cb6-404"><a href="#cb6-404"></a>        }</span>
+<span id="cb6-405"><a href="#cb6-405"></a>    }</span>
+<span id="cb6-406"><a href="#cb6-406"></a>    <span class="cf">if</span> (<span class="op">!</span>DRY_RUN <span class="op">&amp;&amp;</span> deleted<span class="op">&gt;</span><span class="dv">0</span>) Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb6-407"><a href="#cb6-407"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Candidates: "</span> <span class="op">+</span> els<span class="op">.</span><span class="at">Count</span> <span class="op">+</span> <span class="st">" Deleted: "</span> <span class="op">+</span> deleted <span class="op">+</span> <span class="st">" Dry-run="</span> <span class="op">+</span> DRY_RUN)<span class="op">;</span></span>
+<span id="cb6-408"><a href="#cb6-408"></a>}</span>
+<span id="cb6-409"><a href="#cb6-409"></a></span>
+<span id="cb6-410"><a href="#cb6-410"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb6-411"><a href="#cb6-411"></a><span class="in">```</span></span>
+<span id="cb6-412"><a href="#cb6-412"></a></span>
+<span id="cb6-413"><a href="#cb6-413"></a><span class="fu">## Best Practices for Prompts</span></span>
+<span id="cb6-414"><a href="#cb6-414"></a></span>
+<span id="cb6-415"><a href="#cb6-415"></a><span class="ss">- </span>Always say: “EA JScript (ES3 only, no modern JS features)”.</span>
+<span id="cb6-416"><a href="#cb6-416"></a></span>
+<span id="cb6-417"><a href="#cb6-417"></a><span class="ss">- </span>Always request: DRY_RUN flag, verbose comments, and RefreshModelView.</span>
+<span id="cb6-418"><a href="#cb6-418"></a></span>
+<span id="cb6-419"><a href="#cb6-419"></a><span class="ss">- </span>If you want imports/exports: say “use ActiveX FileSystemObject”, not</span>
+<span id="cb6-420"><a href="#cb6-420"></a>  fs or modern Node.js.</span>
+<span id="cb6-421"><a href="#cb6-421"></a></span>
+<span id="cb6-422"><a href="#cb6-422"></a><span class="ss">- </span>If you need CSV/Excel: say “use COM automation for Excel”, not</span>
+<span id="cb6-423"><a href="#cb6-423"></a>  external modules.</span>
+<span id="cb6-424"><a href="#cb6-424"></a></span>
+<span id="cb6-425"><a href="#cb6-425"></a><span class="ss">- </span>Keep prompts specific: “list all Requirements in a package” vs “list</span>
+<span id="cb6-426"><a href="#cb6-426"></a>  elements”.</span>
+<span id="cb6-427"><a href="#cb6-427"></a></span>
+<span id="cb6-428"><a href="#cb6-428"></a><span class="fu">## Summary</span></span>
+<span id="cb6-429"><a href="#cb6-429"></a></span>
+<span id="cb6-430"><a href="#cb6-430"></a>Prompt engineering is about **teaching the AI your constraints**. By</span>
+<span id="cb6-431"><a href="#cb6-431"></a>making your requests precise (JScript ES3, DRY_RUN, .Count/.GetAt(i)),</span>
+<span id="cb6-432"><a href="#cb6-432"></a>you ensure the generated scripts run correctly in EA. AI will often</span>
+<span id="cb6-433"><a href="#cb6-433"></a>hallucinate modern JS features; your job is to correct them</span>
+<span id="cb6-434"><a href="#cb6-434"></a>systematically using the patterns in this chapter.</span>
+<span id="cb6-435"><a href="#cb6-435"></a></span>
+<span id="cb6-436"><a href="#cb6-436"></a>In the next chapter, we’ll explore **Chapter 14 – AI as a Refactoring</span>
+<span id="cb6-437"><a href="#cb6-437"></a>Partner**: using AI to *improve existing scripts* by converting between</span>
+<span id="cb6-438"><a href="#cb6-438"></a>languages, adding documentation headers, or reorganising code for</span>
+<span id="cb6-439"><a href="#cb6-439"></a>readability and maintainability.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

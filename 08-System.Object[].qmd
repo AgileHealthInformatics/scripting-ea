@@ -1,0 +1,839 @@
+# Chapter 7: Script Design Patterns
+
+When you first begin scripting in Enterprise Architect, the process
+feels like a series of one-off solutions. You need to rename a batch of
+elements, so you write a loop. You want to add a tagged value
+everywhere, so you copy and tweak the loop. You need to enforce a naming
+convention, so you adjust the loop again. Each script solves the
+immediate problem but looks and feels slightly different from the last.
+After a while, you realise you are writing the same structural code over
+and over, just with small changes in logic.
+
+This is not accidental. EA scripting tasks fall into recurring shapes.
+Recognising these shapes and naming them as **design patterns** gives
+you a powerful advantage. Instead of starting from scratch each time,
+you select the right pattern and plug in your task-specific logic.
+Patterns make scripts **shorter, safer, and more consistent**. They also
+make it easier to share code with colleagues, because everyone
+recognises the pattern being used.
+
+This chapter introduces a handful of design patterns that cover the
+majority of practical EA scripting needs. They are not patterns in the
+object-oriented sense of Singleton or Observer, but scripting patterns
+tuned to the EA environment. Each one addresses a class of problems —
+traversing and filtering elements, applying changes in two phases,
+propagating metadata, checking quality. Once you master them, scripting
+EA becomes less about inventing and more about assembling known patterns
+into solutions.
+
+## Why Patterns Matter
+
+The first reason to adopt patterns is **safety**. Many script errors
+arise because someone hand-coded a loop in haste, forgot to check
+ObjectType, or failed to include Update(). A pattern encapsulates safe
+practices — dry-run flags, logging, backwards deletion, UI refreshes —
+so you don’t have to remember them each time.
+
+The second reason is **productivity**. A good pattern reduces
+boilerplate. You can focus on what the script should *do*, rather than
+how to set up the loop. For example, the Find/Filter/Apply pattern sets
+up traversal for you; you just provide the filter condition and the
+apply logic.
+
+The third reason is **communication**. When you share a script with a
+colleague and they see it follows a known pattern, they can understand
+it quickly. It creates a shared vocabulary: “oh, this is a
+Curate-then-Write script” means more than “this is some code that loops
+twice.”
+
+## Examples
+
+### Shared Helper
+
+Drop this small helper library in your script group (e.g.,
+“\\_Common\\Helpers.js”) and !INC it from each script.
+
+```{.js filename="Example 7.1 - Helpers.js (JScript ES3) – Common utility helpers"}
+// -------------------------------------------------------
+// Example 7.1 - Helpers.js (JScript ES3) – Common utility helpers
+// Purpose: Logging, safety utilities, folder picker, CSV writer
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+// ---- Safety & string helpers (ES3) ----
+function isNil(x) { return x === null || x === undefined; }
+function trim(s) { return isNil(s) ? "" : String(s).replace(/^\s+|\s+$/g, ""); }
+function equalsIgnoreCase(a, b) { return String(a||"").toLowerCase() == String(b||"").toLowerCase(); }
+function startsWith(s, p) { return String(s||"").indexOf(p) === 0; }
+function contains(s, sub) { return String(s||"").indexOf(sub) !== -1; }
+
+// ---- Output tab management ----
+function ensureOutputTab(name) {
+    try { Repository.CreateOutputTab(name); } catch(e) {}
+    try { Repository.ClearOutput(name); } catch(e) {}
+    try { Repository.EnsureOutputVisible(name); } catch(e) {}
+}
+function log(tab, msg) { Session.Output("[" + tab + "] " + msg); }
+
+// ---- Folder picker (directory only; no file names) ----
+function browseForFolder(promptText) {
+    // Shell.BrowseForFolder is reliable and does *directory only*
+    var shell = new ActiveXObject("Shell.Application");
+    var folder = shell.BrowseForFolder(0, promptText, 0, 0);
+    if (!folder) return null;
+    // Ensure plain path (Self.Path)
+    return folder.Self.Path;
+}
+
+// ---- CSV writer (append; creates file on first write) ----
+function CsvWriter(path) {
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var file = null;
+    function openAppend() {
+// 8 = ForAppending, 2 = TristateTrue (Unicode); EA often prefers ANSI, so use default
+// (TristateFalse=0)
+// We'll stick with default encoding for broader compatibility.
+        file = fso.OpenTextFile(path, 8, true);
+    }
+    this.writeHeader = function(headerLine) {
+        if (!file) openAppend();
+        file.WriteLine(headerLine);
+    };
+    this.writeRow = function(arr) {
+        if (!file) openAppend();
+        var i, out = "";
+        for (i=0; i<arr.length; i++) {
+            var cell = String(arr[i]).replace(/"/g, '""');   // escape quotes
+            if (contains(cell, ",") || contains(cell, "\"") ) {
+                out += "\"" + cell + "\"";
+            } else {
+                out += cell;
+            }
+            if (i < arr.length - 1) out += ",";
+        }
+        file.WriteLine(out);
+    };
+    this.close = function() { if (file) file.Close(); };
+}
+
+// ---- Timing helper ----
+function nowMs() { 
+  return (new Date()).getTime(); 
+  }
+```
+
+
+### Pattern 1 – Find / Filter / Apply
+
+The most common pattern in EA scripting is:
+
+1.  **Find** a collection of items (elements, connectors, diagrams).
+
+2.  **Filter** them based on conditions (type, stereotype, missing tag).
+
+3.  **Apply** an action (rename, add tag, log).
+
+This pattern underlies most governance checks and batch updates. It is
+safe, scalable, and easy to extend. You will see many examples in this
+chapter where the Find/Filter/Apply loop is the skeleton on which the
+logic hangs.
+
+**When to use:** bulk changes with clear criteria (e.g. rename, retag,
+stereotype changes).  
+Why: separates selection from action; an easy, safe mental model.
+
+```{.js filename="Example 7.2 - Pattern1_FindFilterApply.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 7.2 - Pattern1_FindFilterApply.js – JScript (ES3)
+// Purpose: Demonstrates Find/Filter/Apply on elements in a selected package
+// Usage: Select a package → run script. Uses dry-run by default.
+// Assumptions:
+// - ES3 only; EA collections require Count/GetAt(i)
+// - No modern JS features
+// Parameters: adjust TYPE_FILTER / NAME_PREFIX to your needs
+// Dependencies: Helpers.js (browseForFolder, CsvWriter, logging)
+// Update history: 1.0 initial
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "FindFilterApply";
+    ensureOutputTab(TAB);
+
+    // ---- Config ----
+    var DRY_RUN = true;                 // switch to false to commit
+    var TYPE_FILTER = "Class";          // only operate on these element types (e.g., "Requirement", "Capability")
+    var NAME_PREFIX = "ARCH_";          // example change: ensure name has this prefix
+    var WRITE_CSV = true;
+
+    // ---- Context ----
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Please select a package.", promptOK); return; }
+
+    log(TAB, "Selected package: " + pkg.Name + " (ID " + pkg.PackageID + ")");
+    var t0 = nowMs();
+
+    // ---- CSV setup (directory-only; no filename prompts) ----
+    var csv = null;
+    if (WRITE_CSV) {
+        var dir = browseForFolder("Select output folder for log CSV (directory only):");
+        if (dir) {
+            var stamp = (new Date()).getTime();
+            var outPath = dir + "\\pattern1_find_filter_apply_" + stamp + ".csv";
+            csv = new CsvWriter(outPath);
+            csv.writeHeader("ElementID,GUID,OldName,NewName,Type,Action");
+            log(TAB, "Logging to: " + outPath);
+        } else {
+            log(TAB, "No folder selected; CSV logging disabled.");
+        }
+    }
+
+    // ---- Find & filter ----
+    var targets = [];
+    var elements = pkg.Elements;
+    var i;
+    for (i=0; i<elements.Count; i++) {
+        var el = elements.GetAt(i);
+        if (!equalsIgnoreCase(el.Type, TYPE_FILTER)) continue;
+
+        // Filter condition: name missing prefix
+        var hasPrefix = startsWith(el.Name, NAME_PREFIX);
+        if (!hasPrefix) targets.push(el);
+    }
+    log(TAB, "Found " + targets.length + " target(s).");
+
+    // ---- Apply ----
+    var changed = 0;
+    for (i=0; i<targets.length; i++) {
+        var e = targets[i];
+        var oldName = e.Name;
+        var newName = NAME_PREFIX + oldName;
+
+        if (csv) csv.writeRow([e.ElementID, e.ElementGUID, oldName, newName, e.Type, (DRY_RUN? "DRY-RUN" : "RENAME")]);
+
+        if (!DRY_RUN) {
+            e.Name = newName;
+            e.Update(); // persist
+        }
+        changed++;
+    }
+
+    // Refresh UI if we wrote changes
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(pkg.PackageID);
+
+    var dt = nowMs() - t0;
+    log(TAB, "Changed " + changed + " / " + targets.length + " target(s). Dry-run=" + DRY_RUN + ". Time=" + dt + "ms");
+
+    if (csv) csv.close();
+}
+
+main();
+```
+
+### Pattern 2 – Curate-then-Write (2-Phase Updates)
+
+Sometimes you cannot safely update as you go. Perhaps you want to check
+what will change before actually changing it. Perhaps you want to let a
+governance board review the list before updates are applied.
+
+The **Curate-then-Write** pattern solves this by splitting the process
+into two phases:
+
+1.  **Curate** — gather and log the items that *would* be changed
+    (always with DRY_RUN).
+
+2.  **Write** — only later, with approval, run the script again with
+    changes applied.
+
+This pattern reduces risk and increases confidence. It mirrors the
+dry-run principle, but formalises it into a workflow.
+
+**When to use:** risky or large updates. First produce a **reviewable
+CSV**, then run again to apply.  
+**Why:** EA has no transactions; curate first to avoid irreversible bulk
+mistakes.
+
+```{.js filename="Example 7.3 - Pattern1_FindFilterApply.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 7.3 - Pattern2_CurateThenWrite.js – JScript (ES3)
+// Purpose: Phase 1 = produce CSV for review; Phase 2 = read curated CSV and apply
+// Usage:
+//  - Phase 1: set MODE="export" → generates CSV with proposed changes
+//  - Review/edit the CSV (approve rows by setting Apply=YES)
+//  - Phase 2: set MODE="apply"  → reads CSV and applies only approved rows
+// Assumptions:
+//  - ES3 only; CSV written in ANSI for broad compatibility
+//  - Directory chooser only (no filename prompts)
+// Dependencies: Helpers.js
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "CurateThenWrite";
+    ensureOutputTab(TAB);
+
+    // ---- Config ----
+    var MODE = "export";          // "export" or "apply"
+    var TYPE_FILTER = "Requirement";
+    var PROPOSED_STATUS = "Approved";
+
+    if (MODE == "export") return exportPhase(TAB, TYPE_FILTER, PROPOSED_STATUS);
+    if (MODE == "apply")  return applyPhase(TAB);
+    Session.Prompt("Unknown MODE. Use 'export' or 'apply'.", promptOK);
+}
+
+function exportPhase(TAB, TYPE_FILTER, PROPOSED_STATUS) {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var dir = browseForFolder("Select output folder for curation CSV:");
+    if (!dir) { log(TAB, "Cancelled."); return; }
+
+    var stamp = (new Date()).getTime();
+    var path = dir + "\\pattern2_curate_export_" + stamp + ".csv";
+    var csv = new CsvWriter(path);
+    csv.writeHeader("Apply,ElementID,GUID,Name,Type,CurrentStatus,ProposedStatus,Notes");
+
+    var i, elements = pkg.Elements;
+    var exported = 0;
+    for (i=0; i<elements.Count; i++) {
+        var e = elements.GetAt(i);
+        if (!equalsIgnoreCase(e.Type, TYPE_FILTER)) continue;
+        // Propose: set Status to PROPOSED_STATUS
+        csv.writeRow(["NO", e.ElementID, e.ElementGUID, e.Name, e.Type, e.Status, PROPOSED_STATUS, "Set to Approved if meets criteria X"]);
+        exported++;
+    }
+    csv.close();
+    log(TAB, "Wrote " + exported + " row(s) to " + path + ". Review and change 'Apply' to YES where appropriate.");
+}
+
+function applyPhase(TAB) {
+    // Directory-only input: we’ll look for a single CSV file in the chosen folder by pattern.
+    var dir = browseForFolder("Select folder that contains curated CSV (pattern2_curate_export_*.csv):");
+    if (!dir) { log(TAB, "Cancelled."); return; }
+
+    // Very simple scan for the newest curated CSV file
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var folder = fso.GetFolder(dir);
+    var en = new Enumerator(folder.Files);
+    var newest = null, newestTime = 0;
+    for (; !en.atEnd(); en.moveNext()) {
+        var file = en.item();
+        if (contains(file.Name, "pattern2_curate_export_") && endsWith(file.Name, ".csv")) {
+            if (file.DateLastModified.getTime() > newestTime) {
+                newest = file; newestTime = file.DateLastModified.getTime();
+            }
+        }
+    }
+    if (!newest) { log(TAB, "No curated CSV found."); return; }
+    log(TAB, "Applying from: " + newest.Path);
+
+    // Read CSV line by line (very simple parser; assumes no commas in unquoted cells)
+    var ts = fso.OpenTextFile(newest.Path, 1); // ForReading
+    // Skip header
+    if (!ts.AtEndOfStream) ts.ReadLine();
+
+    var applied = 0, considered = 0;
+    while (!ts.AtEndOfStream) {
+        var line = ts.ReadLine();
+        var cells = line.split(",");
+        if (cells.length < 8) continue;
+        var apply = trim(cells[0]);
+        var elementID = parseInt(cells[1], 10);
+        var proposedStatus = trim(cells[6]);
+
+        considered++;
+        if (!equalsIgnoreCase(apply, "YES")) continue; // only approved rows
+
+        var e = Repository.GetElementByID(elementID);
+        if (!e) continue;
+        e.Status = proposedStatus;
+        e.Update();
+        applied++;
+    }
+    ts.Close();
+
+    if (applied>0) Repository.RefreshModelView(0);
+    log(TAB, "Applied " + applied + " change(s) out of " + considered + " curated row(s).");
+}
+
+// ES3 helper – endsWith (not natively available)
+function endsWith(s, suffix) {
+    s = String(s||"");
+    var idx = s.lastIndexOf(suffix);
+    return idx >= 0 && (idx + suffix.length === s.length);
+}
+
+main();
+```
+
+### Pattern 3 – Tag Propagation (Parent → Children)
+
+Another frequent need is to ensure that metadata flows correctly between
+related elements. For example, if a Capability has an Owner tag, then
+all its linked Requirements should inherit that Owner. Or if a System
+has a Criticality tag, then its Interfaces should carry the same.
+
+The **Tag Propagation** pattern handles this: traverse a relationship,
+read a tag from one element, apply it to another, log the change. It
+enforces consistency and helps maintain traceability.
+
+**When to use:** enforce a tagged value from a parent element or package
+onto all contained elements (e.g., Domain=Diabetes).  
+**Options:** set only if missing, or overwrite.
+
+```{.js filename="Example 7.4 - Pattern3_TagPropagation.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 7.4 - Pattern3_TagPropagation.js – JScript (ES3)
+// Purpose: Copy a tagged value from a selected *source element*
+//          to all elements in a selected *target package*
+// Usage: Select source element → run; then select target package → run
+// Assumptions: source has TagName present; target elements may or may not
+// Safety: DRY_RUN = true by default
+// Dependencies: Helpers.js
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "TagPropagation";
+    ensureOutputTab(TAB);
+
+    // ---- Config ----
+    var DRY_RUN = true;
+    var TAG_NAME = "Domain";
+    var OVERWRITE = false;  // false = set only if missing
+
+    // ---- Step 1: obtain source tag from selected element ----
+    var src = Repository.GetTreeSelectedObject();
+    if (!src || src.ObjectType != otElement) {
+        Session.Prompt("Select the *source element* that contains the tag '" + TAG_NAME + "'.", promptOK);
+        return;
+    }
+    var srcVal = readTag(src, TAG_NAME);
+    if (trim(srcVal) === "") {
+        Session.Prompt("Source element does not have tag '" + TAG_NAME + "'.", promptOK);
+        return;
+    }
+
+    // ---- Step 2: ask user to select target *package* ----
+    Session.Prompt("Now select the *target package* and run the script again to apply propagation.", promptOK);
+
+    // If you prefer one-run UX: comment out the prompt above and use GetTreeSelectedPackage()
+    // directly
+}
+
+function applyToTarget() {
+    var TAB = "TagPropagation";
+    ensureOutputTab(TAB);
+
+    var DRY_RUN = true;
+    var TAG_NAME = "Domain";
+    var OVERWRITE = false;
+
+    // Re-get source from memory? For simplicity here we re-read it from user:
+    // In practice you might stash it in a temp file or ask user for the value via InputBox.
+    var val = Session.Input("Enter value to propagate for tag '" + TAG_NAME + "':", "");
+    if (trim(val) === "") { log(TAB, "No value provided; aborting."); return; }
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a *target package*.", promptOK); return; }
+
+    var i, changed=0, elements = pkg.Elements;
+    for (i=0; i<elements.Count; i++) {
+        var e = elements.GetAt(i);
+        var cur = readTag(e, TAG_NAME);
+
+        if (trim(cur) === "") {
+            // tag missing → set
+            log(TAB, "Set " + TAG_NAME + " on " + e.Name + " → " + val);
+            if (!DRY_RUN) { writeTag(e, TAG_NAME, val); }
+            changed++;
+        } else if (OVERWRITE && cur != val) {
+            log(TAB, "Overwrite " + TAG_NAME + " on " + e.Name + " : " + cur + " → " + val);
+            if (!DRY_RUN) { writeTag(e, TAG_NAME, val); }
+            changed++;
+        }
+    }
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(pkg.PackageID);
+    log(TAB, "Updated " + changed + " element(s). Dry-run=" + DRY_RUN);
+}
+
+// ---- Tag helpers ----
+function readTag(e, name) {
+    var i, tvs = e.TaggedValues;
+    for (i=0; i<tvs.Count; i++) {
+        var tv = tvs.GetAt(i);
+        if (equalsIgnoreCase(tv.Name, name)) return String(tv.Value||"");
+    }
+    return "";
+}
+function writeTag(e, name, value) {
+    var i, tvs = e.TaggedValues;
+    for (i=0; i<tvs.Count; i++) {
+        var tv = tvs.GetAt(i);
+        if (equalsIgnoreCase(tv.Name, name)) {
+            tv.Value = value; tv.Update(); e.Update(); return;
+        }
+    }
+    // add new if not found
+    var ntv = tvs.AddNew(name, String(value));
+    ntv.Update(); e.Update();
+}
+
+// Choose which entry point to bind in EA’s Scripts window:
+// main() for step-by-step or applyToTarget() for one-shot after prompting
+// main();
+applyToTarget();
+```
+
+
+
+### Pattern 4 – Linting & Quality Gates (Report-Only by Default)
+
+Just as programmers use “linters” to check code quality, modellers can
+use scripts to check model quality. The **Linting** pattern is about
+scanning the repository for “smells”: missing notes, duplicate names,
+orphaned elements, inconsistent stereotypes.
+
+The script doesn’t necessarily fix the issues. It logs them, creates a
+report, and highlights what needs attention. This is especially powerful
+in enterprise settings where governance requires objective evidence of
+model quality.
+
+**When to use:** continuous hygiene checks (naming, required tags,
+required relationships).  
+**Why:** consistent, repeatable, fast feedback before governance
+reviews.
+
+```{.js filename="Example 7.5 - Pattern4_LintQuality.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 7.5 - Pattern4_LintQuality.js – JScript (ES3)
+// Purpose: Report model "smells" in selected package (no writes by default)
+// Checks:
+//   - Name not empty
+//   - Required tag exists (e.g., "Owner")
+//   - Name matches regex prefix (e.g., "REQ_")
+// Output: CSV + Output tab; dry-run concept not needed (read-only)
+// Dependencies: Helpers.js
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "Lint";
+    ensureOutputTab(TAB);
+
+    // ---- Config ----
+    var REQUIRED_TAG = "Owner";
+    var NAME_PREFIX   = "REQ_";
+    var WRITE_CSV     = true;
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package to lint.", promptOK); return; }
+
+    var dir=null, csv=null;
+    if (WRITE_CSV) {
+        dir = browseForFolder("Select output folder for lint report:");
+        if (dir) {
+            var stamp = (new Date()).getTime();
+            var path = dir + "\\pattern4_lint_report_" + stamp + ".csv";
+            csv = new CsvWriter(path);
+            csv.writeHeader("ElementID,GUID,Name,Type,Issue,Details");
+            log(TAB, "Logging to: " + path);
+        }
+    }
+
+    var i, issues=0, elements = pkg.Elements;
+    for (i=0; i<elements.Count; i++) {
+        var e = elements.GetAt(i);
+
+        // Check 1: name present
+        if (trim(e.Name) === "") {
+            issues += emit(csv, e, "MissingName", "Element has no name");
+        }
+
+        // Check 2: required tag exists
+        if (trim(readTag(e, REQUIRED_TAG)) === "") {
+            issues += emit(csv, e, "MissingTag", "Required tag '"+REQUIRED_TAG+"' is missing or empty");
+        }
+
+        // Check 3: naming convention
+        if (!startsWith(e.Name, NAME_PREFIX)) {
+            issues += emit(csv, e, "NamePrefix", "Expected prefix '" + NAME_PREFIX + "'");
+        }
+    }
+
+    if (csv) csv.close();
+    log(TAB, "Lint finished. Issues found: " + issues);
+}
+
+function emit(csv, e, issue, details) {
+    var line = e.ElementID + " " + e.Name + " – " + issue + " : " + details;
+    log("Lint", line);
+    if (csv) csv.writeRow([e.ElementID, e.ElementGUID, e.Name, e.Type, issue, details]);
+    return 1;
+}
+
+function readTag(e, name) {
+    var i, tvs = e.TaggedValues;
+    for (i=0; i<tvs.Count; i++) {
+        var tv = tvs.GetAt(i);
+        if (equalsIgnoreCase(tv.Name, name)) return String(tv.Value||"");
+    }
+    return "";
+}
+
+main();
+```
+
+### Pattern 5 – SQL-Accelerated Find, API-Safe Write (Hybrid)
+
+One of the most effective ways to balance speed with safety in EA
+scripting is the **hybrid pattern**: use SQL to locate candidates, but
+rely on the API to perform updates.
+
+- **When to use**: this approach shines when you need to identify
+  thousands of elements quickly — for example, all Requirements missing
+  an Owner tag, or all Components in a given layer. Traversing entire
+  package trees with .Count and .GetAt() can be slow; SQL queries are
+  much faster.
+
+- **Why not just update with SQL?** Because direct database updates
+  bypass EA’s business rules and can corrupt the repository. That’s why
+  writes must still go through the API.
+
+**The idea** is simple:
+
+1.  Use Repository.SQLQuery() with a SELECT statement to pull back the
+    candidate IDs.
+
+2.  Parse the XML result to extract element IDs or GUIDs.
+
+3.  Loop over those IDs, load each object via the API, and apply updates
+    safely (Update() + RefreshModelView()).
+
+This hybrid approach gives you the best of both worlds:
+
+- **Fast selection** (SQL can scan tens of thousands of rows in
+  seconds).
+
+- **Safe updates** (API ensures model integrity).
+
+It is one of the most important performance patterns for large
+repositories.
+
+**When to use:** you need to *find* thousands of items quickly, but
+still want **safe updates** via the API (not raw SQL writes).
+
+**Idea:** use Repository.SQLQuery() to *select* candidates (fast), parse
+the XML result to get IDs, then loop via API for writes (safe).
+
+```{.js filename="Example 7.6 - Pattern5_SqlFind_ApiWrite.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 7.6. - Pattern5_SqlFind_ApiWrite.js – JScript (ES3)
+// Purpose: Fast "find" via SQLQuery, then safe writes via API
+// Usage: Select any package (context not required for SQL); DRY_RUN=true by default
+// Dependencies: Helpers.js
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "SqlFindApiWrite";
+    ensureOutputTab(TAB);
+
+    var DRY_RUN = true;
+    var TYPE_FILTER = "Class";
+    var STEREOTYPE_TO_SET = "DomainObject";
+
+    // 1) SQL find (XML result)
+    var sql = "SELECT Object_ID, ea_guid, Name FROM t_object WHERE Object_Type='" + TYPE_FILTER + "' AND Stereotype IS NULL";
+    var xml = Repository.SQLQuery(sql);
+
+    // 2) Parse minimal XML (very simple string parsing; robust XML parser not available in ES3)
+    //    Expect rows like: <Row><Object_ID>123</Object_ID><ea_guid>{...}</ea_guid><Name>Foo</Name></Row>
+    var ids = extractAll(xml, "<Object_ID>", "</Object_ID>");
+
+    var i, changed=0;
+    log(TAB, "Candidates: " + ids.length);
+
+    for (i=0; i<ids.length; i++) {
+        var id = parseInt(trim(ids[i]), 10);
+        var e = Repository.GetElementByID(id);
+        if (!e) continue;
+
+        // Only set stereotype if empty (defensive sanity)
+        if (trim(e.Stereotype) === "") {
+            log(TAB, "Set stereotype on " + e.Name + " → " + STEREOTYPE_TO_SET);
+            if (!DRY_RUN) {
+                e.Stereotype = STEREOTYPE_TO_SET;
+                e.Update();
+            }
+            changed++;
+        }
+    }
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(0);
+    log(TAB, "Changed " + changed + " element(s). Dry-run=" + DRY_RUN);
+}
+
+// Minimal XML extraction helpers (no DOM available in ES3)
+function extractAll(hay, openTag, closeTag) {
+    var res = [], start=0;
+    while (true) {
+        var i = hay.indexOf(openTag, start);
+        if (i < 0) break;
+        var j = hay.indexOf(closeTag, i + openTag.length);
+        if (j < 0) break;
+        var val = hay.substring(i + openTag.length, j);
+        res.push(val);
+        start = j + closeTag.length;
+    }
+    return res;
+}
+
+main();
+```
+
+## Pattern Handling
+
+### Patterns as a Library
+
+The beauty of patterns is that they can be turned into a **script
+library**. Instead of writing bespoke code, you start from a template:
+
+```{.js filename="Example 7.7 - findFilteredApply"}
+// -------------------------------------------------------------------------------------------
+// Example 7.7 - findFilteredApply
+// -------------------------------------------------------------------------------------------
+function findFilterApply(pkg, filterFn, applyFn) {
+    var els = pkg.Elements;
+    for (var i = 0; i < els.Count; i++) {
+        var e = els.GetAt(i);
+        if (filterFn(e)) {
+            applyFn(e);
+        }
+    }
+}
+```
+
+
+With such a template, your script becomes simply the filter and apply
+functions. The boilerplate is taken care of. Even within EA’s limited
+JScript environment, this approach saves effort and reduces bugs.
+
+### Patterns and Governance
+
+One of the most important applications of patterns is governance. Large
+organisations rely on consistent models for reporting, compliance, and
+decision-making. Manual governance is too slow. Patterns like
+Find/Filter/Apply and Linting turn governance into a repeatable,
+automated process.
+
+For example, you can script a governance check that every Requirement
+must have an Owner tag. The script follows the Find/Filter/Apply
+pattern, filters Requirements, checks tags, and logs violations. By
+running it regularly, you maintain model hygiene.
+
+### Patterns Across Languages
+
+Although the examples in this chapter are in JScript, the patterns
+themselves are language-agnostic. If you later write external automation
+in Python or C#, the same patterns apply. A Find/Filter/Apply loop in
+Python looks slightly different, but the structure is identical. This
+makes patterns a great way to transfer knowledge across teams and
+technologies.
+
+### The Safety Net of Patterns
+
+Patterns also act as a safety net against AI hallucinations. As we saw
+earlier, AI can generate starter scripts but often introduces
+unsupported syntax. If you know the underlying pattern, you can spot and
+correct mistakes quickly. For example, if AI gives you a forEach, you
+know the pattern requires a .Count/.GetAt() loop, and you can adjust
+accordingly.
+
+## Performance & Safety Notes
+
+- Prefer **Find/Filter/Apply** for clarity; switch to **SQL-accelerated
+  find** when scale demands it.
+
+- Keep **DRY_RUN = true** until you’ve inspected CSV logs.
+
+- Call **Update()** after modifications, then **RefreshModelView()** for
+  UI.
+
+- For very large sets, consider chunking (operate in batches of, say,
+  250 items) and pausing UI updates:
+
+- // Pseudocode – EA may ignore UI flag in some contexts; rely on
+  batching regardless
+
+- // Repository.EnableUIUpdates = false; // not always honoured
+
+- // ...do batches...
+
+- // Repository.EnableUIUpdates = true;
+
+- // Repository.RefreshModelView(0);
+
+## Bonus: Python “Curate → Apply” Pipeline
+
+Use this when CSV shaping, validation or integration (e.g., SharePoint,
+Jira) is easier outside EA.
+
+```{.py filename="Example 7.8 - pattern6_curate_apply_external.py – Python 3 (pywin32)"}
+# -------------------------------------------------------
+# Example 7.8 - pattern6_curate_apply_external.py – Python 3 (pywin32)
+# Purpose: Read a curated CSV of element updates and apply via EA API
+# Safety: Only rows with Apply=YES are executed
+# -------------------------------------------------------
+import csv, win32com.client
+
+def main(csv_path):
+    ea = win32com.client.Dispatch("EA.App")
+    repo = ea.Repository
+
+    changes = 0
+    with open(csv_path, "r") as f:
+        rdr = csv.DictReader(f)
+        for row in rdr:
+            if str(row.get("Apply","")).strip().lower() != "yes":
+                continue
+            eid = int(row["ElementID"])
+            new_status = row["ProposedStatus"]
+
+            e = repo.GetElementByID(eid)
+            if e:
+                e.Status = new_status
+                e.Update()
+                changes += 1
+
+    if changes:
+        repo.RefreshModelView(0)
+    print(f"Applied {changes} curated change(s).")
+
+if __name__ == "__main__":
+    main(r"C:\path\to\pattern2_curate_export_123.csv")
+```
+
+## What to Use When (cheat-sheet)
+
+- **Small, safe rename/retag** → Pattern 1 (Find/Filter/Apply).
+
+- **Risky/wide updates** → Pattern 2 (Curate-then-Write).
+
+- **Set common metadata** → Pattern 3 (Tag Propagation).
+
+- **Governance checks** → Pattern 4 (Linting & Quality Gates).
+
+- **Huge models** → Pattern 5 (SQL-find, API-write).
+
+- **Pipelines & integrations** → Python external bonus.

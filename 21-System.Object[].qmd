@@ -1,0 +1,396 @@
+# Chapter 20: Troubleshooting
+
+Every scripting environment has its quirks, and Enterprise Architect is
+no exception. By now, you’ve learned how to navigate the API, use
+patterns, enforce governance, and even integrate EA into wider
+workflows. Yet no matter how careful you are, you will encounter
+frustrating moments where “nothing happens” or “it worked yesterday but
+not today.” These issues are not signs of failure — they are a normal
+part of scripting EA.
+
+This chapter collects the **most common errors and pitfalls** you will
+run into, explains why they occur, and shows how to recognise them
+quickly. It is less about teaching new capabilities and more about
+providing a troubleshooting handbook. By knowing the usual suspects, you
+can save hours of debugging.
+
+## Why Troubleshooting Matters
+
+When a script fails silently, it undermines trust. Users may stop
+running governance checks if they think the results are unreliable.
+Architects may give up on automation if every export requires trial and
+error. Building confidence in scripting requires not only writing good
+scripts but also being able to **diagnose problems fast**.
+
+Troubleshooting is also essential for team knowledge transfer. If one
+person understands the quirks but others do not, automation becomes
+fragile. A shared troubleshooting guide empowers everyone to fix common
+issues.
+
+## The Nature of EA’s Quirks
+
+Why does EA feel quirky to script against? A few reasons:
+
+- **COM-based API**: EA exposes its object model through COM, an old but
+  powerful technology with idiosyncrasies.
+
+- **Legacy scripting engine**: JScript is stuck at ES3, which means
+  modern constructs are missing.
+
+- **UI lag**: EA’s interface does not always refresh automatically when
+  the repository changes.
+
+- **Database underpinnings**: EA stores content in relational tables,
+  and API calls must keep schema integrity.
+
+These constraints create subtle traps that new script writers fall into
+again and again.
+
+## The Usual Suspects
+
+From years of practice and community wisdom, a handful of issues account
+for the majority of problems:
+
+- Forgetting Update() after setting a property.
+
+- Forgetting RefreshModelView() after a bulk change.
+
+- Confusing Stereotype with StereotypeEx.
+
+- Treating EA collections as arrays (forEach instead of .GetAt()).
+
+- Forward-deleting instead of backward-deleting.
+
+- Misusing SQL (writing instead of reading).
+
+- Encoding errors when exporting text.
+
+- Failing to check ObjectType before casting.
+
+These “usual suspects” are the core of this chapter.
+
+### Silent Failures
+
+One of the most frustrating experiences in EA scripting is the silent
+failure: your script runs, no errors are thrown, but nothing changes. In
+almost all cases, the culprit is forgetting Update(). EA only persists
+changes when you explicitly call Update(). Without it, modifications
+stay in memory and are discarded.
+
+Another form of silent failure is forgetting to refresh the UI. Changes
+exist in the database but are invisible until you call
+Repository.RefreshModelView(). Recognising these two patterns will
+resolve half your troubleshooting cases.
+
+### Collection Confusion
+
+Another common cause of errors is treating EA collections like standard
+arrays. They are not. They only support .Count and .GetAt(). Any attempt
+to use forEach, map, or array indexing will fail. Scripts that AI
+generates often stumble here, which is why human review is essential.
+
+### Deletion Pitfalls
+
+Deleting items is particularly risky. Forward loops that delete as they
+go will skip elements because the index shifts. The safe pattern is
+always to delete backwards: from the last index down to zero. Forgetting
+this leads to half-deleted collections or inconsistent states.
+
+### SQL Misuse
+
+EA allows direct SQL queries via Repository.SQLQuery() and
+Repository.Execute(). The former is safe (read-only), the latter
+dangerous (write). Beginners sometimes attempt to UPDATE directly via
+SQL, bypassing the API. This risks corrupting the repository because the
+API enforces consistency.
+
+The safe rule is: **SQL for find, API for write**. Never write to the
+database directly unless you absolutely understand the schema and
+consequences.
+
+### Encoding Problems
+
+Because JScript’s FileSystemObject writes files in ANSI encoding,
+exports often lose special characters (e.g. accented letters, non-Latin
+scripts). This leads to CSVs with “???” instead of correct text. The fix
+is to use external automation (Python, C#) for UTF-8 output. Inside EA,
+the workaround is to stick to ASCII.
+
+### ObjectType Confusion
+
+Scripts often fail because the developer assumes a selected object is a
+package or element, but the user actually selected a diagram or
+attribute. The solution is always to check ObjectType before acting.
+This prevents runtime errors and makes scripts more robust.
+
+## The Value of Defensive Patterns
+
+The best way to avoid troubleshooting later is to adopt defensive coding
+patterns now:
+
+- Wrap every modification in if (!DRY_RUN).
+
+- Always check ObjectType.
+
+- Use backward deletion.
+
+- Always Update() and RefreshModelView().
+
+- Validate stereotypes with StereotypeEx.
+
+By embedding these patterns, you avoid the majority of common errors.
+
+## Troubleshooting as a Team Resource
+
+Troubleshooting knowledge should be shared, not hoarded. Teams benefit
+from keeping a living “troubleshooting wiki” that documents issues
+encountered and solutions. AI can also play a role: paste an error into
+AI and ask for explanations. But the foundation is a shared
+understanding of EA’s quirks, documented and available to all.
+
+### Update() Forgotten
+
+**Symptom**: You change an element property, run the script, and nothing
+changes in EA.
+
+**Cause**: EA requires Update() on nearly every object after
+modification. Without it, changes stay in memory only.
+
+#### Wrong
+``` .js
+// [x] Forgets Update()
+
+var e = Repository.GetTreeSelectedObject();
+
+e.Name = "NewName"; // appears to succeed, but won’t persist
+
+// no e.Update()
+```
+
+#### Fixed
+``` .js
+// [✓] Always call Update()
+
+var e = Repository.GetTreeSelectedObject();
+
+e.Name = "NewName";
+
+e.Update(); // persist to repository
+```
+### RefreshModelView() Missing
+
+**Symptom**: The change *did* persist (e.g., new name), but you don’t
+see it in the Project Browser until you close/reopen EA.
+
+**Cause**: EA’s UI cache isn’t automatically updated. Call
+Repository.RefreshModelView() to refresh.
+
+#### Fixed
+``` .js
+var pkg = Repository.GetTreeSelectedPackage();
+
+var e = pkg.Elements.AddNew("TempClass", "Class");
+
+e.Update();
+
+// Refresh the package tree so the user sees the new class
+
+Repository.RefreshModelView(pkg.PackageID);
+```
+#### Wrong Method Name
+
+**Symptom**: AI-generated code crashes with “function not defined.”
+
+**Cause**: Different EA versions expose slightly different casing
+(GetElementByGuid vs GetElementByGUID).
+
+### Fix with wrapper
+``` .js
+// [✓] Compatibility wrapper
+
+function getElementByGuidSafe(guid) {
+
+try { return Repository.GetElementByGuid(guid); }
+
+catch(e) {
+
+try { return Repository.GetElementByGUID(guid); }
+
+catch(e2) { return null; }
+
+}
+
+}
+```
+
+### Collections Misused
+
+**Symptom**: “Object doesn’t support property or method ‘forEach’” or
+“undefined.”
+
+**Cause**: EA collections are COM objects, not JS arrays. You must use
+.Count and .GetAt(i).
+
+#### Wrong
+``` .js
+// [x] This will fail
+
+pkg.Elements.forEach(function(e){ Session.Output(e.Name); });
+```
+
+#### Fixed
+``` .js
+// [✓] Correct
+
+var els = pkg.Elements;
+
+for (var i=0; i\<els.Count; i++) {
+
+var e = els.GetAt(i);
+
+Session.Output(e.Name);
+
+}
+```
+
+### Delete Without Backwards Iteration
+
+**Symptom**: Some elements are skipped when deleting in loops.
+
+**Cause**: Deleting while looping forward shifts indices.
+
+#### Wrong
+``` .js
+// [x] Deletes only half
+
+for (var i=0; i\<pkg.Elements.Count; i++) {
+
+pkg.Elements.DeleteAt(i, false);
+
+}
+```
+
+#### Fixed
+``` .js
+// [✓] Loop backwards
+
+for (var i=pkg.Elements.Count-1; i\>=0; i--) {
+
+pkg.Elements.DeleteAt(i, false);
+
+}
+
+Repository.RefreshModelView(pkg.PackageID);
+```
+
+### Unicode / Encoding Headaches
+
+**Symptom**: Exported CSV shows “???” instead of accented characters.
+
+**Cause**: EA’s JScript FileSystemObject writes in ANSI by default.
+
+**Workaround:**
+
+- Keep exports simple (ASCII where possible).
+
+- If you need UTF-8: use external automation (Python/C#).
+
+### External Python for UTF-8 CSV
+``` .py
+\# utf8_export.py
+
+import win32com.client, csv
+
+ea = win32com.client.Dispatch("EA.App")
+
+repo = ea.Repository
+
+pkg = repo.GetTreeSelectedPackage()
+
+with open("export.csv","w",newline="",encoding="utf-8") as f:
+
+wr = csv.writer(f)
+
+wr.writerow(\["ID","Name"\])
+
+for i in range(pkg.Elements.Count):
+
+e = pkg.Elements.GetAt(i)
+
+wr.writerow(\[e.ElementID, e.Name\])
+```
+
+### Misusing Session.Output (too much logging)
+
+**Symptom**: Script becomes slow or EA hangs.
+
+**Cause**: Printing thousands of lines to EA’s Output tab is slow.
+
+**Fix:**
+
+- Use CSV/file logging for detail.
+
+- Use Session.Output only for summary.
+
+### API vs Direct SQL Write
+
+**Symptom**: Repository corrupted or constraints broken.
+
+**Cause**: Direct Repository.Execute("UPDATE…") writes to EA tables skip
+API integrity.
+
+**Rule**:
+
+- Use Repository.SQLQuery() for *read-only*.
+
+- Use object API (.Update()) for writes.
+
+- Only use direct SQL writes if you fully understand EA’s schema (rare).
+
+### ObjectType Confusion
+
+**Symptom**: Code assumes everything from GetTreeSelectedObject() is an
+element, but sometimes it’s a package or diagram.
+
+**Fix**: Always check ObjectType.
+
+#### Example
+``` .js
+var obj = Repository.GetTreeSelectedObject();
+
+if (obj.ObjectType == otPackage) {
+
+Session.Output("Selected a package: " + obj.Name);
+
+} else if (obj.ObjectType == otElement) {
+
+Session.Output("Selected element: " + obj.Name);
+
+} else {
+
+Session.Output("Unsupported object type.");
+
+}
+```
+
+## Safe Patterns Recap
+
+- **Always Update()** after modifying objects.
+
+- **Always RefreshModelView()** after changes if you want UI sync.
+
+- **Loop with .Count / .GetAt(i)**, not forEach.
+
+- **Delete backwards**.
+
+- **Don’t rely on names alone**: use GUIDs or IDs.
+
+- **Prefer API writes** over SQL.
+
+- **Minimise Session.Output** inside large loops.
+
+- **Check ObjectType** before casting.
+
+- **Expect case differences** in API (GUID vs Guid).
+
+- **Export UTF-8 externally** if needed.

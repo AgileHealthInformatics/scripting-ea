@@ -1,0 +1,564 @@
+# Chapter 17: Performance & Scaling
+
+Enterprise Architect is used in contexts that range from small projects
+to national architectures. In small repositories with a few hundred
+elements, scripting feels instant and forgiving. But as repositories
+grow to tens of thousands or even hundreds of thousands of elements,
+performance becomes a real concern. A script that works perfectly in a
+sandbox may take hours, or even crash EA, when run against an
+enterprise-scale repository.
+
+This chapter explores the principles of performance and scaling in EA
+scripting. It explains why large repositories behave differently, why
+naive loops and excessive logging cause problems, and how to design
+scripts that handle scale safely. The goal is not to turn you into a
+performance engineer, but to provide practical strategies that let your
+scripts run efficiently on real-world repositories.
+
+## Why Performance Matters
+
+At first glance, performance might seem secondary. After all, scripts
+are automation — even if they take a few minutes, they still save hours
+of manual effort. But in practice, performance is about more than speed.
+Poorly written scripts can:
+
+- **Lock up EA’s UI**, frustrating other users.
+
+- **Generate incomplete results**, skipping elements when loops break.
+
+- **Produce overwhelming logs**, flooding the Output tab and crashing
+  EA.
+
+- **Time out in enterprise workflows**, failing integration pipelines.
+
+Performance is therefore about reliability as well as speed. Scripts
+that scale are scripts that can be trusted.
+
+## Sources of Slowness
+
+There are a few common culprits for slow scripts:
+
+- **UI logging**: Session.Output is surprisingly expensive when called
+  thousands of times.
+
+- **Inefficient traversal**: deep recursion or redundant queries slow
+  scripts down.
+
+- **Excessive updates**: calling .Update() unnecessarily adds overhead.
+
+- **Unfiltered loops**: traversing everything when only a subset is
+  needed.
+
+- **SQL misuse**: failing to use SQL for large reads, or misusing SQL
+  for writes.
+
+Understanding these bottlenecks is the first step to avoiding them.
+
+## Measure First
+
+The golden rule of performance is: **measure before you optimise**. In
+scripting, this means timing your loops and logging throughput. For
+example, processing 10,000 elements in 5 seconds is healthy; in 50
+minutes, it is not. By measuring, you can identify where the script
+spends most of its time.
+
+In practice, you can use simple timers (Date().getTime() in JScript) to
+record how long operations take. Always include performance metrics in
+your logs.
+
+## Tips
+
+### SQL for Find, API for Write
+
+One of the most effective performance strategies is:
+
+- **Find with SQL**: use Repository.SQLQuery to locate candidates
+  quickly.
+
+- **Write with API**: use EA’s object model for updates, ensuring
+  integrity.
+
+SQL queries are far faster than traversing the entire package tree with
+.Count/.GetAt(). But writing directly via SQL risks corruption. The
+combination of SQL reads and API writes gives the best of both worlds.
+
+### Chunking Updates
+
+Large updates should be chunked. Updating thousands of elements in one
+continuous loop can overwhelm EA’s UI and lock it up. Instead, process
+in batches — for example, 250 elements at a time — and refresh the model
+view between batches.
+
+This chunking approach improves responsiveness and reduces the risk of
+EA appearing frozen. It also makes logs easier to review.
+
+### Iterative Traversal
+
+Recursion is elegant but risky in large models. Deep package trees can
+hit recursion limits or create excessive stack usage. Iterative
+traversal using a queue (breadth-first) is safer and more scalable. It
+avoids call-stack overflows and makes the traversal logic clearer.
+
+### Idempotence and Skipping
+
+Performance is not only about speed but also about avoiding unnecessary
+work. If an element already has the correct stereotype or tag, there is
+no need to update it. Idempotent scripts — those that skip items already
+in the correct state — run faster and reduce risk.
+
+### Logging Without Flooding
+
+Logging is vital for safety, but excessive logging kills performance.
+Writing 50,000 lines to EA’s Output tab can freeze the tool. The safe
+practice is to log **summary to Output** and **details to CSV**. This
+gives you transparency without choking the UI.
+
+### External Automation for Heavy Jobs
+
+Sometimes the best way to scale is to move heavy jobs outside EA.
+External automation in Python or C# can handle large CSVs, JSON, or
+analytics, leaving EA to focus on updates. Splitting work this way makes
+scripts leaner and safer.
+
+## Principles
+
+1.  **Measure**: time the script and log throughput (items/sec).
+
+2.  **Reduce UI overhead**: write to a file (CSV) instead of spamming
+    Output; refresh UI only once at the end or per large batch.
+
+3.  **Find with SQL, write with API**: SQL is fast for locating
+    candidates; API is safe for updates.
+
+4.  **Chunk**: commit changes in batches (e.g., 250); between batches,
+    give EA a chance to breathe (optional UI refresh).
+
+5.  **Iterative traversal**: avoid deep recursion; use a queue/stack to
+    walk package trees.
+
+6.  **Be idempotent**: skip items already in the desired state.
+
+7.  **No parallelism**: EA’s COM server is single-threaded
+    STA—concurrency won’t help.
+
+All examples below are **ES3** and assume no shared helper file; each
+script includes its own minimal helpers.
+
+## Examples
+
+### Micro-helpers (copy/paste as needed)
+```{.js filename="Example 17.1 - perf_helpers.js (inline for each example)"}
+// -------------------------------------------------------
+// Example 17.1 - perf_helpers.js (inline for each example)
+// -------------------------------------------------------
+function nowMs(){ return (new Date()).getTime(); }
+function trim(s){ return s==null?"":String(s).replace(/^\s+|\s+$/g,""); }
+function equalsIgnoreCase(a,b){ return String(a||"").toLowerCase()==String(b||"").toLowerCase(); }
+function startsWith(s,p){ return String(s||"").indexOf(p)===0; }
+
+// Directory chooser (directory only; no filenames)
+function pickFolder(promptText){
+  var sh = new ActiveXObject("Shell.Application");
+  var f = sh.BrowseForFolder(0, promptText, 0, 0);
+  return f ? f.Self.Path : null;
+}
+
+// CSV writer (lightweight)
+function Csv(path){
+  var fso = new ActiveXObject("Scripting.FileSystemObject");
+  var file = fso.OpenTextFile(path, 8 /*Append*/, true /*Create*/);
+  this.w = function(line){ file.WriteLine(line); };
+  this.close = function(){ file.Close(); };
+}
+
+
+### Pattern A —Timing Harness & Low-noise Logging
+
+**Goal:** measure total time, throughput, and avoid slow Session.Output
+loops.
+```{.js filename="Example 17.2 - Perf_TimingHarness.js – JScript (ES3)"}
+// Example 17.2 - Perf_TimingHarness.js – JScript (ES3)
+// Purpose: Run any loop with minimal UI logging + CSV metrics
+// Usage: Select any package (context not required for the demo)
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function nowMs(){ return (new Date()).getTime(); }
+function pickFolder(t){ var sh=new ActiveXObject("Shell.Application"); var f=sh.BrowseForFolder(0,t,0,0); return f?f.Self.Path:null; }
+function Csv(path){ var fso=new ActiveXObject("Scripting.FileSystemObject"); var f=fso.OpenTextFile(path,8,true); this.w=function(l){f.WriteLine(l);}; this.close=function(){f.Close();}; }
+
+function main(){
+  var outDir = pickFolder("Select output folder for perf log");
+  if(!outDir){ Session.Prompt("Cancelled.", promptOK); return; }
+
+  var stamp = (new Date()).getTime();
+  var csv = new Csv(outDir+"\\perf_metrics_"+stamp+".csv");
+  csv.w("Metric,Value");
+
+  var T0 = nowMs();
+  var N  = 20000; // simulate 20k lightweight ops (replace with real loop)
+  var i;
+  for(i=0;i<N;i++){
+    // do nothing (placeholder for your per-item work)
+    // avoid Session.Output inside hot loops
+  }
+  var dt = nowMs()-T0;
+  var perSec = (N>0)? Math.round((N*1000.0)/dt) : 0;
+
+  csv.w("Items,"+N);
+  csv.w("Millis,"+dt);
+  csv.w("Throughput_items_per_sec,"+perSec);
+  csv.close();
+
+  Session.Output("Done. Items="+N+" Time(ms)="+dt+" Throughput="+perSec+"/s");
+}
+main();
+
+
+Adapt: wrap your actual processing loop and keep Output to a few lines.
+For detailed logs, write to CSV instead.
+
+### Pattern B — SQL-Accelerated Find, API-Safe Write (with chunking)
+
+**Use case:** set a stereotype on all **Class** elements missing one,
+across the repository.  
+**Approach:**
+
+1.  **SQLQuery** all candidate IDs (fast).
+
+2.  Process in **chunks of 250**; call Update() per element, refresh UI
+    only per chunk or once at the end.
+
+3.  **DRY_RUN** for safety.
+```{.js filename="Example 17.3 - Perf_SqlFind_ApiWrite_Chunked.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 17.3 - Perf_SqlFind_ApiWrite_Chunked.js – JScript (ES3)
+// Purpose: Fast find via SQL, chunked updates via API
+// Safety: DRY_RUN = true by default
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function nowMs(){ return (new Date()).getTime(); }
+function pickFolder(t){ var sh=new ActiveXObject("Shell.Application"); var f=sh.BrowseForFolder(0,t,0,0); return f?f.Self.Path:null; }
+function Csv(path){ var fso=new ActiveXObject("Scripting.FileSystemObject"); var f=fso.OpenTextFile(path,8,true); this.w=function(l){f.WriteLine(l);}; this.close=function(){f.Close();}; }
+
+function extractAll(h,openTag,closeTag){
+  var res=[], start=0;
+  while(true){
+    var i=h.indexOf(openTag,start); if(i<0) break;
+    var j=h.indexOf(closeTag,i+openTag.length); if(j<0) break;
+    res.push(h.substring(i+openTag.length,j));
+    start=j+closeTag.length;
+  }
+  return res;
+}
+
+function main(){
+  var DRY_RUN = true;
+  var TYPE_FILTER = "Class";
+  var TARGET_STEREO = "DomainObject";
+  var CHUNK = 250;
+
+  var outDir = pickFolder("Select output folder for change log");
+  if(!outDir){ Session.Prompt("Cancelled.", promptOK); return; }
+  var stamp=(new Date()).getTime();
+  var csv=new Csv(outDir+"\\chunked_changes_"+stamp+".csv");
+  csv.w("Action,ElementID,Name,OldStereo,NewStereo");
+
+  var t0=nowMs();
+  // 1) fast find: candidates with empty stereotype (rough pre-filter)
+  var sql="SELECT Object_ID, Name, Stereotype FROM t_object WHERE Object_Type='"+TYPE_FILTER+"' AND (Stereotype IS NULL OR Stereotype='')";
+  var xml=Repository.SQLQuery(sql);
+  var ids=extractAll(xml,"<Object_ID>","</Object_ID>");
+  var count=ids.length;
+  Session.Output("Candidates: "+count);
+
+  var applied=0, batch=0, processed=0;
+  var i;
+  for(i=0;i<count;i++){
+    var id=parseInt(ids[i],10);
+    var e=Repository.GetElementByID(id);
+    if(!e) continue;
+
+    // double-check to avoid redundant writes
+    var oldStereo=String(e.Stereotype||"");
+    if(oldStereo===""){
+      csv.w((DRY_RUN?"DRY_RUN":"SET") + "," + e.ElementID + "," + e.Name + "," + oldStereo + "," + TARGET_STEREO);
+      if(!DRY_RUN){ e.Stereotype = TARGET_STEREO; e.Update(); applied++; }
+      batch++;
+    }
+
+    processed++;
+
+    // chunk boundary
+    if(batch>=CHUNK){
+      // optional: rare refresh so the UI doesn't feel stale
+      if(!DRY_RUN && applied>0) Repository.RefreshModelView(0);
+      batch=0;
+    }
+  }
+
+  if(!DRY_RUN && applied>0) Repository.RefreshModelView(0);
+  csv.close();
+
+  var dt=nowMs()-t0;
+  var rps = processed>0 ? Math.round(1000.0*processed/dt) : 0;
+  Session.Output("Processed="+processed+" Applied="+applied+" Time(ms)="+dt+" Throughput="+rps+"/s DRY_RUN="+DRY_RUN);
+}
+main();
+```
+
+**Why it’s fast:** the *find* phase is one SQL call. The *write* phase
+avoids extra lookups and refreshes only in large intervals.
+
+### Pattern C — Iterative Package Traversal (no recursion)
+
+Recursive tree walks can hit call-stack limits and are slower than a
+simple queue. This **breadth-first** traversal scales better.
+```{.js filename="Example 17.4 - Perf_PackageWalk_Iterative.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 17.4 - Perf_PackageWalk_Iterative.js – JScript (ES3)
+// Purpose: Walk an entire package tree without recursion
+// Action: Count elements by type (as an example)
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main(){
+  var pkg = Repository.GetTreeSelectedPackage();
+  if(!pkg){ Session.Prompt("Select a root package.", promptOK); return; }
+
+  var queue=[pkg];
+  var typeCount = {}; // map type -> number
+
+  while(queue.length>0){
+    var p = queue.shift();
+
+    // enqueue children
+    var kids = p.Packages;
+    for(var i=0;i<kids.Count;i++){ queue.push(kids.GetAt(i)); }
+
+    // tally elements
+    var els = p.Elements;
+    for(var j=0;j<els.Count;j++){
+      var e = els.GetAt(j);
+      var t = e.Type;
+      typeCount[t] = (typeCount[t]||0)+1;
+    }
+  }
+
+  // low-noise summary output
+  Session.Output("Element counts by Type:");
+  var k; for(k in typeCount){ if(typeCount.hasOwnProperty(k)){ Session.Output("  "+k+": "+typeCount[k]); } }
+}
+main();
+```
+
+**Why it’s scalable:** avoids deep call stacks and allocates a tiny
+queue instead of many temporary stacks frames.
+
+### Pattern D — Large CSV Apply (streaming + batching)
+
+Reading a giant CSV and applying changes? Keep parsing **simple**, skip
+unchanged rows, and batch writes.
+```{.js filename="Example 17.5 - Perf_CsvApply_Batched.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 17.5 - Perf_CsvApply_Batched.js – JScript (ES3)
+// Purpose: Apply safe updates from a curated CSV with batching
+// CSV columns (example): Apply,ElementID,NewStatus
+// Safety: Only Apply=YES rows execute; chunk writes; minimal UI refresh
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function trim(s){ return s==null?"":String(s).replace(/^\s+|\s+$/g,""); }
+function pickFolder(t){ var sh=new ActiveXObject("Shell.Application"); var f=sh.BrowseForFolder(0,t,0,0); return f?f.Self.Path:null; }
+function endsWith(s,suf){ s=String(s||""); var i=s.lastIndexOf(suf); return i>=0 && i+suf.length==s.length; }
+
+function main(){
+  var DRY_RUN = true;
+  var CHUNK = 250;
+
+  var dir = pickFolder("Select folder containing curated CSV");
+  if(!dir){ Session.Prompt("Cancelled.", promptOK); return; }
+
+  // Pick the newest CSV in the folder by a known prefix (customize if needed)
+  var fso=new ActiveXObject("Scripting.FileSystemObject");
+  var folder=fso.GetFolder(dir);
+  var en=new Enumerator(folder.Files);
+  var newest=null, t=0;
+  for(;!en.atEnd(); en.moveNext()){
+    var f=en.item();
+    if(endsWith(f.Name.toLowerCase(), ".csv")){
+      var m=f.DateLastModified.getTime();
+      if(m>t){ newest=f; t=m; }
+    }
+  }
+  if(!newest){ Session.Prompt("No CSV found.", promptOK); return; }
+
+  var ts=fso.OpenTextFile(newest.Path,1); // ForReading
+  // header
+  if(!ts.AtEndOfStream) ts.ReadLine();
+
+  var applied=0, considered=0, batch=0;
+  while(!ts.AtEndOfStream){
+    var line=ts.ReadLine();
+    if(trim(line)==="") continue;
+    // naive split (keep curation fields simple—avoid commas in cells)
+    var cells=line.split(",");
+    if(cells.length<3) continue;
+
+    var apply=trim(cells[0]);
+    var eid = parseInt(cells[1],10);
+    var newStatus = trim(cells[2]);
+
+    considered++;
+
+    if(equalsIgnoreCase(apply,"YES") && eid>0){
+      var e = Repository.GetElementByID(eid);
+      if(e && String(e.Status||"") != newStatus){
+        if(!DRY_RUN){ e.Status=newStatus; e.Update(); applied++; }
+        batch++;
+      }
+    }
+
+    if(batch>=CHUNK){
+      if(!DRY_RUN && applied>0) Repository.RefreshModelView(0);
+      batch=0;
+    }
+  }
+  ts.Close();
+
+  if(!DRY_RUN && applied>0) Repository.RefreshModelView(0);
+  Session.Output("CSV apply complete. Considered="+considered+" Applied="+applied+" DRY_RUN="+DRY_RUN);
+}
+main();
+```
+
+**Why it scales:** minimal parsing, batched writes, rare refreshes, and
+no per-row UI logs.
+
+### Pattern E — Repository-wide “Exists?” checks via SQL
+
+Before creating a new element (or relationship), **prove it doesn’t
+already exist**—using a quick SQL existence test.
+
+```{.js filename="Example 17.6 - Perf_ExistsCheck_SQL.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 17.6 - Perf_ExistsCheck_SQL.js – JScript (ES3)
+// Purpose: Quick existence test for (Name,Type)
+// Note: Adjust SQL for your DB if needed; this is generic enough for most back-ends
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function esc(s){ return String(s||"").replace(/'/g, "''"); }
+function between(h,a,b){ var i=h.indexOf(a); if(i<0)return""; var j=h.indexOf(b,i+a.length); return j<0?"":h.substring(i+a.length,j); }
+
+function existsByNameType(name, type){
+  var sql="SELECT TOP 1 Object_ID FROM t_object WHERE Name='"+esc(name)+"' AND Object_Type='"+esc(type)+"'";
+  var xml=Repository.SQLQuery(sql);
+  var id=between(xml,"<Object_ID>","</Object_ID>");
+  return id!=="";
+}
+
+function main(){
+  var found = existsByNameType("Customer","Class");
+  Session.Output("Customer/Class exists? "+(found?"YES":"NO"));
+}
+main();
+```
+
+**Performance tip:** do this **before** expensive creation logic,
+especially inside large importers.
+
+### Pattern F — External Python for Heavy Lifting
+
+When processing **very large** updates with lots of text/CSV/JSON
+parsing, use Python for the parsing, then EA’s API for the write
+boundary. (Bitness note from earlier chapters: use 32-bit Python to
+match EA.)
+
+```{.py filename="Example 17.6 - Perf_ExistsCheck_SQL.js – JScript (ES3)"}
+# -------------------------------------------------------
+# Example 17.7 - perf_apply_large_external.py – Python 3 (pywin32)
+# Purpose: Chunked status updates from a big CSV, with guards
+# Usage: python perf_apply_large_external.py input.csv
+# -------------------------------------------------------
+import sys, csv, win32com.client
+
+CHUNK = 500
+
+def main(path):
+    ea = win32com.client.Dispatch("EA.App")
+    repo = ea.Repository
+
+    applied = 0
+    batch = 0
+
+    with open(path, newline="", encoding="utf-8") as f:
+        rdr = csv.DictReader(f)
+        for row in rdr:
+            if str(row.get("Apply","")).strip().lower() != "yes":
+                continue
+            eid = int(row["ElementID"])
+            status = row.get("NewStatus","").strip()
+            if not status:
+                continue
+
+            e = repo.GetElementByID(eid)
+            if e and str(e.Status or "") != status:
+                e.Status = status
+                e.Update()
+                applied += 1
+                batch  += 1
+
+            if batch >= CHUNK:
+                repo.RefreshModelView(0)
+                batch = 0
+
+    if applied:
+        repo.RefreshModelView(0)
+    print(f"Applied={applied}")
+
+if __name__ == "__main__":
+    if len(sys.argv)<2:
+        print("Usage: perf_apply_large_external.py <input.csv>")
+    else:
+        main(sys.argv[1])
+```
+
+**Why it’s fast:** Python’s CSV is robust; you perform only the
+necessary EA updates, chunked with rare refreshes.
+
+## Dos & Don’ts (cheat-sheet)
+
+- **Do**: SQL for *find*, API for *write*.
+
+- **Do**: Log to file instead of spamming Output.
+
+- **Do**: Refresh UI once (or per big batch).
+
+- **Do**: Short-circuit when the target state is already correct.
+
+- **Don’t**: Recursively walk deep trees—prefer an iterative queue.
+
+- **Don’t**: Multi-thread COM calls to EA—stick to single-threaded.
+
+- **Don’t**: Write via SQL unless you fully understand EA’s schema
+  (read-only SQL is fine; writes are risky).
+
+## Putting It Together
+
+For a **large governance fix** (e.g., add missing stereotype on 40k
+classes):
+
+1.  **Timing Harness**: wrap the whole run and log metrics.
+
+2.  **SQL Find**: one query for candidate IDs.
+
+3.  **Chunked Apply**: update in batches of ~250–500.
+
+4.  **Low-noise logging**: a single CSV with “what changed.”
+
+5.  **One refresh** at the end (or per batch).
+
+Following these steps keeps your scripts fast enough for
+enterprise-scale repositories and safe enough for governance.

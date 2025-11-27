@@ -1,0 +1,425 @@
+# Chapter 11: Governance Scripts
+
+Governance is one of the most important and least glamorous aspects of
+modelling. It is the quiet discipline that ensures models remain
+trustworthy, consistent, and usable over time. Without governance,
+repositories decay. Naming conventions drift, orphaned elements
+accumulate, stereotypes are misapplied, and diagrams no longer reflect
+reality. A model that begins as a clear architectural guide slowly
+becomes a jungle of inconsistencies, and eventually stakeholders stop
+trusting it.
+
+Enterprise Architect provides some built-in validation features, but
+governance at scale requires automation. This is where **governance
+scripts** come in. They act as model guardians: scanning repositories
+for violations, enforcing standards, and generating objective reports on
+quality. They take subjective debates about “style” and turn them into
+automated checks that either pass or fail. In doing so, they transform
+governance from a painful, manual process into a manageable and
+repeatable workflow.
+
+This chapter introduces the concept of governance scripts. It explains
+why governance matters, what kinds of issues can be checked, how
+automation changes the governance process, and why scripting is uniquely
+suited to this role. It also emphasises the importance of balance:
+governance should not be punitive or bureaucratic, but enabling — a way
+to help modellers do good work with confidence.
+
+## Why Governance Matters
+
+Models are living artefacts. They are updated by many people over months
+or years. Left unchecked, even small deviations accumulate into serious
+problems:
+
+- Inconsistent naming makes elements hard to find.
+
+- Missing tags leave models unfit for analysis.
+
+- Incorrect connectors break traceability.
+
+- Duplicated elements cause confusion in reports.
+
+- Orphaned elements give the illusion of coverage but no actual linkage.
+
+Governance provides the antidote. It ensures the model remains a
+reliable foundation for decision-making, documentation, and integration
+with other tools.
+
+## The Pain of Manual Governance
+
+Traditionally, governance has been manual: reviewers inspect models,
+checklists are filled in, and corrective actions assigned. This is slow,
+subjective, and demoralising. Architects end up spending more time
+policing modellers than doing architecture. Reviewers argue about style
+rather than substance. And problems are often caught late, when
+correcting them is expensive.
+
+Manual governance is also inconsistent. Different reviewers may apply
+different standards, leading to confusion and resentment. The result is
+often governance fatigue: modellers stop caring, reviewers stop
+enforcing, and quality slides.
+
+### The Case for Automation
+
+Scripting changes the dynamic completely. With governance scripts,
+checks are automated, repeatable, and objective. A script does not get
+tired, bored, or inconsistent. It simply scans the repository and
+reports results.
+
+Benefits include:
+
+- **Speed**: thousands of elements can be checked in seconds.
+
+- **Objectivity**: standards are enforced consistently.
+
+- **Transparency**: logs show exactly what passed and failed.
+
+- **Scalability**: large repositories can be governed without
+  multiplying staff effort.
+
+Automated governance also changes culture. Instead of governance being
+seen as policing, it becomes part of normal workflow. Modellers can run
+scripts themselves before committing changes, catching issues early.
+
+### What Governance Scripts Check
+
+Governance scripts can cover many aspects of model quality. Common
+categories include:
+
+- **Naming conventions**: e.g., requirements must start with REQ\_,
+  capabilities with BC\_.
+
+- **Stereotype compliance**: only approved stereotypes may be used.
+
+- **Tagged value completeness**: certain tags must exist and be
+  populated.
+
+- **Connector rules**: e.g., only ApplicationComponents may realise
+  Capabilities.
+
+- **Model smells**: orphaned elements, duplicate names, unused diagrams.
+
+- **Coverage checks**: every requirement must trace to a capability,
+  every component to a service.
+
+These checks can be run as reports or as enforcement scripts that
+auto-correct issues.
+
+### From Policing to Enablement
+
+One danger of governance automation is that it can become heavy-handed:
+modellers feel constrained and demotivated. The key is to frame
+governance as **enablement, not punishment**. Scripts are there to help,
+not hinder.
+
+For example:
+
+- A script that renames elements automatically to match conventions
+  saves modellers time.
+
+- A script that adds missing tags reduces manual entry.
+
+- A script that reports orphans gives clear guidance for cleanup.
+
+When governance scripts are seen as helpers, adoption increases.
+
+### Governance as Quality Assurance
+
+Governance is not separate from quality; it is quality assurance for
+models. Just as code is tested by unit tests and static analysis, models
+should be tested by governance scripts. This analogy is powerful:
+modellers begin to see governance not as red tape but as the modelling
+equivalent of running tests. Passing governance checks means your model
+is ready for use.
+
+### Levels of Governance
+
+Governance can be applied at different levels:
+
+- **Local**: a modeller runs a script on their package before
+  publishing.
+
+- **Team**: governance scripts are run during reviews or milestones.
+
+- **Enterprise**: scheduled jobs scan the whole repository and produce
+  dashboards.
+
+Scripting supports all three levels. Internal scripts are ideal for
+local checks. External automation can handle enterprise-wide scans and
+reporting.
+
+### Reporting and Transparency
+
+The value of governance scripts is not only in enforcement but also in
+**reporting**. A script that logs issues to CSV can feed dashboards or
+be shared in review meetings. Reports provide evidence of compliance,
+useful for audits or regulatory contexts.
+
+Transparency is key: modellers must be able to see why something failed
+and how to fix it. A governance report that simply says “non-compliant”
+is not helpful. A report that lists exactly which elements are missing
+which tags is actionable.
+
+## Governance and MDGs
+
+As Chapter 9 explained, MDGs define the modelling language in use.
+Governance scripts must respect MDGs: checking that stereotypes are used
+correctly, tags are populated, and connector rules are followed. This
+alignment ensures that automation reinforces, rather than undermines,
+the MDG.
+
+For example, a governance script for an ArchiMate MDG might check that
+every ApplicationComponent has a Layer tag and that only
+ApplicationComponents realise Capabilities.
+
+## Examples
+
+### Naming Conventions
+```{.js filename="Example 11.1 - Gov_NamingConvention.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 11.1 - Gov_NamingConvention.js – JScript (ES3)
+// Purpose: Enforce naming convention "REQ_" for Requirement elements
+// Safety: DRY_RUN = true by default
+// Output: Logs violations, optional repair
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function trim(str) {
+    if (str == null || str == undefined) return "";
+    return String(str).replace(/^\s+|\s+$/g, "");
+}
+function startsWith(str, prefix) {
+    return String(str||"").indexOf(prefix) === 0;
+}
+
+function main() {
+    var DRY_RUN = true;
+    var PREFIX  = "REQ_";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var fixed=0, issues=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Type == "Requirement") {
+            if (!startsWith(e.Name, PREFIX)) {
+                issues++;
+                var newName = PREFIX + trim(e.Name);
+                Session.Output("Naming issue: " + e.Name + " → " + newName);
+                if (!DRY_RUN) {
+                    e.Name = newName;
+                    e.Update();
+                    fixed++;
+                }
+            }
+        }
+    }
+    if (!DRY_RUN && fixed>0) Repository.RefreshModelView(pkg.PackageID);
+    Session.Output("Issues=" + issues + " Fixed=" + fixed + " Dry-run=" + DRY_RUN);
+}
+
+main();
+```
+
+### Model Smells
+```{.js filename="Example 11.1 - Gov_NamingConvention.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 11.2 - Gov_ModelSmells_Orphans.js – JScript (ES3)
+// Purpose: Find elements without any connectors (orphans)
+// Output: Report-only
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var orphans=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Connectors.Count == 0) {
+            orphans++;
+            Session.Output("Orphan: " + e.Name + " (" + e.Type + ")");
+        }
+    }
+    Session.Output("Total orphans found: " + orphans);
+}
+
+main();
+```
+
+### Duplicate Elements
+```{.js filename="Example 11.3 - Gov_ModelSmells_Duplicates.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 11.3 - Gov_ModelSmells_Duplicates.js – JScript (ES3)
+// Purpose: Report duplicate element names within a package
+// Output: Report-only
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var seen = {};
+    var dups = 0;
+
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var name = String(e.Name||"");
+        if (seen[name]) {
+            Session.Output("Duplicate name: " + name + " (ElementID=" + e.ElementID + ")");
+            dups++;
+        } else {
+            seen[name] = true;
+        }
+    }
+    Session.Output("Duplicate count: " + dups);
+}
+
+main();
+```
+
+### Coverage & Traceability
+
+Traceability rules ensure that modelled items are linked correctly
+(e.g., each requirement must trace to at least one capability).
+
+```{.js filename="Example 11.4 - Gov_Traceability_Check.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 11.4 - Gov_Traceability_Check.js – JScript (ES3)
+// Purpose: Verify every Requirement in a package has at least one Realization link to a Capability
+// Safety: Report-only
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var missing=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Type == "Requirement") {
+            var cons = e.Connectors;
+            var hasTrace = false;
+            for (var j=0; j<cons.Count; j++) {
+                var c = cons.GetAt(j);
+                if (c.Type == "Realisation" || c.Type == "Realization") {
+                    var target = Repository.GetElementByID(c.SupplierID);
+                    if (target && target.Stereotype == "Capability") {
+                        hasTrace = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasTrace) {
+                missing++;
+                Session.Output("Requirement without Capability trace: " + e.Name + " (ID=" + e.ElementID + ")");
+            }
+        }
+    }
+    Session.Output("Traceability issues found: " + missing);
+}
+
+main();
+```
+
+### Governance Reports (CSV)
+
+For larger models, CSV outputs make governance easier to review.
+
+```{.js filename="Example 11.5 - Gov_ExportViolations.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 11.5 - Gov_ExportViolations.js – JScript (ES3)
+// Purpose: Collect naming, orphan, and traceability issues into CSV
+// Output: directory-only chooser; filename auto-derived
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function trim(str) {
+    if (str == null || str == undefined) return "";
+    return String(str).replace(/^\s+|\s+$/g, "");
+}
+function browseForFolder(promptText) {
+    var shell = new ActiveXObject("Shell.Application");
+    var folder = shell.BrowseForFolder(0, promptText, 0, 0);
+    return folder ? folder.Self.Path : null;
+}
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var outDir = browseForFolder("Select output folder for governance CSV");
+    if (!outDir) return;
+
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var stamp = (new Date()).getTime();
+    var path = outDir + "\\governance_report_" + stamp + ".csv";
+    var file = fso.CreateTextFile(path, true);
+
+    file.WriteLine("IssueType,ElementID,Name,Details");
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+
+        // Naming check
+        if (e.Type == "Requirement" && !startsWith(e.Name, "REQ_")) {
+            file.WriteLine("Naming,"+e.ElementID+","+e.Name+",Missing REQ_ prefix");
+        }
+
+        // Orphan check
+        if (e.Connectors.Count == 0) {
+            file.WriteLine("Orphan,"+e.ElementID+","+e.Name+",No connectors");
+        }
+
+        // Traceability check
+        if (e.Type == "Requirement" && !hasCapabilityTrace(e)) {
+            file.WriteLine("Traceability,"+e.ElementID+","+e.Name+",No Capability trace");
+        }
+    }
+
+    file.Close();
+    Session.Output("Governance report written → " + path);
+}
+
+function startsWith(str, prefix) {
+    return String(str||"").indexOf(prefix) === 0;
+}
+function hasCapabilityTrace(e) {
+    var cons = e.Connectors;
+    for (var j=0; j<cons.Count; j++) {
+        var c = cons.GetAt(j);
+        if (c.Type == "Realisation" || c.Type == "Realization") {
+            var target = Repository.GetElementByID(c.SupplierID);
+            if (target && target.Stereotype == "Capability") return true;
+        }
+    }
+    return false;
+}
+
+main();
+```
+
+## Summary
+
+Governance scripts are simple but powerful. They let you:
+
+- Enforce naming standards (Example 10.1).
+
+- Detect structural smells like orphans and duplicates (Examples 10.2 &
+  10.3).
+
+- Check coverage and traceability (Example 10.4).
+
+- Export reports for human review (Example 10.5).
+
+Together, these create a **living quality gate** for your repository —
+fast, repeatable, and objective.

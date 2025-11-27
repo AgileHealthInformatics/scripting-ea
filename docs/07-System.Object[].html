@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; Chapter 6: External Automation – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08-System.Object[].html" rel="next">
+<link href="./06-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-System.Object[].html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-external-automation" id="toc-why-external-automation" class="nav-link active" data-scroll-target="#why-external-automation"><span class="header-section-number">7.1</span> Why external automation?</a></li>
+  <li><a href="#how-it-works-at-a-glance" id="toc-how-it-works-at-a-glance" class="nav-link" data-scroll-target="#how-it-works-at-a-glance"><span class="header-section-number">7.2</span> How it works (at a glance)</a>
+  <ul class="collapse">
+  <li><a href="#example-6.1-end-to-end-external-automation-with-eaconnect" id="toc-example-6.1-end-to-end-external-automation-with-eaconnect" class="nav-link" data-scroll-target="#example-6.1-end-to-end-external-automation-with-eaconnect"><span class="header-section-number">7.2.1</span> Example 6.1 — End-to-End External Automation with EAConnect</a></li>
+  </ul></li>
+  <li><a href="#trade-offs" id="toc-trade-offs" class="nav-link" data-scroll-target="#trade-offs"><span class="header-section-number">7.3</span> Trade-offs</a></li>
+  <li><a href="#where-this-goes-next" id="toc-where-this-goes-next" class="nav-link" data-scroll-target="#where-this-goes-next"><span class="header-section-number">7.4</span> Where this goes next</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Internal scripts in Enterprise Architect (EA) are perfect for quick utilities, governance checks, and tidy-ups that live with the repository. Sometimes you need more. Integrations with registries and backlog tools, JSON-heavy exports, analytics over thousands of elements, CI/CD checks, and richer UX all benefit from <strong>external automation</strong>.</p>
+<p>External automation means driving EA from a separate program (e.g., C#/.NET, Python) via EA’s COM interface. Your program attaches to (or launches) EA, grabs the same Repository object you use inside scripts, and then performs work — with modern language ecosystems, logging, tests, packaging, and debugging.</p>
+<section id="why-external-automation" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="why-external-automation"><span class="header-section-number">7.1</span> Why external automation?</h2>
+<ul>
+<li><p><strong>Modern capabilities</strong>: async, structured logging, JSON, LINQ/pandas.</p></li>
+<li><p><strong>Ecosystem</strong>: proper source control, CI, test frameworks, packaging.</p></li>
+<li><p><strong>Integration</strong>: REST/Graph APIs, registries, issue trackers, data platforms.</p></li>
+<li><p><strong>Maintainability</strong>: clearer separation of concerns and deployable tools.</p></li>
+<li><p><strong>Scale</strong>: process large repositories, batch operations, pipelines.</p></li>
+</ul>
+</section>
+<section id="how-it-works-at-a-glance" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="how-it-works-at-a-glance"><span class="header-section-number">7.2</span> How it works (at a glance)</h2>
+<p>EA registers a COM server (EA.App). Your tool attaches (or launches), obtains EA.App.Repository, and then uses the familiar API for packages, elements, connectors, diagrams, SQL reads, and so on — just from outside EA.</p>
+<section id="example-6.1-end-to-end-external-automation-with-eaconnect" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="example-6.1-end-to-end-external-automation-with-eaconnect"><span class="header-section-number">7.2.1</span> Example 6.1 — End-to-End External Automation with EAConnect</h3>
+<p>The example below shows a practical, fully-commented <strong>C#</strong> console utility that:</p>
+<ol type="1">
+<li><p>Connects to EA (attach or launch)</p></li>
+<li><p>Ensures a model is open (optionally open a specified file)</p></li>
+<li><p>Finds a working package (selected in UI or falls back to first root)</p></li>
+<li><p>Creates a new Element in that package</p></li>
+<li><p>Persists and refreshes the UI so the change is immediately visible</p></li>
+</ol>
+<p>The EAConnect helper (namespace EA.Automation) centralises COM wiring, timing/polling, and small UX conveniences. The full helper implementation and setup guidance live in <strong>Appendix A – EAConnect Helper &amp; Setup</strong>.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 6.1 - EA Automation – Example Utility</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Example 6.1 - EA Automation – Example Utility"><pre class="sourceCode numberSource cs number-lines code-with-copy"><code class="sourceCode cs"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// =============================================================================================</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">// Example 6.1</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">// File:        Program.cs</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">// Project:     EA Automation – Example Utility</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">// Author:      &lt;Your Name&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">//</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">// Created:     2025-08-31</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">// Last Update: 2025-08-31</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">//</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co">// PURPOSE</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">// -------</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">// Demonstrates a practical end-to-end EA automation task using the EAConnect helper:</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">//   1) Connect to Enterprise Architect (attach or launch)</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">//   2) Ensure a model is open (optionally open a specified .qea/.qeax/.eapx)</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">//   3) Identify a target package (selected in the UI or fallback to the first root)</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">//   4) Create a new Element in that package</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="co">//   5) Persist and refresh the UI so the user immediately sees the change</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co">//</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co">// USAGE</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">// -----</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co">//   From a developer console (matching EA bitness):</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co">//   MyEaTool.exe "New Class Name" "Class" "Optional notes"</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">//   "OptionalProfile::OptionalStereotype"</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co">//</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="co">//   Arguments (all optional; sensible defaults provided):</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co">//     [0] name : Element name (default: "New Class")</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co">//     [1] type : Element type (default: "Class"; e.g., "Component", "Requirement", "UseCase")</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co">//     [2] notes: Notes/description (default: "Created by example utility.")</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="co">//     [3] stereotypeEx : Fully qualified stereotype (default: none; e.g., "BPMN2.0::Task")</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="co">//</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="co">// PRE-REQUISITES</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="co">// --------------</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co">// - Windows + .NET 8 (Windows)</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="co">// - &lt;TargetFramework&gt;net8.0-windows&lt;/TargetFramework&gt;</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co">// - &lt;PlatformTarget&gt;x64&lt;/PlatformTarget&gt; (for EA 64-bit) or x86 for 32-bit EA</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="co">// - Reference Interop.EA.dll from your EA installation</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="co">// - Entry point marked [STAThread]</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a><span class="co">//</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="co">// NOTES</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a><span class="co">// -----</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="co">// If nothing is selected in EA’s Project Browser, we default to the first root package.</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a><span class="co">// After creating the element, call element.Update() to persist and then refresh the model view.</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a><span class="co">// We also advise EA’s UI that the element changed to update open diagrams.</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="co">//</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a><span class="co">// UPDATE HISTORY</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a><span class="co">// --------------</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="co">// - 2025-08-31: Initial illustrative example.</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a><span class="co">// ==============================================================================================</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a></span>
+<span id="cb1-50"><a href="#cb1-50"></a>#nullable enable</span>
+<span id="cb1-51"><a href="#cb1-51"></a><span class="kw">using</span> System<span class="op">;</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a><span class="kw">using</span> EA<span class="op">;</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a><span class="kw">using</span> EA<span class="op">.</span><span class="fu">Automation</span><span class="op">;</span>  <span class="co">// EAConnect helper</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a></span>
+<span id="cb1-55"><a href="#cb1-55"></a><span class="kw">internal</span> <span class="kw">static</span> <span class="kw">class</span> Program</span>
+<span id="cb1-56"><a href="#cb1-56"></a><span class="op">{</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a>    <span class="op">[</span>STAThread<span class="op">]</span> <span class="co">// EA COM automation expects an STA thread</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a>    <span class="kw">private</span> <span class="kw">static</span> <span class="dt">void</span> <span class="fu">Main</span><span class="op">(</span><span class="dt">string</span><span class="op">[]</span> args<span class="op">)</span></span>
+<span id="cb1-59"><a href="#cb1-59"></a>    <span class="op">{</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a><span class="co">// --------------------------------------------</span></span>
+<span id="cb1-61"><a href="#cb1-61"></a><span class="co">// 0) Parse command-line args with safe defaults</span></span>
+<span id="cb1-62"><a href="#cb1-62"></a><span class="co">// --------------------------------------------</span></span>
+<span id="cb1-63"><a href="#cb1-63"></a>        <span class="dt">string</span> name <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">:</span> <span class="st">"New Class"</span><span class="op">;</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a>        <span class="dt">string</span> type <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">1</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="st">"Class"</span><span class="op">;</span></span>
+<span id="cb1-65"><a href="#cb1-65"></a>        <span class="dt">string</span> notes <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">2</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">:</span> <span class="st">"Created by example utility."</span><span class="op">;</span></span>
+<span id="cb1-66"><a href="#cb1-66"></a>        <span class="dt">string</span><span class="op">?</span> stereotype <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">3</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">:</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-67"><a href="#cb1-67"></a></span>
+<span id="cb1-68"><a href="#cb1-68"></a><span class="co">// Optional: set this if you want to force-opening a specific model file when none is open.</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a><span class="co">// If you’re writing a general utility, you might leave it null and let the user open/select.</span></span>
+<span id="cb1-70"><a href="#cb1-70"></a>        <span class="dt">string</span><span class="op">?</span> modelPath <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a><span class="co">// Example:</span></span>
+<span id="cb1-72"><a href="#cb1-72"></a><span class="co">// modelPath = @"C:\Users\Public\Documents\Sparx Systems\EA\EA Example.qea";</span></span>
+<span id="cb1-73"><a href="#cb1-73"></a></span>
+<span id="cb1-74"><a href="#cb1-74"></a>        Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"EA Automation Example – Add Element to Package"</span><span class="op">);</span></span>
+<span id="cb1-75"><a href="#cb1-75"></a>        Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"Requested element: Name='{name}', Type='{type}', StereotypeEx='{stereotype ?? "</span><span class="op">(</span>none<span class="op">)</span><span class="st">"}'"</span><span class="op">);</span></span>
+<span id="cb1-76"><a href="#cb1-76"></a></span>
+<span id="cb1-77"><a href="#cb1-77"></a>        <span class="kw">try</span></span>
+<span id="cb1-78"><a href="#cb1-78"></a>        <span class="op">{</span></span>
+<span id="cb1-79"><a href="#cb1-79"></a>            <span class="co">// ------------------------------------------------------------</span></span>
+<span id="cb1-80"><a href="#cb1-80"></a>            <span class="co">// 1) Connect to EA, ensure a model is open, and show the UI</span></span>
+<span id="cb1-81"><a href="#cb1-81"></a>            <span class="co">// ------------------------------------------------------------</span></span>
+<span id="cb1-82"><a href="#cb1-82"></a>            <span class="kw">using</span> <span class="dt">var</span> ea <span class="op">=</span> EAConnect<span class="op">.</span><span class="fu">AttachOrLaunch</span><span class="op">(</span><span class="kw">new</span> EAConnect<span class="op">.</span><span class="fu">Options</span></span>
+<span id="cb1-83"><a href="#cb1-83"></a>            <span class="op">{</span></span>
+<span id="cb1-84"><a href="#cb1-84"></a>                PreferAttach <span class="op">=</span> <span class="kw">true</span><span class="op">,</span>        <span class="co">// attach to a running EA if possible</span></span>
+<span id="cb1-85"><a href="#cb1-85"></a>                LaunchIfNotRunning <span class="op">=</span> <span class="kw">true</span><span class="op">,</span>        <span class="co">// otherwise launch a new EA instance</span></span>
+<span id="cb1-86"><a href="#cb1-86"></a>                ModelPath <span class="op">=</span> modelPath<span class="op">,</span>   <span class="co">// open a known model if none is open</span></span>
+<span id="cb1-87"><a href="#cb1-87"></a>                ShowUI <span class="op">=</span> <span class="kw">true</span><span class="op">,</span>        <span class="co">// show EA UI so user sees what happens</span></span>
+<span id="cb1-88"><a href="#cb1-88"></a>                StartupWaitMs <span class="op">=</span> <span class="dv">1500</span><span class="op">,</span>        <span class="co">// small settle time after opening/launching</span></span>
+<span id="cb1-89"><a href="#cb1-89"></a>                RepoPollMs <span class="op">=</span> <span class="dv">100</span><span class="op">,</span>         <span class="co">// poll interval for App.Repository</span></span>
+<span id="cb1-90"><a href="#cb1-90"></a>                RepoPollMax <span class="op">=</span> <span class="dv">50</span>           <span class="co">// up to 5 seconds for Repo to appear</span></span>
+<span id="cb1-91"><a href="#cb1-91"></a>            <span class="op">});</span></span>
+<span id="cb1-92"><a href="#cb1-92"></a></span>
+<span id="cb1-93"><a href="#cb1-93"></a>            <span class="co">// -----------------------------------------------------------------------</span></span>
+<span id="cb1-94"><a href="#cb1-94"></a>            <span class="co">// 2) Find the working package: selected package or fallback to root[0]</span></span>
+<span id="cb1-95"><a href="#cb1-95"></a>            <span class="co">// -----------------------------------------------------------------------</span></span>
+<span id="cb1-96"><a href="#cb1-96"></a>            Package pkg <span class="op">=</span> ea<span class="op">.</span><span class="fu">GetSelectedPackageOrRoot</span><span class="op">();</span></span>
+<span id="cb1-97"><a href="#cb1-97"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"Target package: {pkg.Name} (ID={pkg.PackageID})"</span><span class="op">);</span></span>
+<span id="cb1-98"><a href="#cb1-98"></a></span>
+<span id="cb1-99"><a href="#cb1-99"></a>            <span class="co">// --------------------------------------------------------</span></span>
+<span id="cb1-100"><a href="#cb1-100"></a>            <span class="co">// 3) Create a new element inside that package (core steps)</span></span>
+<span id="cb1-101"><a href="#cb1-101"></a>            <span class="co">//    - AddNew(name, type)</span></span>
+<span id="cb1-102"><a href="#cb1-102"></a>            <span class="co">//    - Set optional properties (Notes, StereotypeEx)</span></span>
+<span id="cb1-103"><a href="#cb1-103"></a>            <span class="co">//    - Update() to persist changes</span></span>
+<span id="cb1-104"><a href="#cb1-104"></a>            <span class="co">// --------------------------------------------------------</span></span>
+<span id="cb1-105"><a href="#cb1-105"></a>            Element el <span class="op">=</span> <span class="op">(</span>Element<span class="op">)</span>pkg<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">AddNew</span><span class="op">(</span>name<span class="op">,</span> type<span class="op">);</span></span>
+<span id="cb1-106"><a href="#cb1-106"></a></span>
+<span id="cb1-107"><a href="#cb1-107"></a>            <span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrEmpty</span><span class="op">(</span>stereotype<span class="op">))</span></span>
+<span id="cb1-108"><a href="#cb1-108"></a>            <span class="op">{</span></span>
+<span id="cb1-109"><a href="#cb1-109"></a>                <span class="co">// For MDG types, you can set fully qualified stereotype (e.g., "BPMN2.0::Task")</span></span>
+<span id="cb1-110"><a href="#cb1-110"></a>                el<span class="op">.</span><span class="fu">StereotypeEx</span> <span class="op">=</span> stereotype<span class="op">;</span></span>
+<span id="cb1-111"><a href="#cb1-111"></a>            <span class="op">}</span></span>
+<span id="cb1-112"><a href="#cb1-112"></a></span>
+<span id="cb1-113"><a href="#cb1-113"></a>            <span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>notes<span class="op">))</span></span>
+<span id="cb1-114"><a href="#cb1-114"></a>                el<span class="op">.</span><span class="fu">Notes</span> <span class="op">=</span> notes<span class="op">;</span></span>
+<span id="cb1-115"><a href="#cb1-115"></a></span>
+<span id="cb1-116"><a href="#cb1-116"></a>            <span class="co">// Persist the new element into the repository</span></span>
+<span id="cb1-117"><a href="#cb1-117"></a>            <span class="kw">if</span> <span class="op">(!</span>el<span class="op">.</span><span class="fu">Update</span><span class="op">())</span></span>
+<span id="cb1-118"><a href="#cb1-118"></a>            <span class="op">{</span></span>
+<span id="cb1-119"><a href="#cb1-119"></a>                <span class="co">// If Update() returns false, EA has an error you can read via</span></span>
+<span id="cb1-120"><a href="#cb1-120"></a>                <span class="co">// repo.GetLastError()</span></span>
+<span id="cb1-121"><a href="#cb1-121"></a>                <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span><span class="st">"Element.Update() failed."</span><span class="op">);</span></span>
+<span id="cb1-122"><a href="#cb1-122"></a>            <span class="op">}</span></span>
+<span id="cb1-123"><a href="#cb1-123"></a></span>
+<span id="cb1-124"><a href="#cb1-124"></a>            <span class="co">// ------------------------------------------------------------------------</span></span>
+<span id="cb1-125"><a href="#cb1-125"></a>            <span class="co">// 4) Refresh EA’s UI so the user immediately sees the new element appear</span></span>
+<span id="cb1-126"><a href="#cb1-126"></a>            <span class="co">// ------------------------------------------------------------------------</span></span>
+<span id="cb1-127"><a href="#cb1-127"></a>            <span class="co">// - AdviseElementChange: tells EA something changed – updates any open diagrams</span></span>
+<span id="cb1-128"><a href="#cb1-128"></a>            <span class="co">// - RefreshModelView   : reloads the package in the Project Browser</span></span>
+<span id="cb1-129"><a href="#cb1-129"></a>            ea<span class="op">.</span><span class="fu">Repo</span><span class="op">.</span><span class="fu">AdviseElementChange</span><span class="op">(</span>el<span class="op">.</span><span class="fu">ElementID</span><span class="op">);</span></span>
+<span id="cb1-130"><a href="#cb1-130"></a>            ea<span class="op">.</span><span class="fu">Repo</span><span class="op">.</span><span class="fu">RefreshModelView</span><span class="op">(</span>pkg<span class="op">.</span><span class="fu">PackageID</span><span class="op">);</span></span>
+<span id="cb1-131"><a href="#cb1-131"></a></span>
+<span id="cb1-132"><a href="#cb1-132"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"Created: {el.Name} [{el.Type}]"</span><span class="op">);</span></span>
+<span id="cb1-133"><a href="#cb1-133"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"GUID   : {el.ElementGUID}"</span><span class="op">);</span></span>
+<span id="cb1-134"><a href="#cb1-134"></a></span>
+<span id="cb1-135"><a href="#cb1-135"></a>            <span class="co">// -----------------------------------------</span></span>
+<span id="cb1-136"><a href="#cb1-136"></a>            <span class="co">// 5) Bonus: enumerate elements in the pkg</span></span>
+<span id="cb1-137"><a href="#cb1-137"></a>            <span class="co">// -----------------------------------------</span></span>
+<span id="cb1-138"><a href="#cb1-138"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">();</span></span>
+<span id="cb1-139"><a href="#cb1-139"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Elements now present in package:"</span><span class="op">);</span></span>
+<span id="cb1-140"><a href="#cb1-140"></a>            <span class="dt">short</span> count <span class="op">=</span> pkg<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">Count</span><span class="op">;</span></span>
+<span id="cb1-141"><a href="#cb1-141"></a>            <span class="kw">for</span> <span class="op">(</span><span class="dt">short</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> count<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb1-142"><a href="#cb1-142"></a>            <span class="op">{</span></span>
+<span id="cb1-143"><a href="#cb1-143"></a>                <span class="dt">var</span> existing <span class="op">=</span> <span class="op">(</span>Element<span class="op">)</span>pkg<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">GetAt</span><span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb1-144"><a href="#cb1-144"></a>                Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"  - {existing.Name} ({existing.Type})"</span><span class="op">);</span></span>
+<span id="cb1-145"><a href="#cb1-145"></a>            <span class="op">}</span></span>
+<span id="cb1-146"><a href="#cb1-146"></a></span>
+<span id="cb1-147"><a href="#cb1-147"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">();</span></span>
+<span id="cb1-148"><a href="#cb1-148"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Done. Press any key to exit."</span><span class="op">);</span></span>
+<span id="cb1-149"><a href="#cb1-149"></a>            Console<span class="op">.</span><span class="fu">ReadKey</span><span class="op">();</span></span>
+<span id="cb1-150"><a href="#cb1-150"></a>        <span class="op">}</span></span>
+<span id="cb1-151"><a href="#cb1-151"></a>        <span class="kw">catch</span> <span class="op">(</span>Exception ex<span class="op">)</span></span>
+<span id="cb1-152"><a href="#cb1-152"></a>        <span class="op">{</span></span>
+<span id="cb1-153"><a href="#cb1-153"></a><span class="co">// In production tools you might log the stack. For a book example, keep output readable.</span></span>
+<span id="cb1-154"><a href="#cb1-154"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">();</span></span>
+<span id="cb1-155"><a href="#cb1-155"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"ERROR:"</span><span class="op">);</span></span>
+<span id="cb1-156"><a href="#cb1-156"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>ex<span class="op">.</span><span class="fu">Message</span><span class="op">);</span></span>
+<span id="cb1-157"><a href="#cb1-157"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Tip: Ensure EA is installed (matching x64/x86), Interop.EA.dll is referenced,"</span><span class="op">);</span></span>
+<span id="cb1-158"><a href="#cb1-158"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"     and that a model is open or ModelPath is set."</span><span class="op">);</span></span>
+<span id="cb1-159"><a href="#cb1-159"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Press any key to exit."</span><span class="op">);</span></span>
+<span id="cb1-160"><a href="#cb1-160"></a>            Console<span class="op">.</span><span class="fu">ReadKey</span><span class="op">();</span></span>
+<span id="cb1-161"><a href="#cb1-161"></a>        <span class="op">}</span></span>
+<span id="cb1-162"><a href="#cb1-162"></a>    <span class="op">}</span></span>
+<span id="cb1-163"><a href="#cb1-163"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="trade-offs" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="trade-offs"><span class="header-section-number">7.3</span> Trade-offs</h2>
+<p><strong>Pros</strong></p>
+<ul>
+<li><p>Modern language, logging, testing, and packaging.</p></li>
+<li><p>Clear separation from the model repository.</p></li>
+<li><p>Works well for integrations, analytics, and pipelines.</p></li>
+<li><p>Easier to scale and maintain over time.</p></li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li><p>Requires setup (Interop reference, bitness alignment, COM availability).</p></li>
+<li><p>Windows/COM dependency.</p></li>
+<li><p>Distribution/versioning outside the model.</p></li>
+<li><p>Speed + power mean mistakes propagate quickly if you skip safety.</p></li>
+</ul>
+<p><strong>Safety still matters</strong></p>
+<ul>
+<li><p>Prefer <strong>dry-run</strong> patterns and <strong>audit logs</strong> for batch updates.</p></li>
+<li><p>Use <strong>SQL-find + API-write</strong> for scale (helper provides this).</p></li>
+<li><p>Test on <strong>sandbox repositories</strong> first.</p></li>
+<li><p><strong>Batch</strong> writes and <strong>refresh</strong> the UI once per operation.</p></li>
+</ul>
+</section>
+<section id="where-this-goes-next" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="where-this-goes-next"><span class="header-section-number">7.4</span> Where this goes next</h2>
+<p>Most teams adopt a blended approach: internal scripts for quick hygiene; external utilities for integrations and heavy lifting; add-ins for stable, menu-driven capabilities. With EAConnect, you keep examples concise while centralising boilerplate and sharp edges in one place.</p>
+<p>See <strong>Appendix A – EAConnect Helper &amp; Setup</strong> for the full helper class (verbose header, usage, assumptions, dependencies, and update history), plus environment notes (Interop.EA.dll, bitness, COM), optional “directory-only” output pickers, CSV logging utilities, a curate-then-apply pipeline, and the SQL-accelerated find / API-safe write pattern.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./06-System.Object[].html" class="pagination-link" aria-label="Chapter 5: Inside EA with JScript">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./08-System.Object[].html" class="pagination-link" aria-label="Chapter 7: Script Design Patterns">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu"># Chapter 6: External Automation</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>Internal scripts in Enterprise Architect (EA) are perfect for quick</span>
+<span id="cb2-4"><a href="#cb2-4"></a>utilities, governance checks, and tidy-ups that live with the</span>
+<span id="cb2-5"><a href="#cb2-5"></a>repository. Sometimes you need more. Integrations with registries and</span>
+<span id="cb2-6"><a href="#cb2-6"></a>backlog tools, JSON-heavy exports, analytics over thousands of elements,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>CI/CD checks, and richer UX all benefit from **external automation**.</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>External automation means driving EA from a separate program (e.g.,</span>
+<span id="cb2-10"><a href="#cb2-10"></a>C#/.NET, Python) via EA’s COM interface. Your program attaches to (or</span>
+<span id="cb2-11"><a href="#cb2-11"></a>launches) EA, grabs the same Repository object you use inside scripts,</span>
+<span id="cb2-12"><a href="#cb2-12"></a>and then performs work — with modern language ecosystems, logging,</span>
+<span id="cb2-13"><a href="#cb2-13"></a>tests, packaging, and debugging.</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="fu">## Why external automation?</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="ss">- </span>**Modern capabilities**: async, structured logging, JSON, LINQ/pandas.</span>
+<span id="cb2-18"><a href="#cb2-18"></a></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="ss">- </span>**Ecosystem**: proper source control, CI, test frameworks, packaging.</span>
+<span id="cb2-20"><a href="#cb2-20"></a></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="ss">- </span>**Integration**: REST/Graph APIs, registries, issue trackers, data</span>
+<span id="cb2-22"><a href="#cb2-22"></a>  platforms.</span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="ss">- </span>**Maintainability**: clearer separation of concerns and deployable</span>
+<span id="cb2-25"><a href="#cb2-25"></a>  tools.</span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="ss">- </span>**Scale**: process large repositories, batch operations, pipelines.</span>
+<span id="cb2-28"><a href="#cb2-28"></a></span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="fu">## How it works (at a glance)</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a></span>
+<span id="cb2-31"><a href="#cb2-31"></a>EA registers a COM server (EA.App). Your tool attaches (or launches),</span>
+<span id="cb2-32"><a href="#cb2-32"></a>obtains EA.App.Repository, and then uses the familiar API for packages,</span>
+<span id="cb2-33"><a href="#cb2-33"></a>elements, connectors, diagrams, SQL reads, and so on — just from outside</span>
+<span id="cb2-34"><a href="#cb2-34"></a>EA.</span>
+<span id="cb2-35"><a href="#cb2-35"></a></span>
+<span id="cb2-36"><a href="#cb2-36"></a><span class="fu">### Example 6.1 — End-to-End External Automation with EAConnect</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a></span>
+<span id="cb2-38"><a href="#cb2-38"></a>The example below shows a practical, fully-commented **C#** console</span>
+<span id="cb2-39"><a href="#cb2-39"></a>utility that:</span>
+<span id="cb2-40"><a href="#cb2-40"></a></span>
+<span id="cb2-41"><a href="#cb2-41"></a><span class="ss">1.  </span>Connects to EA (attach or launch)</span>
+<span id="cb2-42"><a href="#cb2-42"></a></span>
+<span id="cb2-43"><a href="#cb2-43"></a><span class="ss">2.  </span>Ensures a model is open (optionally open a specified file)</span>
+<span id="cb2-44"><a href="#cb2-44"></a></span>
+<span id="cb2-45"><a href="#cb2-45"></a><span class="ss">3.  </span>Finds a working package (selected in UI or falls back to first root)</span>
+<span id="cb2-46"><a href="#cb2-46"></a></span>
+<span id="cb2-47"><a href="#cb2-47"></a><span class="ss">4.  </span>Creates a new Element in that package</span>
+<span id="cb2-48"><a href="#cb2-48"></a></span>
+<span id="cb2-49"><a href="#cb2-49"></a><span class="ss">5.  </span>Persists and refreshes the UI so the change is immediately visible</span>
+<span id="cb2-50"><a href="#cb2-50"></a></span>
+<span id="cb2-51"><a href="#cb2-51"></a>The EAConnect helper (namespace EA.Automation) centralises COM wiring,</span>
+<span id="cb2-52"><a href="#cb2-52"></a>timing/polling, and small UX conveniences. The full helper</span>
+<span id="cb2-53"><a href="#cb2-53"></a>implementation and setup guidance live in **Appendix A – EAConnect</span>
+<span id="cb2-54"><a href="#cb2-54"></a>Helper &amp; Setup**.</span>
+<span id="cb2-55"><a href="#cb2-55"></a></span>
+<span id="cb2-56"><a href="#cb2-56"></a><span class="in">```{.cs filename="Example 6.1 - EA Automation – Example Utility"}</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a><span class="co">// =============================================================================================</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="co">// Example 6.1</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a><span class="co">// File:        Program.cs</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a><span class="co">// Project:     EA Automation – Example Utility</span></span>
+<span id="cb2-61"><a href="#cb2-61"></a><span class="co">// Author:      &lt;Your Name&gt;</span></span>
+<span id="cb2-62"><a href="#cb2-62"></a><span class="co">//</span></span>
+<span id="cb2-63"><a href="#cb2-63"></a><span class="co">// Created:     2025-08-31</span></span>
+<span id="cb2-64"><a href="#cb2-64"></a><span class="co">// Last Update: 2025-08-31</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a><span class="co">//</span></span>
+<span id="cb2-66"><a href="#cb2-66"></a><span class="co">// PURPOSE</span></span>
+<span id="cb2-67"><a href="#cb2-67"></a><span class="co">// -------</span></span>
+<span id="cb2-68"><a href="#cb2-68"></a><span class="co">// Demonstrates a practical end-to-end EA automation task using the EAConnect helper:</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a><span class="co">//   1) Connect to Enterprise Architect (attach or launch)</span></span>
+<span id="cb2-70"><a href="#cb2-70"></a><span class="co">//   2) Ensure a model is open (optionally open a specified .qea/.qeax/.eapx)</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a><span class="co">//   3) Identify a target package (selected in the UI or fallback to the first root)</span></span>
+<span id="cb2-72"><a href="#cb2-72"></a><span class="co">//   4) Create a new Element in that package</span></span>
+<span id="cb2-73"><a href="#cb2-73"></a><span class="co">//   5) Persist and refresh the UI so the user immediately sees the change</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a><span class="co">//</span></span>
+<span id="cb2-75"><a href="#cb2-75"></a><span class="co">// USAGE</span></span>
+<span id="cb2-76"><a href="#cb2-76"></a><span class="co">// -----</span></span>
+<span id="cb2-77"><a href="#cb2-77"></a><span class="co">//   From a developer console (matching EA bitness):</span></span>
+<span id="cb2-78"><a href="#cb2-78"></a><span class="co">//   MyEaTool.exe "New Class Name" "Class" "Optional notes"</span></span>
+<span id="cb2-79"><a href="#cb2-79"></a><span class="co">//   "OptionalProfile::OptionalStereotype"</span></span>
+<span id="cb2-80"><a href="#cb2-80"></a><span class="co">//</span></span>
+<span id="cb2-81"><a href="#cb2-81"></a><span class="co">//   Arguments (all optional; sensible defaults provided):</span></span>
+<span id="cb2-82"><a href="#cb2-82"></a><span class="co">//     [0] name : Element name (default: "New Class")</span></span>
+<span id="cb2-83"><a href="#cb2-83"></a><span class="co">//     [1] type : Element type (default: "Class"; e.g., "Component", "Requirement", "UseCase")</span></span>
+<span id="cb2-84"><a href="#cb2-84"></a><span class="co">//     [2] notes: Notes/description (default: "Created by example utility.")</span></span>
+<span id="cb2-85"><a href="#cb2-85"></a><span class="co">//     [3] stereotypeEx : Fully qualified stereotype (default: none; e.g., "BPMN2.0::Task")</span></span>
+<span id="cb2-86"><a href="#cb2-86"></a><span class="co">//</span></span>
+<span id="cb2-87"><a href="#cb2-87"></a><span class="co">// PRE-REQUISITES</span></span>
+<span id="cb2-88"><a href="#cb2-88"></a><span class="co">// --------------</span></span>
+<span id="cb2-89"><a href="#cb2-89"></a><span class="co">// - Windows + .NET 8 (Windows)</span></span>
+<span id="cb2-90"><a href="#cb2-90"></a><span class="co">// - &lt;TargetFramework&gt;net8.0-windows&lt;/TargetFramework&gt;</span></span>
+<span id="cb2-91"><a href="#cb2-91"></a><span class="co">// - &lt;PlatformTarget&gt;x64&lt;/PlatformTarget&gt; (for EA 64-bit) or x86 for 32-bit EA</span></span>
+<span id="cb2-92"><a href="#cb2-92"></a><span class="co">// - Reference Interop.EA.dll from your EA installation</span></span>
+<span id="cb2-93"><a href="#cb2-93"></a><span class="co">// - Entry point marked [STAThread]</span></span>
+<span id="cb2-94"><a href="#cb2-94"></a><span class="co">//</span></span>
+<span id="cb2-95"><a href="#cb2-95"></a><span class="co">// NOTES</span></span>
+<span id="cb2-96"><a href="#cb2-96"></a><span class="co">// -----</span></span>
+<span id="cb2-97"><a href="#cb2-97"></a><span class="co">// If nothing is selected in EA’s Project Browser, we default to the first root package.</span></span>
+<span id="cb2-98"><a href="#cb2-98"></a><span class="co">// After creating the element, call element.Update() to persist and then refresh the model view.</span></span>
+<span id="cb2-99"><a href="#cb2-99"></a><span class="co">// We also advise EA’s UI that the element changed to update open diagrams.</span></span>
+<span id="cb2-100"><a href="#cb2-100"></a><span class="co">//</span></span>
+<span id="cb2-101"><a href="#cb2-101"></a><span class="co">// UPDATE HISTORY</span></span>
+<span id="cb2-102"><a href="#cb2-102"></a><span class="co">// --------------</span></span>
+<span id="cb2-103"><a href="#cb2-103"></a><span class="co">// - 2025-08-31: Initial illustrative example.</span></span>
+<span id="cb2-104"><a href="#cb2-104"></a><span class="co">// ==============================================================================================</span></span>
+<span id="cb2-105"><a href="#cb2-105"></a></span>
+<span id="cb2-106"><a href="#cb2-106"></a>#nullable enable</span>
+<span id="cb2-107"><a href="#cb2-107"></a><span class="kw">using</span> System<span class="op">;</span></span>
+<span id="cb2-108"><a href="#cb2-108"></a><span class="kw">using</span> EA<span class="op">;</span></span>
+<span id="cb2-109"><a href="#cb2-109"></a><span class="kw">using</span> EA<span class="op">.</span><span class="fu">Automation</span><span class="op">;</span>  <span class="co">// EAConnect helper</span></span>
+<span id="cb2-110"><a href="#cb2-110"></a></span>
+<span id="cb2-111"><a href="#cb2-111"></a><span class="kw">internal</span> <span class="kw">static</span> <span class="kw">class</span> Program</span>
+<span id="cb2-112"><a href="#cb2-112"></a><span class="op">{</span></span>
+<span id="cb2-113"><a href="#cb2-113"></a>    <span class="op">[</span>STAThread<span class="op">]</span> <span class="co">// EA COM automation expects an STA thread</span></span>
+<span id="cb2-114"><a href="#cb2-114"></a>    <span class="kw">private</span> <span class="kw">static</span> <span class="dt">void</span> <span class="fu">Main</span><span class="op">(</span><span class="dt">string</span><span class="op">[]</span> args<span class="op">)</span></span>
+<span id="cb2-115"><a href="#cb2-115"></a>    <span class="op">{</span></span>
+<span id="cb2-116"><a href="#cb2-116"></a><span class="co">// --------------------------------------------</span></span>
+<span id="cb2-117"><a href="#cb2-117"></a><span class="co">// 0) Parse command-line args with safe defaults</span></span>
+<span id="cb2-118"><a href="#cb2-118"></a><span class="co">// --------------------------------------------</span></span>
+<span id="cb2-119"><a href="#cb2-119"></a>        <span class="dt">string</span> name <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">:</span> <span class="st">"New Class"</span><span class="op">;</span></span>
+<span id="cb2-120"><a href="#cb2-120"></a>        <span class="dt">string</span> type <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">1</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="st">"Class"</span><span class="op">;</span></span>
+<span id="cb2-121"><a href="#cb2-121"></a>        <span class="dt">string</span> notes <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">2</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">:</span> <span class="st">"Created by example utility."</span><span class="op">;</span></span>
+<span id="cb2-122"><a href="#cb2-122"></a>        <span class="dt">string</span><span class="op">?</span> stereotype <span class="op">=</span> args<span class="op">.</span><span class="fu">Length</span> <span class="op">&gt;</span> <span class="dv">3</span> <span class="op">?</span> args<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">:</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb2-123"><a href="#cb2-123"></a></span>
+<span id="cb2-124"><a href="#cb2-124"></a><span class="co">// Optional: set this if you want to force-opening a specific model file when none is open.</span></span>
+<span id="cb2-125"><a href="#cb2-125"></a><span class="co">// If you’re writing a general utility, you might leave it null and let the user open/select.</span></span>
+<span id="cb2-126"><a href="#cb2-126"></a>        <span class="dt">string</span><span class="op">?</span> modelPath <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb2-127"><a href="#cb2-127"></a><span class="co">// Example:</span></span>
+<span id="cb2-128"><a href="#cb2-128"></a><span class="co">// modelPath = @"C:\Users\Public\Documents\Sparx Systems\EA\EA Example.qea";</span></span>
+<span id="cb2-129"><a href="#cb2-129"></a></span>
+<span id="cb2-130"><a href="#cb2-130"></a>        Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"EA Automation Example – Add Element to Package"</span><span class="op">);</span></span>
+<span id="cb2-131"><a href="#cb2-131"></a>        Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"Requested element: Name='{name}', Type='{type}', StereotypeEx='{stereotype ?? "</span><span class="op">(</span>none<span class="op">)</span><span class="st">"}'"</span><span class="op">);</span></span>
+<span id="cb2-132"><a href="#cb2-132"></a></span>
+<span id="cb2-133"><a href="#cb2-133"></a>        <span class="kw">try</span></span>
+<span id="cb2-134"><a href="#cb2-134"></a>        <span class="op">{</span></span>
+<span id="cb2-135"><a href="#cb2-135"></a>            <span class="co">// ------------------------------------------------------------</span></span>
+<span id="cb2-136"><a href="#cb2-136"></a>            <span class="co">// 1) Connect to EA, ensure a model is open, and show the UI</span></span>
+<span id="cb2-137"><a href="#cb2-137"></a>            <span class="co">// ------------------------------------------------------------</span></span>
+<span id="cb2-138"><a href="#cb2-138"></a>            <span class="kw">using</span> <span class="dt">var</span> ea <span class="op">=</span> EAConnect<span class="op">.</span><span class="fu">AttachOrLaunch</span><span class="op">(</span><span class="kw">new</span> EAConnect<span class="op">.</span><span class="fu">Options</span></span>
+<span id="cb2-139"><a href="#cb2-139"></a>            <span class="op">{</span></span>
+<span id="cb2-140"><a href="#cb2-140"></a>                PreferAttach <span class="op">=</span> <span class="kw">true</span><span class="op">,</span>        <span class="co">// attach to a running EA if possible</span></span>
+<span id="cb2-141"><a href="#cb2-141"></a>                LaunchIfNotRunning <span class="op">=</span> <span class="kw">true</span><span class="op">,</span>        <span class="co">// otherwise launch a new EA instance</span></span>
+<span id="cb2-142"><a href="#cb2-142"></a>                ModelPath <span class="op">=</span> modelPath<span class="op">,</span>   <span class="co">// open a known model if none is open</span></span>
+<span id="cb2-143"><a href="#cb2-143"></a>                ShowUI <span class="op">=</span> <span class="kw">true</span><span class="op">,</span>        <span class="co">// show EA UI so user sees what happens</span></span>
+<span id="cb2-144"><a href="#cb2-144"></a>                StartupWaitMs <span class="op">=</span> <span class="dv">1500</span><span class="op">,</span>        <span class="co">// small settle time after opening/launching</span></span>
+<span id="cb2-145"><a href="#cb2-145"></a>                RepoPollMs <span class="op">=</span> <span class="dv">100</span><span class="op">,</span>         <span class="co">// poll interval for App.Repository</span></span>
+<span id="cb2-146"><a href="#cb2-146"></a>                RepoPollMax <span class="op">=</span> <span class="dv">50</span>           <span class="co">// up to 5 seconds for Repo to appear</span></span>
+<span id="cb2-147"><a href="#cb2-147"></a>            <span class="op">});</span></span>
+<span id="cb2-148"><a href="#cb2-148"></a></span>
+<span id="cb2-149"><a href="#cb2-149"></a>            <span class="co">// -----------------------------------------------------------------------</span></span>
+<span id="cb2-150"><a href="#cb2-150"></a>            <span class="co">// 2) Find the working package: selected package or fallback to root[0]</span></span>
+<span id="cb2-151"><a href="#cb2-151"></a>            <span class="co">// -----------------------------------------------------------------------</span></span>
+<span id="cb2-152"><a href="#cb2-152"></a>            Package pkg <span class="op">=</span> ea<span class="op">.</span><span class="fu">GetSelectedPackageOrRoot</span><span class="op">();</span></span>
+<span id="cb2-153"><a href="#cb2-153"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"Target package: {pkg.Name} (ID={pkg.PackageID})"</span><span class="op">);</span></span>
+<span id="cb2-154"><a href="#cb2-154"></a></span>
+<span id="cb2-155"><a href="#cb2-155"></a>            <span class="co">// --------------------------------------------------------</span></span>
+<span id="cb2-156"><a href="#cb2-156"></a>            <span class="co">// 3) Create a new element inside that package (core steps)</span></span>
+<span id="cb2-157"><a href="#cb2-157"></a>            <span class="co">//    - AddNew(name, type)</span></span>
+<span id="cb2-158"><a href="#cb2-158"></a>            <span class="co">//    - Set optional properties (Notes, StereotypeEx)</span></span>
+<span id="cb2-159"><a href="#cb2-159"></a>            <span class="co">//    - Update() to persist changes</span></span>
+<span id="cb2-160"><a href="#cb2-160"></a>            <span class="co">// --------------------------------------------------------</span></span>
+<span id="cb2-161"><a href="#cb2-161"></a>            Element el <span class="op">=</span> <span class="op">(</span>Element<span class="op">)</span>pkg<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">AddNew</span><span class="op">(</span>name<span class="op">,</span> type<span class="op">);</span></span>
+<span id="cb2-162"><a href="#cb2-162"></a></span>
+<span id="cb2-163"><a href="#cb2-163"></a>            <span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrEmpty</span><span class="op">(</span>stereotype<span class="op">))</span></span>
+<span id="cb2-164"><a href="#cb2-164"></a>            <span class="op">{</span></span>
+<span id="cb2-165"><a href="#cb2-165"></a>                <span class="co">// For MDG types, you can set fully qualified stereotype (e.g., "BPMN2.0::Task")</span></span>
+<span id="cb2-166"><a href="#cb2-166"></a>                el<span class="op">.</span><span class="fu">StereotypeEx</span> <span class="op">=</span> stereotype<span class="op">;</span></span>
+<span id="cb2-167"><a href="#cb2-167"></a>            <span class="op">}</span></span>
+<span id="cb2-168"><a href="#cb2-168"></a></span>
+<span id="cb2-169"><a href="#cb2-169"></a>            <span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>notes<span class="op">))</span></span>
+<span id="cb2-170"><a href="#cb2-170"></a>                el<span class="op">.</span><span class="fu">Notes</span> <span class="op">=</span> notes<span class="op">;</span></span>
+<span id="cb2-171"><a href="#cb2-171"></a></span>
+<span id="cb2-172"><a href="#cb2-172"></a>            <span class="co">// Persist the new element into the repository</span></span>
+<span id="cb2-173"><a href="#cb2-173"></a>            <span class="kw">if</span> <span class="op">(!</span>el<span class="op">.</span><span class="fu">Update</span><span class="op">())</span></span>
+<span id="cb2-174"><a href="#cb2-174"></a>            <span class="op">{</span></span>
+<span id="cb2-175"><a href="#cb2-175"></a>                <span class="co">// If Update() returns false, EA has an error you can read via</span></span>
+<span id="cb2-176"><a href="#cb2-176"></a>                <span class="co">// repo.GetLastError()</span></span>
+<span id="cb2-177"><a href="#cb2-177"></a>                <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span><span class="st">"Element.Update() failed."</span><span class="op">);</span></span>
+<span id="cb2-178"><a href="#cb2-178"></a>            <span class="op">}</span></span>
+<span id="cb2-179"><a href="#cb2-179"></a></span>
+<span id="cb2-180"><a href="#cb2-180"></a>            <span class="co">// ------------------------------------------------------------------------</span></span>
+<span id="cb2-181"><a href="#cb2-181"></a>            <span class="co">// 4) Refresh EA’s UI so the user immediately sees the new element appear</span></span>
+<span id="cb2-182"><a href="#cb2-182"></a>            <span class="co">// ------------------------------------------------------------------------</span></span>
+<span id="cb2-183"><a href="#cb2-183"></a>            <span class="co">// - AdviseElementChange: tells EA something changed – updates any open diagrams</span></span>
+<span id="cb2-184"><a href="#cb2-184"></a>            <span class="co">// - RefreshModelView   : reloads the package in the Project Browser</span></span>
+<span id="cb2-185"><a href="#cb2-185"></a>            ea<span class="op">.</span><span class="fu">Repo</span><span class="op">.</span><span class="fu">AdviseElementChange</span><span class="op">(</span>el<span class="op">.</span><span class="fu">ElementID</span><span class="op">);</span></span>
+<span id="cb2-186"><a href="#cb2-186"></a>            ea<span class="op">.</span><span class="fu">Repo</span><span class="op">.</span><span class="fu">RefreshModelView</span><span class="op">(</span>pkg<span class="op">.</span><span class="fu">PackageID</span><span class="op">);</span></span>
+<span id="cb2-187"><a href="#cb2-187"></a></span>
+<span id="cb2-188"><a href="#cb2-188"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"Created: {el.Name} [{el.Type}]"</span><span class="op">);</span></span>
+<span id="cb2-189"><a href="#cb2-189"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"GUID   : {el.ElementGUID}"</span><span class="op">);</span></span>
+<span id="cb2-190"><a href="#cb2-190"></a></span>
+<span id="cb2-191"><a href="#cb2-191"></a>            <span class="co">// -----------------------------------------</span></span>
+<span id="cb2-192"><a href="#cb2-192"></a>            <span class="co">// 5) Bonus: enumerate elements in the pkg</span></span>
+<span id="cb2-193"><a href="#cb2-193"></a>            <span class="co">// -----------------------------------------</span></span>
+<span id="cb2-194"><a href="#cb2-194"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">();</span></span>
+<span id="cb2-195"><a href="#cb2-195"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Elements now present in package:"</span><span class="op">);</span></span>
+<span id="cb2-196"><a href="#cb2-196"></a>            <span class="dt">short</span> count <span class="op">=</span> pkg<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">Count</span><span class="op">;</span></span>
+<span id="cb2-197"><a href="#cb2-197"></a>            <span class="kw">for</span> <span class="op">(</span><span class="dt">short</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> count<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb2-198"><a href="#cb2-198"></a>            <span class="op">{</span></span>
+<span id="cb2-199"><a href="#cb2-199"></a>                <span class="dt">var</span> existing <span class="op">=</span> <span class="op">(</span>Element<span class="op">)</span>pkg<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">GetAt</span><span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb2-200"><a href="#cb2-200"></a>                Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"  - {existing.Name} ({existing.Type})"</span><span class="op">);</span></span>
+<span id="cb2-201"><a href="#cb2-201"></a>            <span class="op">}</span></span>
+<span id="cb2-202"><a href="#cb2-202"></a></span>
+<span id="cb2-203"><a href="#cb2-203"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">();</span></span>
+<span id="cb2-204"><a href="#cb2-204"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Done. Press any key to exit."</span><span class="op">);</span></span>
+<span id="cb2-205"><a href="#cb2-205"></a>            Console<span class="op">.</span><span class="fu">ReadKey</span><span class="op">();</span></span>
+<span id="cb2-206"><a href="#cb2-206"></a>        <span class="op">}</span></span>
+<span id="cb2-207"><a href="#cb2-207"></a>        <span class="kw">catch</span> <span class="op">(</span>Exception ex<span class="op">)</span></span>
+<span id="cb2-208"><a href="#cb2-208"></a>        <span class="op">{</span></span>
+<span id="cb2-209"><a href="#cb2-209"></a><span class="co">// In production tools you might log the stack. For a book example, keep output readable.</span></span>
+<span id="cb2-210"><a href="#cb2-210"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">();</span></span>
+<span id="cb2-211"><a href="#cb2-211"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"ERROR:"</span><span class="op">);</span></span>
+<span id="cb2-212"><a href="#cb2-212"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>ex<span class="op">.</span><span class="fu">Message</span><span class="op">);</span></span>
+<span id="cb2-213"><a href="#cb2-213"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Tip: Ensure EA is installed (matching x64/x86), Interop.EA.dll is referenced,"</span><span class="op">);</span></span>
+<span id="cb2-214"><a href="#cb2-214"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"     and that a model is open or ModelPath is set."</span><span class="op">);</span></span>
+<span id="cb2-215"><a href="#cb2-215"></a>            Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Press any key to exit."</span><span class="op">);</span></span>
+<span id="cb2-216"><a href="#cb2-216"></a>            Console<span class="op">.</span><span class="fu">ReadKey</span><span class="op">();</span></span>
+<span id="cb2-217"><a href="#cb2-217"></a>        <span class="op">}</span></span>
+<span id="cb2-218"><a href="#cb2-218"></a>    <span class="op">}</span></span>
+<span id="cb2-219"><a href="#cb2-219"></a><span class="op">}</span></span>
+<span id="cb2-220"><a href="#cb2-220"></a><span class="in">```</span></span>
+<span id="cb2-221"><a href="#cb2-221"></a><span class="fu">## Trade-offs</span></span>
+<span id="cb2-222"><a href="#cb2-222"></a></span>
+<span id="cb2-223"><a href="#cb2-223"></a>**Pros**</span>
+<span id="cb2-224"><a href="#cb2-224"></a></span>
+<span id="cb2-225"><a href="#cb2-225"></a><span class="ss">- </span>Modern language, logging, testing, and packaging.</span>
+<span id="cb2-226"><a href="#cb2-226"></a></span>
+<span id="cb2-227"><a href="#cb2-227"></a><span class="ss">- </span>Clear separation from the model repository.</span>
+<span id="cb2-228"><a href="#cb2-228"></a></span>
+<span id="cb2-229"><a href="#cb2-229"></a><span class="ss">- </span>Works well for integrations, analytics, and pipelines.</span>
+<span id="cb2-230"><a href="#cb2-230"></a></span>
+<span id="cb2-231"><a href="#cb2-231"></a><span class="ss">- </span>Easier to scale and maintain over time.</span>
+<span id="cb2-232"><a href="#cb2-232"></a></span>
+<span id="cb2-233"><a href="#cb2-233"></a>**Cons**</span>
+<span id="cb2-234"><a href="#cb2-234"></a></span>
+<span id="cb2-235"><a href="#cb2-235"></a><span class="ss">- </span>Requires setup (Interop reference, bitness alignment, COM</span>
+<span id="cb2-236"><a href="#cb2-236"></a>  availability).</span>
+<span id="cb2-237"><a href="#cb2-237"></a></span>
+<span id="cb2-238"><a href="#cb2-238"></a><span class="ss">- </span>Windows/COM dependency.</span>
+<span id="cb2-239"><a href="#cb2-239"></a></span>
+<span id="cb2-240"><a href="#cb2-240"></a><span class="ss">- </span>Distribution/versioning outside the model.</span>
+<span id="cb2-241"><a href="#cb2-241"></a></span>
+<span id="cb2-242"><a href="#cb2-242"></a><span class="ss">- </span>Speed + power mean mistakes propagate quickly if you skip safety.</span>
+<span id="cb2-243"><a href="#cb2-243"></a></span>
+<span id="cb2-244"><a href="#cb2-244"></a>**Safety still matters**</span>
+<span id="cb2-245"><a href="#cb2-245"></a></span>
+<span id="cb2-246"><a href="#cb2-246"></a><span class="ss">- </span>Prefer **dry-run** patterns and **audit logs** for batch updates.</span>
+<span id="cb2-247"><a href="#cb2-247"></a></span>
+<span id="cb2-248"><a href="#cb2-248"></a><span class="ss">- </span>Use **SQL-find + API-write** for scale (helper provides this).</span>
+<span id="cb2-249"><a href="#cb2-249"></a></span>
+<span id="cb2-250"><a href="#cb2-250"></a><span class="ss">- </span>Test on **sandbox repositories** first.</span>
+<span id="cb2-251"><a href="#cb2-251"></a></span>
+<span id="cb2-252"><a href="#cb2-252"></a><span class="ss">- </span>**Batch** writes and **refresh** the UI once per operation.</span>
+<span id="cb2-253"><a href="#cb2-253"></a></span>
+<span id="cb2-254"><a href="#cb2-254"></a><span class="fu">## Where this goes next</span></span>
+<span id="cb2-255"><a href="#cb2-255"></a></span>
+<span id="cb2-256"><a href="#cb2-256"></a>Most teams adopt a blended approach: internal scripts for quick hygiene;</span>
+<span id="cb2-257"><a href="#cb2-257"></a>external utilities for integrations and heavy lifting; add-ins for</span>
+<span id="cb2-258"><a href="#cb2-258"></a>stable, menu-driven capabilities. With EAConnect, you keep examples</span>
+<span id="cb2-259"><a href="#cb2-259"></a>concise while centralising boilerplate and sharp edges in one place.</span>
+<span id="cb2-260"><a href="#cb2-260"></a></span>
+<span id="cb2-261"><a href="#cb2-261"></a>See **Appendix A – EAConnect Helper &amp; Setup** for the full helper class</span>
+<span id="cb2-262"><a href="#cb2-262"></a>(verbose header, usage, assumptions, dependencies, and update history),</span>
+<span id="cb2-263"><a href="#cb2-263"></a>plus environment notes (Interop.EA.dll, bitness, COM), optional</span>
+<span id="cb2-264"><a href="#cb2-264"></a>“directory-only” output pickers, CSV logging utilities, a</span>
+<span id="cb2-265"><a href="#cb2-265"></a>curate-then-apply pipeline, and the SQL-accelerated find / API-safe</span>
+<span id="cb2-266"><a href="#cb2-266"></a>write pattern.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,363 @@
+# Chapter 16: AI in Daily Workflow
+
+By now we have seen how AI can help overcome the blank page problem,
+generate patterns, translate between languages, and refactor old scripts
+into safer, clearer versions. All of these uses are valuable, but they
+still treat AI as something you consult occasionally — a tool you dip
+into when you need help. The next step is to make AI part of your
+**daily scripting workflow**.
+
+This means integrating AI into how you plan, write, document, and share
+scripts. It means building a personal or team “prompt library” that
+captures successful ways of asking for code. It means using AI to
+generate standard headers or loggers automatically. It means involving
+AI in version control, commit messages, and governance checks. When AI
+becomes part of your routine, it stops being an add-on and starts being
+a multiplier.
+
+This chapter explains what it looks like to work with AI every day as a
+script writer or modelling architect. It shows how to build habits and
+structures that make AI useful without making you dependent. It also
+highlights the risks of over-reliance and the safeguards needed to
+maintain trust.
+
+## From Occasional Help to Daily Companion
+
+For most people, the first time they use AI for scripting is when they
+are stuck. They don’t know how to write a loop, or they have an old
+VBScript to translate, or they need a header quickly. That is a good
+start, but it is still **reactive**: AI is only consulted when there is
+a problem.
+
+Daily workflow means turning this reactive use into **proactive
+integration**. Instead of waiting until you are stuck, you design your
+process around AI from the start. For example:
+
+- Every new script begins with an AI-generated header template.
+
+- Every new task begins with a search of your prompt library.
+
+- Every commit is accompanied by an AI-suggested message.
+
+- Every governance run is explained by an AI-drafted summary.
+
+The point is not that AI replaces your work, but that it saves you from
+repetitive effort and keeps you moving forward.
+
+## The Role of a Prompt Library
+
+One of the simplest but most effective habits is to maintain a **prompt
+library**. This is a set of carefully worded instructions you know
+produce reliable code. For example:
+
+- “Write a JScript ES3 script for EA that traverses the selected
+  package, loops with .Count/.GetAt(), and logs each element name to the
+  Output tab. Include DRY_RUN.”
+
+- “Translate this VBScript into JScript, preserving behaviour, adding
+  DRY_RUN and logging.”
+
+- “Refactor this script to use backward deletion loops.”
+
+By reusing these prompts, you reduce the chance of errors and improve
+consistency. You also save time: instead of re-explaining EA’s quirks to
+AI each time, you paste a standard prompt and focus on the task.
+
+## Automating Boilerplate
+
+A surprising amount of scripting effort goes into **boilerplate**:
+headers, loggers, dry-run wrappers, refresh calls. These are necessary
+for safety but repetitive to write. AI is very good at generating
+boilerplate.
+
+For example, you might ask: *“Generate a standard EA script header with
+fields for Purpose, Usage, Assumptions, Safety, Dependencies, and Update
+history.”* AI will output a block you can paste at the top of every
+script. You can then refine it once and reuse it many times.
+
+Similarly, you can ask AI to insert a standard logging helper or dry-run
+guard into existing scripts. Over time, this ensures all your scripts
+share a consistent structure.
+
+## AI as a Debugging Partner
+
+Although EA’s scripting environment lacks a debugger, AI can serve as a
+**debugging partner**. When you get an error, you can paste the message
+and the relevant code into AI and ask: *“Why does this fail in EA
+JScript?”*
+
+AI will often spot issues like:
+
+- Using .forEach instead of .GetAt().
+
+- Forgetting .Update().
+
+- Using let or const instead of var.
+
+This is not fool-proof, but it gives you quick feedback, reducing
+trial-and-error.
+
+## Integration with Version Control
+
+Many teams now keep their scripts in Git repositories. AI can support
+this workflow in several ways:
+
+- **Commit messages**: generate clear, descriptive commit messages
+  summarising what changed.
+
+- **Code reviews**: provide first-pass feedback on whether a script
+  follows safety conventions.
+
+- **Refactoring suggestions**: highlight duplication across scripts.
+
+For example, you might paste a diff into AI and ask: *“Summarise these
+changes in a Git commit message.”* It will return a concise summary you
+can tweak.
+
+## Governance and Reporting
+
+AI can also help with governance reporting. After running a governance
+script that logs issues to CSV, you can feed the results into AI and ask
+for a plain-English summary: *“Explain the key issues found in this log
+and suggest actions.”*
+
+This does not replace human judgement, but it makes governance outputs
+easier to digest. Stakeholders see not just a list of IDs but an
+interpretation.
+
+## Risks of Daily AI Use
+
+Daily use of AI brings its own risks:
+
+- **Complacency**: relying on AI to generate boilerplate without
+  understanding it.
+
+- **Over-reliance**: forgetting how to write basic loops yourself.
+
+- **False trust**: assuming AI output is always safe.
+
+- **Data exposure**: pasting sensitive content into AI without
+  considering confidentiality.
+
+To mitigate these risks, you should:
+
+- Continue practising core scripting skills.
+
+- Review AI output critically.
+
+- Use internal AI deployments where data sensitivity is an issue.
+
+- Keep your own library of trusted patterns.
+
+## AI as a Team Enabler
+
+AI is not only useful for individuals. Teams can adopt it as a shared
+resource. For example:
+
+- Store prompt templates in the same Git repo as scripts.
+
+- Agree on standard AI guardrails (always include DRY_RUN, never use
+  direct SQL writes).
+
+- Use AI to explain scripts to non-technical colleagues.
+
+This makes scripting more inclusive. Analysts who cannot code fluently
+can still understand and contribute by using AI as an interpreter.
+
+### Building Habits
+
+The key to making AI part of your daily workflow is to build habits:
+
+- Start every new script with an AI-generated header.
+
+- Always run prompts through your standard templates.
+
+- Use AI for documentation and commit messages.
+
+- Review output in dry-run mode before trusting it.
+
+Habits ensure consistency and reduce the cognitive load. You don’t have
+to remember every detail — the process takes care of it.
+
+### Build a Prompt Library
+
+When you find a prompt that works, don’t rely on memory — **save it**.
+Treat prompts like reusable code snippets. Keep them in a text file, Git
+repository, or even within EA as a script comment block.
+
+#### Prompt snippet saved for reuse
+
+::: {.callout-note title="Prompt"}
+Prompt: Write a script for Sparx Enterprise Architect using JScript (ES3
+only).
+
+Constraints:
+
+\- Use var (no let/const)
+
+\- EA collections require .Count and .GetAt(i)
+
+\- Use Session.Output (not console.log)
+
+\- Always call Update() after changes
+
+\- Include DRY_RUN flag and verbose comments
+
+Task: List all Requirement names in a selected package.
+::: 
+
+### Use AI for Boilerplate
+
+Instead of re-typing headers or dry-run scaffolding, ask AI to **insert
+the standard structure** for you.
+```{.js filename="Example 16.1 - ListRequirements.js"}
+// -------------------------------------------------------
+// Example 16.1 - ListRequirements.js
+// Purpose: Output names of Requirement elements in a package
+// Usage: Select a package in Project Browser → run
+// Assumptions: JScript ES3 runtime
+// Safety: Read-only
+// Dependencies: none
+// Update history: 1.0 initial
+// -------------------------------------------------------
+```
+
+This header can be generated by AI in seconds and keeps your scripts
+consistent.
+
+### Use AI for Daily Queries
+
+You don’t need to remember every API call. Ask AI things like:
+
+- “How do I get all connectors from an element in EA JScript?”
+
+- “Show me how to create a new attribute on a class.”
+
+- “How do I output the selected diagram’s objects?”
+
+AI can provide scaffolding, but you must **correct it for EA’s
+environment**.
+
+### Daily Script with AI Template
+
+Suppose you often need to **list tagged values** of selected elements.
+Save a reusable script pattern, which AI can adapt for other tasks.
+```{.js filename="Example 16.2 - ListTaggedValues.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 16.2 - ListTaggedValues.js – JScript (ES3)
+// Purpose: Show all tagged values for the selected element
+// Usage: Select element in Project Browser → run script
+// Safety: Read-only
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var el = Repository.GetTreeSelectedObject();
+    if (!el || el.ObjectType != otElement) {
+        Session.Prompt("Select an element first.", promptOK);
+        return;
+    }
+
+    var tags = el.TaggedValues;
+    if (tags.Count == 0) {
+        Session.Output("No tagged values on " + el.Name);
+        return;
+    }
+
+    for (var i=0; i<tags.Count; i++) {
+        var tv = tags.GetAt(i);
+        Session.Output("Tag: " + tv.Name + " = " + tv.Value);
+    }
+}
+
+main();
+```
+
+When you need a **variation** (e.g. export tags to CSV, update missing
+tags), prompt AI with *“adapt ListTaggedValues.js to write tags to a CSV
+file, ES3 only”*.
+
+## Git + AI Workflow
+
+Version-control your scripts with Git (or even OneDrive). AI can:
+
+- Generate **commit messages** (“Add dry-run safety to SafeRename
+  script”).
+
+- Suggest **code reviews** (“Highlight where Update() is missing”).
+
+- Propose **refactors** across multiple scripts.
+
+### Commit message prompt
+
+::: {.callout-note title="Prompt"}
+Prompt: Write a Git commit message for adding DRY_RUN safety and CSV
+logging to BulkPrefixRename.js
+::: 
+
+## AI-Assisted Governance Check
+
+Daily workflows often involve governance (naming rules, tags,
+traceability). Here’s a pattern you can copy, extend, and ask AI to
+adapt.
+```{.js filename="Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)
+// Purpose: Report Requirements missing 'Owner' tag
+// Safety: Read-only; logs only
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var missing=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Type == "Requirement" && !hasTag(e,"Owner")) {
+            missing++;
+            Session.Output("Requirement missing Owner tag: " + e.Name);
+        }
+    }
+    Session.Output("Governance check: " + missing + " missing tags.");
+}
+
+function hasTag(e, tagName) {
+    var tags = e.TaggedValues;
+    for (var i=0; i<tags.Count; i++) {
+        var t = tags.GetAt(i);
+        if (t.Name == tagName) return true;
+    }
+    return false;
+}
+```
+
+Tomorrow, you might ask AI:
+
+*“Extend DailyGovernanceCheck.js to add the tag if missing, with default
+value ‘ArchitectureTeam’. Keep DRY_RUN enabled.”*
+
+AI can refactor this for you, but you must validate the code against
+EA’s constraints.
+
+## Summary
+
+AI becomes part of your **daily workflow** when you:
+
+- Save **prompt libraries** for reuse.
+
+- Use AI to generate **boilerplate headers** and scaffolding.
+
+- Ask natural-language **API queries** instead of memorising details.
+
+- Maintain scripts in **Git**, with AI suggesting commit messages and
+  refactors.
+
+- Start from a **daily pattern script** (like tagged value checks), and
+  let AI adapt it to new use cases.
+
+The key is consistency: you are the architect, AI is your assistant. By
+building repeatable workflows around AI, you gain speed and safety
+without losing control.

@@ -1,0 +1,12 @@
+@'
+---
+title: "References"
+# If you use a .bib file, add it here (optional):
+# bibliography: references.bib
+---
+
+# References
+
+<!-- If you’re using a .bib/.csl, citations in chapters
+     will render here automatically when cited. -->
+'@ | Out-File -FilePath .\references.qmd -Encoding utf8 -NoNewline

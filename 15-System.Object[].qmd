@@ -1,0 +1,439 @@
+# Chapter 14: Prompt Engineering
+
+In the previous chapter, we saw how artificial intelligence can reduce
+the blank-page barrier and accelerate scripting. But to get real value
+from AI, you must learn how to **ask properly**. AI is like a very fast
+but sometimes careless assistant. If you give vague instructions, it
+will give vague or even dangerous results. If you provide precise,
+structured prompts, it can generate highly usable code. This practice of
+crafting inputs deliberately is called **prompt engineering**.
+
+Prompt engineering is not about writing long, elaborate instructions. It
+is about giving AI just enough context, constraints, and examples so
+that the output is aligned with your needs. For Enterprise Architect
+scripting, that means telling AI about the limitations of JScript ES3,
+reminding it to use Update() and RefreshModelView(), and insisting on a
+DRY_RUN flag.
+
+This chapter introduces the art of prompt engineering for EA scripting.
+It shows why generic prompts fail, what makes EA-specific prompts
+different, and how to refine AI outputs safely. It also explains how to
+build a library of reusable prompts, so you don’t have to reinvent the
+wheel every time you need a script.
+
+## Why Prompt Engineering Matters
+
+AI models are generalists. They have been trained on vast amounts of
+code and text, but they do not “know” Enterprise Architect in detail.
+That means they will often produce code that looks plausible but does
+not run in EA. For example, they may suggest forEach on a collection, or
+JSON.parse, or modern JavaScript features that EA’s engine does not
+support.
+
+Without careful prompting, you get output that looks fine but fails
+immediately. With careful prompting, you get output that respects EA’s
+constraints and includes safety features. Prompt engineering makes the
+difference between AI as a gimmick and AI as a practical assistant.
+
+### The Anatomy of a Good Prompt
+
+A good prompt for EA scripting usually contains:
+
+1.  **Context**: make clear you are scripting inside Enterprise
+    Architect using JScript ES3.
+
+2.  **Task**: what you want the script to do (e.g., rename requirements,
+    export tags).
+
+3.  **Constraints**: what not to use (no let, no const, no forEach).
+
+4.  **Safety**: require DRY_RUN, logging, and comments.
+
+5.  **Format**: ask for a complete runnable script with comments, not
+    just fragments.
+
+For example:
+
+::: {.callout-note title="Prompt"}
+Write a JScript ES3 script for Sparx Enterprise Architect that traverses
+the selected package, finds all Requirement elements, and prefixes their
+names with “REQ\_”. Use .Count and .GetAt(i) loops, not modern JS
+features. Include a DRY_RUN flag set to true by default, call Update()
+for changes, and refresh the package at the end. Comment every step.
+::: 
+
+This is a prompt that sets context, constraints, safety, and format.
+
+### Iterative Prompting
+
+Prompt engineering is rarely one-and-done. Often the first output will
+be close but not perfect. That is normal. The trick is to **iterate**:
+
+1.  Run the script in dry-run mode.
+
+2.  If it fails, feed the error message back into AI: *“The error says
+    ‘forEach is not a function’. Rewrite using .Count and .GetAt().”*
+
+3.  If it runs but misbehaves, clarify: *“The script renamed packages as
+    well as requirements. Please filter only Elements of type
+    Requirement.”*
+
+4.  Keep refining until the script is safe and correct.
+
+This iterative loop is part of prompt engineering. You don’t expect
+perfection in one shot; you treat AI as a partner who improves with
+feedback.
+
+### Prompt Templates
+
+Over time, you will notice you reuse similar prompts. Instead of writing
+them from scratch each time, build **prompt templates**. For example:
+
+- **Traversal template**: “Write a JScript ES3 script that traverses all
+  elements in the selected package. Use .Count and .GetAt(). For each
+  element, \[do something\]. Include DRY_RUN and logging.”
+
+- **Tagged value template**: “Write a JScript ES3 script that checks all
+  elements of stereotype X in the selected package and ensures they have
+  a tagged value Y with value Z. Add if missing. Include DRY_RUN,
+  logging, and RefreshModelView.”
+
+- **Export template**: “Write a JScript ES3 script that exports all
+  elements in the selected package to CSV. Include ElementID, GUID,
+  Name, Type, and Stereotype. Use FileSystemObject, ANSI safe. Comment
+  every step.”
+
+By maintaining these prompt templates, you save time and improve
+consistency.
+
+### Guardrails in Prompts
+
+Because EA is unforgiving (no undo, no rollback), guardrails are
+essential. Your prompt should explicitly require:
+
+- DRY_RUN flag.
+
+- Update() on changes.
+
+- RefreshModelView() at the end.
+
+- Comments explaining each step.
+
+- Backward deletion loops when deleting.
+
+- Logs to Output or CSV.
+
+Think of these as non-negotiable. If AI fails to include them, ask it to
+add them.
+
+### Prompting for Externals
+
+Prompt engineering also applies when you use AI for external automation.
+For example, you might ask for a Python script with pywin32 that
+connects to EA. The same principles apply: specify language, COM,
+bitness, safety, and logging.
+
+For instance:
+
+::: {.callout-note title="Prompt"}
+*Write a Python 3 script using pywin32 to connect to EA. Traverse the
+selected package and print element names. Ensure it checks bitness
+(32-bit Python), and include error handling.*
+::: 
+
+By being explicit, you avoid generic Python that won’t attach to EA.
+
+### Common Prompting Mistakes
+
+New users often make the following mistakes:
+
+- **Being vague**: *“Write a script to rename elements.”* (AI invents
+  code with forEach.)
+
+- **Forgetting context**: not mentioning EA or JScript, so AI writes
+  browser JavaScript.
+
+- **Skipping safety**: AI writes a script that modifies elements without
+  dry-run.
+
+- **Accepting first output blindly**: running unsafe code in production.
+
+Each of these can be avoided by careful prompting and iteration.
+
+## Prompt Engineering as Team Practice
+
+Prompt engineering is not just an individual skill. Teams can share
+prompt libraries alongside script libraries. For example, store
+templates in Git: one folder for prompts, one for scripts. This allows
+consistency across a team and accelerates onboarding for new members.
+
+Teams can also develop **governance prompts**: standard ways of asking
+AI to generate scripts that align with organisational policies.
+
+## AI Literacy for Modellers
+
+Not every modeller will become a script writer. But every modeller can
+benefit from AI literacy. Even if you don’t run the scripts yourself,
+being able to ask AI for “the shape” of a script, review the comments,
+and discuss it with colleagues adds value. Prompt engineering is
+therefore not only for coders; it is part of the wider skillset of
+modern architecture teams.
+
+## Prompt Template
+
+Here’s a reliable template you can use when asking AI to generate an EA
+script:
+
+::: {.callout-note title="Prompt"}
+Write a script for Sparx Enterprise Architect using JScript (ES3 only,
+no ES6 features).
+
+Constraints:
+
+\- Use var (no let/const)
+
+\- EA collections use .Count and .GetAt(i)
+
+\- Use Session.Output for logging (not console.log)
+
+\- Always call Update() after modifying objects
+
+\- Include a DRY_RUN flag and verbose comments
+
+Task: \[state the specific automation you want\]
+::: 
+
+## Examples
+
+### List All Requirements
+
+#### Prompt
+
+::: {.callout-note title="Prompt"}
+“Write an EA JScript that lists all requirements in a selected package.
+ES3 only, no modern JS features. Include DRY_RUN and comments.”
+::: 
+
+#### Raw AI Output (often wrong)
+``` .js
+// [x] Incorrect AI output
+
+let pkg = Repository.GetTreeSelectedPackage();
+
+if (!pkg) { console.log("Select a package"); }
+
+pkg.Elements.forEach(e =\> console.log(e.Name));
+```
+Problems:
+
+- let and arrow functions unsupported (ES3 only).
+
+- pkg.Elements is an EA collection, not an array (forEach will fail).
+
+- console.log doesn’t exist in EA (use Session.Output).
+
+#### Corrected Script
+```{.js filename="Example 14.1 - ListRequirements.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 14.1 - ListRequirements.js – JScript (ES3)
+// Purpose: List all Requirement elements in selected package
+// Safety: DRY_RUN pattern included (though not needed for read-only)
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true; // Included for consistency
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) {
+        Session.Prompt("Select a package first.", promptOK);
+        return;
+    }
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Type == "Requirement") {
+            Session.Output("Requirement: " + e.Name + " (ID=" + e.ElementID + ")");
+        }
+    }
+}
+
+main();
+```
+
+### Bulk Prefix Naming
+
+#### Prompt
+
+::: {.callout-note title="Prompt"}
+“Write an EA JScript that renames all elements in a package by adding
+prefix ‘SYS\_’. ES3 only, no modern JS features. Include DRY_RUN,
+logging, and RefreshModelView.”
+::: 
+
+#### Corrected Script
+```{.js filename="14.2 - BulkPrefixRename.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 14.2 - BulkPrefixRename.js – JScript (ES3)
+// Purpose: Add 'SYS_' prefix to element names in a selected package
+// Safety: DRY_RUN prevents accidental renaming
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var PREFIX = "SYS_";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var changed=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Name.indexOf(PREFIX) != 0) {
+            var newName = PREFIX + e.Name;
+            Session.Output("Would rename: " + e.Name + " → " + newName);
+            if (!DRY_RUN) {
+                e.Name = newName;
+                e.Update();
+                changed++;
+            }
+        }
+    }
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(pkg.PackageID);
+    Session.Output("Processed " + els.Count + " elements, changed " + changed);
+}
+
+main();
+```
+
+### Add a Tagged Value with Defaults
+
+#### Prompt
+
+::: {.callout-note title="Prompt"}
+“Write an EA JScript that ensures all elements in a package have a
+tagged value ‘Owner=ArchitectureTeam’. ES3 only, no modern JS features.
+DRY_RUN and comments required.”
+::: 
+
+#### Corrected Script
+```{.js filename="Example 14.3 - EnsureTag_Owner.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 14.3 - EnsureTag_Owner.js – JScript (ES3)
+// Purpose: Add/update tagged value 'Owner=ArchitectureTeam' for all elements
+// Safety: DRY_RUN flag enabled
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var TAG_NAME = "Owner";
+    var TAG_VALUE = "ArchitectureTeam";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var tags = e.TaggedValues;
+        var found = false;
+
+        for (var j=0; j<tags.Count; j++) {
+            var t = tags.GetAt(j);
+            if (t.Name == TAG_NAME) {
+                found = true;
+                if (t.Value != TAG_VALUE) {
+                    Session.Output("Would update tag for " + e.Name);
+                    if (!DRY_RUN) { t.Value = TAG_VALUE; t.Update(); e.Update(); }
+                }
+            }
+        }
+
+        if (!found) {
+            Session.Output("Would add tag for " + e.Name);
+            if (!DRY_RUN) {
+                var nt = tags.AddNew(TAG_NAME, TAG_VALUE);
+                nt.Update(); e.Update();
+            }
+        }
+    }
+    if (!DRY_RUN) Repository.RefreshModelView(pkg.PackageID);
+}
+
+main();
+```
+### Safe Delete
+
+#### Prompt
+::: {.callout-note title="Prompt"}
+“Write an EA JScript that deletes all UseCase elements in a package. ES3
+only, DRY_RUN by default, with logging.”
+:::
+Corrected Script
+```{.js filename="Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)"}
+“Write an EA JScript that deletes all UseCase elements in a package. ES3 only, DRY_RUN by default, with logging.”
+Corrected Script
+// -------------------------------------------------------
+// Example 14.4 - SafeDelete_UseCases.js – JScript (ES3)
+// Purpose: Delete all UseCase elements in a package
+// Safety: DRY_RUN by default; logs each candidate
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var TYPE_FILTER = "UseCase";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    var deleted=0;
+    for (var i=els.Count-1; i>=0; i--) { // iterate backwards
+        var e = els.GetAt(i);
+        if (e.Type == TYPE_FILTER) {
+            Session.Output("Would delete: " + e.Name);
+            if (!DRY_RUN) {
+                els.DeleteAt(i, false); // false = don’t refresh each time
+                deleted++;
+            }
+        }
+    }
+    if (!DRY_RUN && deleted>0) Repository.RefreshModelView(pkg.PackageID);
+    Session.Output("Candidates: " + els.Count + " Deleted: " + deleted + " Dry-run=" + DRY_RUN);
+}
+
+main();
+```
+
+## Best Practices for Prompts
+
+- Always say: “EA JScript (ES3 only, no modern JS features)”.
+
+- Always request: DRY_RUN flag, verbose comments, and RefreshModelView.
+
+- If you want imports/exports: say “use ActiveX FileSystemObject”, not
+  fs or modern Node.js.
+
+- If you need CSV/Excel: say “use COM automation for Excel”, not
+  external modules.
+
+- Keep prompts specific: “list all Requirements in a package” vs “list
+  elements”.
+
+## Summary
+
+Prompt engineering is about **teaching the AI your constraints**. By
+making your requests precise (JScript ES3, DRY_RUN, .Count/.GetAt(i)),
+you ensure the generated scripts run correctly in EA. AI will often
+hallucinate modern JS features; your job is to correct them
+systematically using the patterns in this chapter.
+
+In the next chapter, we’ll explore **Chapter 14 – AI as a Refactoring
+Partner**: using AI to *improve existing scripts* by converting between
+languages, adding documentation headers, or reorganising code for
+readability and maintainability.

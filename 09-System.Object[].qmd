@@ -1,0 +1,266 @@
+# Chapter 8: Object Details
+
+Enterprise Architect’s automation interface exposes a large number of
+objects, each representing some aspect of the model: repositories,
+packages, elements, connectors, attributes, tagged values, and many
+more. The official Sparx documentation lists these objects, but it can
+be terse and difficult to map back to day-to-day modelling tasks.
+
+This chapter bridges that gap: it introduces the most common objects in
+the API, explains how to use their attributes and collections, and
+provides **fully commented JScript examples** you can run directly in
+EA.
+
+## Sparx EA Objects
+
+### Repository
+
+The **Repository** is always your starting point. It represents the
+currently open EA project file (EAP, QEA, or DBMS connection).
+
+```{.js filename="Example 8.1 - RepoInfo"}
+// ----------------------------------------------------------------------------------------
+// Example 8.1 - RepoInfo
+// Purpose: Demonstrates key Repository properties
+// Author: Handbook
+// Date: 2025-08-26
+// ----------------------------------------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    // The Repository object is always available inside EA scripts
+    var repo = Repository;
+
+    // Connection string: file path or DB connection string
+    Session.Output("Connection: " + repo.ConnectionString);
+
+    // Root models
+    var models = repo.Models;
+    Session.Output("Root packages count: " + models.Count);
+
+    // Security
+    Session.Output("Security enabled: " + repo.IsSecurityEnabled);
+
+    // Current EA Edition
+    Session.Output("Edition: " + repo.EAEdition);
+}
+
+main();
+```
+
+### Package
+
+A **Package** is a container for elements, diagrams, and child packages.
+
+```{.js filename="Example 8.2 - PackageTraverse"}
+// ----------------------------------------------------------------------------------------
+// Example 8.2 PackageTraverse
+// Purpose: List all child packages and their elements
+// ----------------------------------------------------------------------------------------
+
+!INC Local Scripts.EAConstants-Jscript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) {
+        Session.Prompt("Select a package in the browser.", promptOK);
+        return;
+    }
+
+    Session.Output("Package: " + pkg.Name);
+
+    // Loop child packages
+    var childPkgs = pkg.Packages;
+    for (var i = 0; i < childPkgs.Count; i++) {
+        var child = childPkgs.GetAt(i);
+        Session.Output("  Child package: " + child.Name);
+    }
+
+    // Loop elements in this package
+    var elements = pkg.Elements;
+    for (var j = 0; j < elements.Count; j++) {
+        var el = elements.GetAt(j);
+        Session.Output("  Element: " + el.Name + " (" + el.Type + ")");
+    }
+}
+
+main();
+```
+
+### Element
+
+An **Element** is any model item (Class, Requirement, Component, Actor,
+etc.).
+
+```{.js filename="Example 8.3 - ElementCreate"}
+// ----------------------------------------------------------------------------------------
+// Example 8.3 - ElementCreate
+// Purpose: Add a new class to a selected package
+// ----------------------------------------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    // Add a new Class element
+    var el = pkg.Elements.AddNew("NewClass", "Class");
+    el.Notes = "This class was created by script.";
+    el.Update(); // Always update to persist
+
+    // Refresh UI so user sees it
+    Repository.RefreshModelView(pkg.PackageID);
+
+    Session.Output("Created class: " + el.Name);
+}
+
+main();
+```
+
+### Connector
+
+A **Connector** represents a relationship between two elements.
+
+```{.js filename="Example 8.4 - ConnectorCreate"}
+// ----------------------------------------------------------------------------------------
+// Example 8.4 - ConnectorCreate
+// Purpose: Create a dependency between two selected elements
+// ----------------------------------------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+
+function main() {
+    // Assumes two elements are selected in a diagram
+    var diagram = Repository.GetCurrentDiagram();
+    if (!diagram) { Session.Prompt("Open a diagram and select two elements.", promptOK); return; }
+
+    if (diagram.SelectedObjects.Count != 2) {
+        Session.Prompt("Select exactly two elements.", promptOK);
+        return;
+    }
+
+    var el1 = Repository.GetElementByID(diagram.SelectedObjects.GetAt(0).ElementID);
+    var el2 = Repository.GetElementByID(diagram.SelectedObjects.GetAt(1).ElementID);
+
+    // Create dependency
+    var conn = el1.Connectors.AddNew("", "Dependency");
+    conn.SupplierID = el2.ElementID;
+    conn.Update();
+
+    Repository.RefreshModelView(el1.PackageID);
+    Session.Output("Created dependency: " + el1.Name + " → " + el2.Name);
+}
+
+main();
+```
+
+### Attribute
+
+Attributes belong to elements (e.g., class fields).
+
+```{.js filename="Example 8.5 - AddAttributes"}
+// ----------------------------------------------------------------------------------------
+// Example 8.5 - AddAttributes
+// Purpose: Add attributes to a selected class
+// ----------------------------------------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+
+function main() {
+    var el = Repository.GetTreeSelectedObject();
+    if (!el || el.ObjectType != otElement) {
+        Session.Prompt("Select a class element.", promptOK);
+        return;
+    }
+    if (el.Type != "Class") {
+        Session.Prompt("Element is not a class.", promptOK);
+        return;
+    }
+
+    // Add attribute
+    var attr = el.Attributes.AddNew("id", "int");
+    attr.Notes = "Primary key";
+    attr.Update();
+
+    el.Update();
+    Session.Output("Added attribute 'id:int' to " + el.Name);
+}
+
+main();
+```
+
+### Tagged Values
+
+Tagged Values extend elements and connectors with metadata.
+
+```{.js filename="Example 8.6 - TagValuesDemo"}
+// ----------------------------------------------------------------------------------------
+// Example 8.6 - TagValuesDemo
+// Purpose: Add or update tagged values
+// ----------------------------------------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+
+function main() {
+    var el = Repository.GetTreeSelectedObject();
+    if (!el || el.ObjectType != otElement) {
+        Session.Prompt("Select an element.", promptOK);
+        return;
+    }
+
+    // Add new tag
+    var tag = el.TaggedValues.AddNew("Owner", "ArchitectureTeam");
+    tag.Update();
+
+    // Update element after tag change
+    el.Update();
+
+    Session.Output("Tagged value 'Owner=ArchitectureTeam' set on " + el.Name);
+}
+
+main();
+```
+
+### Diagram Objects
+
+Diagram objects are visual instances of elements. They store
+coordinates, styles, and appearance, not the semantic content.
+
+```{.js filename="Example 8.7 - DiagramObjectStyle"}
+// ----------------------------------------------------------------------------------------
+// Example 8.7 - DiagramObjectStyle
+// Purpose: Change fill color of selected diagram object
+// ----------------------------------------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+
+function main() {
+    var dia = Repository.GetCurrentDiagram();
+    if (!dia) { Session.Prompt("Open a diagram.", promptOK); return; }
+
+    if (dia.SelectedObjects.Count == 0) {
+        Session.Prompt("Select at least one element on the diagram.", promptOK);
+        return;
+    }
+
+    var dobj = dia.SelectedObjects.GetAt(0);
+    dobj.BackgroundColor = 16777215; // White
+    dobj.Update();
+
+    Repository.ReloadDiagram(dia.DiagramID);
+    Session.Output("Updated background color for object ID " + dobj.InstanceID);
+}
+
+main();
+```
+
+## Summary
+
+This chapter covered the most important objects in EA’s automation
+model: Repository, Package, Element, Connector, Attribute, TaggedValue,
+and DiagramObject. Each has specific rules:
+
+- Always call Update() to persist changes.
+- Use .Count and .GetAt(i) for collections (they are not arrays).
+- Refresh the model or diagram to see changes in the UI.
+- Be cautious with null values (names, tags).

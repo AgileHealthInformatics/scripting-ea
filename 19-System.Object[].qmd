@@ -1,0 +1,628 @@
+# Chapter 18: Integrating with Workflows
+
+Enterprise Architect is a powerful modelling tool, but if kept in
+isolation it risks becoming a silo. Models are valuable only when they
+connect to the wider enterprise environment — to planning tools,
+collaboration platforms, version control systems, registries, and
+analytics pipelines. Architects may capture brilliant structures in EA,
+but if those structures cannot be accessed by colleagues in Jira, shared
+in Confluence, tracked in Git, or exported to analytics platforms, then
+their impact is limited.
+
+This chapter explores the role of scripting and automation in
+**integrating EA with enterprise workflows**. It explains why
+integration matters, what types of systems are typically involved, and
+how automation bridges the gap. It also discusses the cultural
+implications: how integration makes models more visible, improves
+collaboration, and embeds architecture more deeply into organisational
+processes.
+
+## Why Integration Matters
+
+In most organisations, EA is not the system of record for requirements,
+issues, or tasks. Those live in Jira, Azure DevOps, or ServiceNow. Nor
+is EA the publishing platform for architecture views — that role is
+filled by Confluence, SharePoint, or custom portals. Nor is EA the
+analytics engine — data warehouses and BI tools play that part.
+
+If EA is to have influence, it must connect. Integration ensures that
+architecture does not sit in a closed repository but flows into the
+daily tools of developers, analysts, managers, and executives. It turns
+EA from a specialist tool into part of the wider enterprise nervous
+system.
+
+## The Role of Automation in Integration
+
+Manual integration is possible but unsustainable. You could export CSVs
+by hand, paste diagrams into Confluence, or retype requirements into
+Jira. But these manual steps are slow, error-prone, and quickly
+abandoned.
+
+Automation transforms integration into a **repeatable, reliable
+process**. Scripts can pull requirements from Jira nightly, export model
+summaries to Confluence weekly, or commit EA script libraries into Git
+with every change. Automation eliminates the friction that often
+prevents integration from sticking.
+
+## Common Integration Targets
+
+The most frequent systems EA needs to connect with are:
+
+- **Jira / Azure DevOps** — for requirements, user stories, and tasks.
+
+- **Confluence / SharePoint** — for publishing models, governance
+  reports, and guidance.
+
+- **Git / Version Control** — for managing scripts, MDGs, and sometimes
+  even model fragments.
+
+- **Registries / Catalogs** — for synchronising metadata (applications,
+  datasets, services).
+
+- **Analytics Platforms** — for reporting, dashboards, and quality
+  metrics.
+
+Each of these integrations has different requirements, but the principle
+is the same: use scripts to extract, transform, and push or pull data.
+
+## Integration Approaches
+
+### Integration via Exports
+
+The simplest form of integration is export. Scripts can export EA
+content to CSV, JSON, or XML, which is then consumed by another system.
+For example:
+
+- Exporting all Applications and their Owners to CSV for import into a
+  CMDB.
+
+- Exporting requirements to JSON for loading into Jira.
+
+- Exporting governance reports to HTML for Confluence publishing.
+
+Export-based integration is one-way but powerful. It is often the first
+step towards tighter two-way sync.
+
+### Integration via APIs
+
+More advanced integration uses APIs. Many enterprise systems (Jira,
+Confluence, ServiceNow) expose REST APIs. External EA scripts in Python
+or C# can call these APIs to push or pull data in real time. For
+example:
+
+- A Python script reads new Jira issues and creates EA Requirements.
+
+- A C# utility pushes EA diagrams as images into Confluence pages.
+
+- A script updates ServiceNow CMDB records based on EA application data.
+
+API integration requires authentication, error handling, and careful
+mapping between EA objects and external entities, but it enables true
+synchronisation.
+
+### Integration with Git
+
+Although EA itself is not a code repository, scripts and MDG definitions
+benefit from version control. Git provides traceability, collaboration,
+and rollback. By storing scripts and MDG XML in Git, teams can manage
+them like any other software artefact.
+
+Automation helps here too:
+
+- Scripts can export to a file system where Git commits are triggered.
+
+- AI can generate commit messages explaining changes.
+
+- Governance scripts can check that repositories are up to date.
+
+Git integration makes EA scripting part of the DevOps toolchain.
+
+### Integration with Analytics
+
+Another important integration is with analytics platforms. EA contains
+rich metadata: numbers of requirements, traceability ratios, coverage
+metrics. But EA’s own reporting is limited. Exporting to CSV, JSON, or
+direct database queries allows BI tools like Power BI or Tableau to
+visualise architecture quality.
+
+Scripting plays a key role here:
+
+- Automating exports to CSV nightly.
+
+- Generating JSON snapshots for ingestion.
+
+- Curating data (e.g., counting orphaned requirements).
+
+This turns architecture from a static document into a measurable
+process.
+
+## The Cultural Dimension of Integration
+
+Integration is not only technical; it changes how people perceive
+architecture. When requirements flow from Jira into EA automatically,
+architects are seen as part of the delivery pipeline, not an
+afterthought. When governance reports appear in Confluence every week,
+stakeholders see architecture as transparent and accountable. When
+scripts push metadata into analytics dashboards, leaders see
+architecture as measurable.
+
+In this way, integration changes culture: it makes architecture visible,
+relevant, and trusted.
+
+## Risks of Integration
+
+Integration is powerful but risky. Poorly designed integrations can:
+
+- Flood EA with duplicates.
+
+- Overwrite authoritative data incorrectly.
+
+- Expose sensitive data via exports.
+
+- Create brittle dependencies on API versions.
+
+That is why governance principles still apply: dry-run modes, logging,
+backups, and version control. Integration scripts should be treated with
+the same rigour as any enterprise software.
+
+## Examples
+
+### HTTP from JScript (webhooks & simple POSTs)
+
+EA’s JScript can call HTTP endpoints via **WinHTTP**. That’s enough to
+send messages to ChatOps (Teams/Slack) or any webhook.
+
+⚠️ JScript has **no JSON parser**. Prefer “write JSON out; parse/apply
+externally.” For push-only notifications, build a small JSON string by
+hand.
+```{.js filename="Example 18.1 - WebhookNotify.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 18.1 - WebhookNotify.js – JScript (ES3)
+// Purpose: Send a simple JSON message to a webhook (e.g. Teams/Slack/custom)
+// Usage: Set WEBHOOK_URL; run to notify about the selected package
+// Notes: No JSON.parse; we only build a tiny JSON string
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+function main() {
+    var WEBHOOK_URL = "https://example.webhook/your-token"; // <-- put your webhook here
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package to announce.", promptOK); return; }
+
+    // Build a tiny JSON body (escape quotes and backslashes)
+    var body = "{"
+             + "\"title\":\"EA Notification\","
+             + "\"text\":\"Package '" + jsonEscape(pkg.Name) + "' (ID " + pkg.PackageID + ") was processed.\""
+             + "}";
+
+    var ok = httpPostJson(WEBHOOK_URL, body, 15000);
+    Session.Output(ok ? "Webhook sent." : "Webhook failed.");
+}
+
+function httpPostJson(url, body, timeoutMs) {
+    try {
+        var http = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+        http.Open("POST", url, false);
+        http.SetTimeouts(5000, 5000, timeoutMs||15000, timeoutMs||15000); // DNS/connect/send/receive
+        http.SetRequestHeader("Content-Type", "application/json");
+        http.Send(body);
+        var status = http.Status;
+        return status >= 200 && status < 300;
+    } catch(e) {
+        Session.Output("HTTP error: " + e.message);
+        return false;
+    }
+}
+
+function jsonEscape(s){ s=String(s||""); return s.replace(/\\/g,"\\\\").replace(/"/g,'\\"'); }
+
+main();
+```
+
+**When to use:** status pings (“curation ready,” “governance run
+finished”), small alerts, pipeline handoffs.
+
+### Jira ⇄ EA (keys as tagged values)
+
+Best practice: **store the Jira issue key on the EA element** (e.g.,
+JiraKey tag). Use **external Python** to pull from Jira (robust JSON),
+then create/update EA Requirements. This keeps identity stable and
+avoids duplicates.
+
+#### Import Jira issues → EA Requirements (external Python)
+```{.py filename="Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)"}
+# -------------------------------------------------------
+# Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)
+# Purpose: Query Jira and sync to EA Requirements (store JiraKey as a tag)
+# Safety: Idempotent by key; only updates when values differ
+# Usage: python jira_to_ea_import.py "https://your-jira" "JQL here" 1234
+#   where 1234 is the target PackageID in EA
+# -------------------------------------------------------
+import sys, requests, win32com.client
+
+# --- Config & secrets ---
+JIRA_BASE   = sys.argv[1]              # e.g., "https://yourcompany.atlassian.net"
+JQL         = sys.argv[2]              # e.g., 'project=ARCH AND issuetype=Requirement'
+TARGET_PKG  = int(sys.argv[3])
+AUTH_USER   = "<jira_user_email>"      # store securely in env/secret store in real use
+AUTH_TOKEN  = "<jira_api_token>"       # never hardcode in production
+
+def ea_get_tag(el, name):
+    tvs = el.TaggedValues
+    for i in range(tvs.Count):
+        tv = tvs.GetAt(i)
+        if tv.Name == name:
+            return tv.Value or ""
+    return ""
+
+def ea_set_tag(el, name, value):
+    tvs = el.TaggedValues
+    for i in range(tvs.Count):
+        tv = tvs.GetAt(i)
+        if tv.Name == name:
+            tv.Value = value; tv.Update(); el.Update(); return
+    nt = tvs.AddNew(name, value)
+    nt.Update(); el.Update()
+
+def find_by_name(pkg, name):
+    els = pkg.Elements
+    for i in range(els.Count):
+        e = els.GetAt(i)
+        if e.Name == name and e.Type == "Requirement":
+            return e
+    return None
+
+def main():
+    # --- Jira query ---
+    s = requests.Session()
+    s.auth = (AUTH_USER, AUTH_TOKEN)
+    s.headers.update({"Accept": "application/json"})
+
+    r = s.get(f"{JIRA_BASE}/rest/api/3/search", params={"jql": JQL, "maxResults": 100})
+    r.raise_for_status()
+    issues = r.json()["issues"]
+
+    # --- EA attach ---
+    ea  = win32com.client.Dispatch("EA.App")
+    repo= ea.Repository
+    pkg = repo.GetPackageByID(TARGET_PKG)
+
+    created, updated = 0, 0
+    for it in issues:
+        key   = it["key"]
+        fields= it["fields"]
+        name  = fields.get("summary", key)
+        notes = fields.get("description") or ""
+
+        # Try match by JiraKey tag first
+        match = None
+        els = pkg.Elements
+        for i in range(els.Count):
+            e = els.GetAt(i)
+            if ea_get_tag(e, "JiraKey") == key:
+                match = e; break
+
+        if not match:
+            # fallback: by name
+            match = find_by_name(pkg, name)
+
+        if not match:
+            # create new
+            e = pkg.Elements.AddNew(name, "Requirement")
+            e.Notes = notes
+            e.Update()
+            ea_set_tag(e, "JiraKey", key)
+            created += 1
+        else:
+            # update if changed
+            dirty = False
+            if (match.Notes or "") != (notes or ""):
+                match.Notes = notes; dirty = True
+            if ea_get_tag(match, "JiraKey") != key:
+                ea_set_tag(match, "JiraKey", key); dirty = False  # tag helper already updated
+            if dirty:
+                match.Update(); updated += 1
+
+    if created or updated:
+        repo.RefreshModelView(pkg.PackageID)
+
+    print(f"Done. Created={created}, Updated={updated}")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 4:
+        print("Usage: python jira_to_ea_import.py <base> <jql> <package_id>")
+    else:
+        main()
+```
+
+## Notes
+
+- Use **API tokens** (don’t embed secrets in scripts; prefer env
+  vars/secret stores).
+
+- Maintain a **JiraKey** tag on each synced element.
+
+- Extend mapping easily (priority → Status, components → tagged values,
+  etc.).
+
+### Publish to Confluence (page with a live table)
+
+Typical flow: generate HTML/CSV **inside EA**, then **external Python**
+updates a Confluence page with the content. Confluence Cloud expects
+REST + JSON.
+
+#### Export an HTML table from EA (in-EA)
+```{.js filename="Example 18.3 - ExportHTML_Table.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 18.3 - ExportHTML_Table.js – JScript (ES3)
+// Purpose: Export selected package elements as a simple HTML table (for Confluence)
+// Output: Writes .html to chosen folder
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function pickFolder(msg){ var sh=new ActiveXObject("Shell.Application"); var f=sh.BrowseForFolder(0,msg,0,0); return f?f.Self.Path:null; }
+
+function main(){
+    var pkg = Repository.GetTreeSelectedPackage();
+    if(!pkg){ Session.Prompt("Select a package.", promptOK); return; }
+
+    var dir = pickFolder("Select output folder for HTML");
+    if(!dir) return;
+
+    var fso=new ActiveXObject("Scripting.FileSystemObject");
+    var stamp=(new Date()).getTime();
+    var path = dir+"\\ea_table_"+stamp+".html";
+    var file = fso.CreateTextFile(path, true);
+
+    file.WriteLine("<table>");
+    file.WriteLine("<tr><th>ID</th><th>Name</th><th>Type</th><th>Status</th></tr>");
+
+    var els=pkg.Elements;
+    for (var i=0;i<els.Count;i++){
+        var e=els.GetAt(i);
+        file.WriteLine("<tr><td>"+e.ElementID+"</td><td>"+html(e.Name)+"</td><td>"+e.Type+"</td><td>"+(e.Status||"")+"</td></tr>");
+    }
+    file.WriteLine("</table>");
+    file.Close();
+
+    Session.Output("HTML written → "+path);
+}
+function html(s){ s=String(s||""); return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+main();
+```
+#### Update or create a Confluence page (external Python)
+
+```{.py filename="Example 18.4 - confluence_publish.py – Python 3 (requests)"}
+# -------------------------------------------------------
+# Example 18.4 - confluence_publish.py – Python 3 (requests)
+# Purpose: Create/update a Confluence page with HTML body
+# Usage: python confluence_publish.py SPACE PAGE_TITLE path\to\ea_table.html
+# Notes: Uses "storage" format; increments version when updating
+# -------------------------------------------------------
+import sys, requests, json
+
+BASE   = "https://your-domain.atlassian.net/wiki"
+USER   = "<confluence_user_email>"
+TOKEN  = "<confluence_api_token>"
+
+def find_page(space, title, sess):
+    r = sess.get(f"{BASE}/rest/api/content", params={"spaceKey": space, "title": title})
+    r.raise_for_status()
+    results = r.json().get("results", [])
+    return results[0] if results else None
+
+def main():
+    if len(sys.argv) < 4:
+        print("Usage: confluence_publish.py <SPACE> <TITLE> <HTML_PATH>")
+        return
+
+    space, title, html_path = sys.argv[1], sys.argv[2], sys.argv[3]
+    html = open(html_path, "r", encoding="utf-8").read()
+
+    s = requests.Session()
+    s.auth = (USER, TOKEN)
+    s.headers.update({"Content-Type": "application/json"})
+
+    existing = find_page(space, title, s)
+    if existing:
+        page_id = existing["id"]
+        ver = existing["version"]["number"] + 1
+        payload = {
+            "id": page_id,
+            "type": "page",
+            "title": title,
+            "version": {"number": ver},
+            "body": {"storage": {"value": html, "representation": "storage"}}
+        }
+        r = s.put(f"{BASE}/rest/api/content/{page_id}", data=json.dumps(payload))
+        r.raise_for_status()
+        print(f"Updated page {title} (id={page_id}) to version {ver}")
+    else:
+        payload = {
+            "type":"page","title":title,"space":{"key":space},
+            "body":{"storage":{"value":html,"representation":"storage"}}
+        }
+        r = s.post(f"{BASE}/rest/api/content", data=json.dumps(payload))
+        r.raise_for_status()
+        print(f"Created page {title}")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Git: version control your exports (and script library)
+
+A simple pattern: export CSV/JSON from EA, then **commit with Git**
+using the system’s git CLI.
+
+#### Run git add/commit from EA (JScript)
+```{.js filename="Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)
+// Purpose: Run 'git add' and 'git commit' for a chosen folder
+// Usage: Prepare your folder as a git repo; run after exports
+// Notes: Captures stdout/stderr; commit message is timestamped
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function pickFolder(m){ var sh=new ActiveXObject("Shell.Application"); var f=sh.BrowseForFolder(0,m,0,0); return f?f.Self.Path:null; }
+
+function main(){
+    var dir = pickFolder("Select folder to commit (must be a git repo)");
+    if(!dir) return;
+
+    var shell = new ActiveXObject("WScript.Shell");
+    var cmdAdd = 'cmd /c cd /d "' + dir + '" && git add -A';
+    var cmdCommit = 'cmd /c cd /d "' + dir + '" && git commit -m "EA export '+(new Date()).toISOString()+'"';
+
+    execAndLog(shell, cmdAdd);
+    execAndLog(shell, cmdCommit);
+
+    Session.Output("Git commit attempted. Review output above for success/errors.");
+}
+
+function execAndLog(shell, cmd){
+    try{
+        var exec = shell.Exec(cmd);
+        while(!exec.StdOut.AtEndOfStream){ Session.Output(exec.StdOut.ReadLine()); }
+        while(!exec.StdErr.AtEndOfStream){ Session.Output("[ERR] "+exec.StdErr.ReadLine()); }
+    }catch(e){
+        Session.Output("Exec error: " + e.message);
+    }
+}
+
+main();
+```
+
+Tip: Pair this with the **export scripts** from Chapter 8 to automate a
+nightly “export → commit” job.
+
+### Registry/Analytics: push EA metadata downstream
+
+A common requirement is to feed a **registry** (e.g., a catalog or data
+platform). Pattern:
+
+1.  **Export** tidy JSON/CSV from EA (in-EA).
+
+2.  **Push** to your API or storage (external Python with requests).
+
+#### Export NDJSON (one JSON per line) inside EA
+```{.js filename="Example 18.6 - Export_NDJSON.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 18.6 - Export_NDJSON.js – JScript (ES3)
+// Purpose: Write NDJSON (line-delimited JSON) for easy ingestion
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function pickFolder(m){ var sh=new ActiveXObject("Shell.Application"); var f=sh.BrowseForFolder(0,m,0,0); return f?f.Self.Path:null; }
+
+function main(){
+    var pkg = Repository.GetTreeSelectedPackage();
+    if(!pkg){ Session.Prompt("Select a package.", promptOK); return; }
+    var dir = pickFolder("Select output folder for NDJSON");
+    if(!dir) return;
+
+    var fso=new ActiveXObject("Scripting.FileSystemObject");
+    var path=dir+"\\ea_export_"+(new Date()).getTime()+".ndjson";
+    var file=fso.CreateTextFile(path, true);
+
+    var els=pkg.Elements;
+    for (var i=0;i<els.Count;i++){
+        var e=els.GetAt(i);
+        var json = "{"
+                 + "\"id\":" + e.ElementID + ","
+                 + "\"guid\":\"" + esc(e.ElementGUID) + "\","
+                 + "\"name\":\"" + esc(e.Name) + "\","
+                 + "\"type\":\"" + esc(e.Type) + "\","
+                 + "\"status\":\"" + esc(String(e.Status||"")) + "\""
+                 + "}";
+        file.WriteLine(json);
+    }
+    file.Close();
+    Session.Output("NDJSON written → " + path);
+}
+function esc(s){ s=String(s||""); return s.replace(/\\/g,"\\\\").replace(/"/g,'\\"'); }
+
+main();
+```
+
+#### Push NDJSON to your registry (external Python)
+```{.py filename="Example 18.7 - push_ndjson.py – Python 3 (requests)"}
+# -------------------------------------------------------
+# Example 18.7 - push_ndjson.py – Python 3 (requests)
+# Purpose: Stream NDJSON lines to a registry endpoint
+# Usage: python push_ndjson.py https://registry.example/api/bulk path\to\file.ndjson
+# -------------------------------------------------------
+import sys, requests
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: push_ndjson.py <endpoint> <ndjson_path>")
+        return
+
+    endpoint, path = sys.argv[1], sys.argv[2]
+    with open(path, "rb") as f:
+        r = requests.post(endpoint, data=f, headers={"Content-Type":"application/x-ndjson"}, timeout=60)
+    r.raise_for_status()
+    print("Pushed NDJSON. Server:", r.status_code)
+
+if __name__ == "__main__":
+    main()
+```
+
+## Secrets, auth & bitness (read this!)
+
+- **Never hardcode secrets** in EA scripts. Use environment variables
+  (via WScript.Shell.Environment("PROCESS")) or external secret stores.
+
+- **Use API tokens** (Jira/Confluence) rather than passwords.
+
+- **Bitness must match**: EA is typically **32-bit**; external Python
+  should be **32-bit** to attach via COM.
+
+- **Network constraints**: Corporate proxies/firewalls may require proxy
+  settings; WinHTTP and requests both support proxies (configure in
+  environment or code).
+
+## Putting it together (one realistic flow)
+
+1.  Nightly job (Task Scheduler/CI) runs **Python**:
+
+- Query **Jira** (JQL) → update EA Requirements (store JiraKey).
+
+- Export **HTML** table from EA.
+
+- Update **Confluence** page with the new table.
+
+- Export **NDJSON** and push to registry.
+
+- git add/commit the export folder for traceability.
+
+2.  EA users see fresh data in Confluence; governance can trace elements
+    back to Jira; downstream teams ingest NDJSON.
+
+## Troubleshooting quick wins
+
+- **401/403**: bad token or wrong endpoint path/version (/api/2 vs
+  /api/3).
+
+- **SSL errors**: corporate MITM certs—install trust chain or use
+  verify= with org CA (Python).
+
+- **Timeouts**: increase receive timeout; batch large payloads.
+
+- **Unicode**: prefer UTF-8 in Python; JScript file I/O defaults to
+  ANSI—keep payloads simple or generate externally.
+
+## Checklist (cheat-sheet)
+
+- Keep identities in EA via **tagged values** (JiraKey, ExternalID).
+
+- **Write in EA; parse outside** (JSON).
+
+- Dry-run first; log to CSV/HTML for review.
+
+- Use **git** for exported artifacts (history, diffs).
+
+- Make small, composable scripts; orchestrate with Python/CI.

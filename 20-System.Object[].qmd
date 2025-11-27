@@ -1,0 +1,312 @@
+# Chapter 19: Add-ins vs Scripts
+
+Up to this point, we have focused mainly on scripts that live inside
+Enterprise Architect or run against it externally through the automation
+interface. These approaches are flexible, fast to develop, and ideal for
+governance checks, imports and exports, and targeted utilities. But
+there comes a point when scripts start to feel limited. You may want
+permanent menus, event handlers that react when users create elements,
+or deeper integration with EA’s user interface. At this stage, you move
+beyond scripts and begin thinking in terms of **Add-ins**.
+
+This chapter explores the boundary between scripts and add-ins. It
+explains what each approach is best suited for, why organisations
+sometimes make the leap to add-ins, and what the trade-offs are in terms
+of power, safety, and maintainability. The aim is not to suggest that
+every script should become an add-in, but to show you the decision space
+clearly so you can choose the right tool for the job.
+
+## Scripts as the First Line of Automation
+
+Scripts are the natural starting point for automation in EA. They are:
+
+- **Easy to create**: no extra tools beyond EA itself.
+
+- **Portable**: stored in the repository, available to all users.
+
+- **Quick to test**: you can write a script in the morning and run it
+  that afternoon.
+
+For governance, imports/exports, and small utilities, scripts are ideal.
+They reduce friction, allow experimentation, and empower modellers who
+are not professional developers.
+
+However, scripts also have **limitations**:
+
+- They cannot add permanent menus or toolbars.
+
+- They cannot hook into events (e.g. “element created”).
+
+- They are tied to a specific repository rather than installed globally.
+
+- They are confined to JScript or VBScript, with limited libraries.
+
+When you hit these walls, it is time to consider add-ins.
+
+## Add-ins as Compiled Extensions
+
+An **Add-in** is a compiled .NET assembly (usually in C#) that EA loads
+at startup. It is registered in the Windows Registry under the EAAddins
+key, marked COM-visible, and referenced by EA as if it were part of the
+application.
+
+Add-ins can:
+
+- Add menus and toolbars to EA’s UI.
+
+- Respond to events like element creation, diagram opening, or project
+  closing.
+
+- Use the full power of .NET libraries, from JSON parsing to REST APIs.
+
+- Provide custom docked windows and richer user interfaces.
+
+In short, add-ins let you extend EA itself, turning one-off utilities
+into permanent, user-friendly tools.
+
+## Why Move from Script to Add-in?
+
+Organisations usually move from script to add-in for one or more of
+these reasons:
+
+- **Distribution**: a script stored in one repository is not visible in
+  another; an add-in installed on all workstations is.
+
+- **Consistency**: add-ins provide the same menus for everyone, ensuring
+  a common experience.
+
+- **Events**: only add-ins can react to events (e.g. auto-tag new
+  elements).
+
+- **Professionalisation**: mature utilities become part of a toolset
+  rather than ad hoc snippets.
+
+- **Integration**: add-ins can use advanced libraries and UI frameworks.
+
+## Trade-offs
+
+The move to add-ins brings benefits, but also costs.
+
+**Advantages of Add-ins:**
+
+- Richer features (menus, events, UI).
+
+- Strong typing (C#, VB.NET).
+
+- Access to modern libraries.
+
+- Professional distribution and versioning.
+
+**Disadvantages of Add-ins:**
+
+- More setup (Visual Studio, COM registration).
+
+- Distribution overhead (must be installed on each machine).
+
+- Debugging complexity (requires attaching to EA process).
+
+- Higher governance burden (DLLs need version control and change
+  management).
+
+In other words, add-ins are heavier. They make sense when a solution is
+stable and widely used, but they are overkill for experimental or
+repository-specific tasks.
+
+## Add-ins and Governance
+
+One of the subtle reasons to move to add-ins is governance. Scripts are
+flexible but ephemeral; anyone can change them in the repository.
+Add-ins, by contrast, are compiled, versioned, and distributed. This
+makes them better suited to regulated environments where tools must be
+controlled.
+
+For example, a bank may insist that only signed add-ins are used,
+ensuring all automation has passed security checks. Scripts may still
+exist for local use, but official tooling is delivered as add-ins.
+
+## The Learning Curve
+
+Writing add-ins requires more development skill than writing scripts.
+You need to:
+
+- Set up a Class Library project in Visual Studio.
+
+- Add a reference to Interop.EA.dll.
+
+- Mark the assembly COM-visible.
+
+- Register it with regasm or an installer.
+
+- Implement required methods like EA_Connect, EA_Disconnect,
+  EA_GetMenuItems, and EA_MenuClick.
+
+This is more demanding than writing JScript in EA’s built-in editor. But
+it opens far greater possibilities.
+
+## A Progressive Path
+
+A useful way to think about the script/add-in distinction is as a path:
+
+- **Scripts** — fast, flexible, repository-bound.
+
+- **External Automation** — Python or C# utilities that integrate EA
+  into enterprise workflows.
+
+- **Add-ins** — compiled, distributed, integrated extensions.
+
+Teams often move along this path naturally. A script solves a local
+problem. Later it becomes an external utility. Finally, it matures into
+an add-in for permanent use. Understanding this path helps you decide
+when to invest in the extra effort of an add-in.
+
+## Cultural Impact
+
+The choice between scripts and add-ins also shapes team culture. Scripts
+empower modellers; add-ins formalise tools. Too much reliance on add-ins
+can discourage experimentation. Too much reliance on scripts can create
+chaos. The healthiest culture balances the two: scripts for flexibility,
+add-ins for stability.
+
+## Risks of Add-ins
+
+Because add-ins load at EA startup, errors in add-ins can be disruptive.
+A badly written add-in may prevent menus from loading, slow down EA, or
+crash the application. This risk means testing and version control are
+even more critical than for scripts.
+
+## Example
+
+### Minimal C# Add-in
+
+Here’s a **minimal C# Add-in**. It adds a menu under **Specialize →
+MyAddin → Hello**. When clicked, it shows a message box.
+```{.cs filename="Example 19.1 - MyAddin.cs – Minimal EA Add-in"}
+// -------------------------------------------------------
+// Example 19.1 - MyAddin.cs – Minimal EA Add-in
+// Purpose: Demonstrate how to build a COM-visible add-in
+// Notes:
+//   - Build as Class Library (.NET Framework, not .NET Core).
+//   - Mark assembly COM-visible.
+//   - Register DLL with regasm or installer.
+// -------------------------------------------------------
+using System;
+using System.Runtime.InteropServices;
+using EA; // Reference to Interop.EA.dll (from EA install folder)
+using System.Windows.Forms;
+
+namespace MyAddin
+{
+    [ComVisible(true)]                 // Required for COM
+    [ClassInterface(ClassInterfaceType.None)]
+    public class MyAddinClass
+    {
+        // EA calls this at connection
+        public string EA_Connect(Repository Repository)
+        {
+            return "a string";         // Reserved, can be anything
+        }
+
+        public void EA_Disconnect()
+        {
+            // Cleanup if needed
+        }
+
+        // ---- Menu Integration ----
+
+        // Tell EA which menu root to show
+        public object EA_GetMenuItems(Repository Repository, string Location, string MenuName)
+        {
+            if (MenuName == "")
+                return "MyAddin";      // Root menu
+            else if (MenuName == "MyAddin")
+                return "Hello";        // Submenu item
+            return "";
+        }
+
+        // Control enabled/disabled state
+        public bool EA_GetMenuState(Repository Repository, string Location, string MenuName, string ItemName, ref bool IsEnabled, ref bool IsChecked)
+        {
+            IsEnabled = true;          // Always enabled
+            return true;
+        }
+
+        // Handle click events
+        public void EA_MenuClick(Repository Repository, string Location, string MenuName, string ItemName)
+        {
+            if (MenuName == "MyAddin" && ItemName == "Hello")
+            {
+                MessageBox.Show("Hello from MyAddin!", "EA Add-in");
+            }
+        }
+    }
+}
+```
+
+### Build & Register the Add-in
+
+1.  In Visual Studio:
+
+- Create a **Class Library (.NET Framework)** project (e.g., .NET
+  Framework 4.7.2).
+
+- Add reference to Interop.EA.dll (found in EA’s install folder).
+
+- Ensure AssemblyInfo.cs has \[assembly: ComVisible(true)\].
+
+2.  Build the DLL.
+
+3.  Register it for COM (run as admin):
+
+4.  regasm MyAddin.dll /codebase
+
+5.  Add registry entry for EA (HKCU or HKLM):
+
+6.  `\[HKEY_CURRENT_USER\Software\Sparx Systems\EAAddins\MyAddin\]`
+
+7.  @="MyAddin.MyAddinClass"
+
+8.  Restart EA → check **Specialize → Manage Add-ins**. Enable
+    **MyAddin**.
+
+## When to Migrate Script → Add-in
+
+Stick with **Scripts** when:
+
+- One-off bulk edits or imports.
+
+- Repository-specific governance checks.
+
+- You don’t need UI menus.
+
+Move to **Add-ins** when:
+
+- You want consistent menu items for all users.
+
+- You need .NET libraries (e.g., JSON.NET, REST SDK).
+
+- You want event handling (e.g., auto-tag new elements).
+
+- Distribution is across many repositories.
+
+## Migration Example
+
+**Governance Script (inside EA)** → “Enforce Owner tag on all
+Requirements.”  
+When matured into an **Add-in**:
+
+- Provide a permanent menu item *“Governance → Enforce Tags”*.
+
+- Use events: EA_OnElementCreated → auto-add Owner tag.
+
+- Add reporting form with filtering, progress bar, export button.
+
+## Summary
+
+- **Scripts** are lightweight, repository-local, and quick.
+
+- **Add-ins** are heavy-duty, system-wide, and extensible.
+
+- Migration path: prove with scripts → formalise as Add-in when stable.
+
+- Minimal Add-in = COM-visible C# class, a registry key, and menu
+  methods.

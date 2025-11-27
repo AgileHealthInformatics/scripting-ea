@@ -1,0 +1,413 @@
+# Chapter 4: API Essentials
+
+Enterprise Architect is first and foremost a modelling tool. But beneath
+its diagrams, toolboxes, and properties windows lies a structured
+**object model** — a formal API (Application Programming Interface) that
+represents everything you see in the repository. Packages, elements,
+connectors, diagrams, attributes, tagged values: all are exposed as
+objects with properties and methods.
+
+The EA Automation API can feel intimidating at first. It includes dozens
+of classes, hundreds of properties, and subtle rules about when you must
+call Update() or RefreshModelView(). But in practice, you do not need
+the whole surface of the API to be productive. In fact, like many large
+systems, EA’s object model follows the **80/20 rule**: about 20% of the
+classes and methods cover 80% of what you will ever need.
+
+This chapter focuses on that 20%. It introduces the core objects —
+Repository, Package, Element, Connector, Attribute, and TaggedValue —
+and explains their roles in the automation model. It also explains how
+to navigate between them, when to use the object API and when to use
+SQL, and the importance of persisting changes. By the end of this
+introduction, you will understand the “grammar” of the EA API, which
+will make the worked examples far easier to follow.
+
+## Why Understand the API?
+
+It might seem obvious: if you are going to script EA, you need to know
+the API. But there is a deeper point. Many beginners approach scripting
+by copying and pasting snippets without understanding what is happening.
+This can work for small tasks, but it is risky at scale. Without a
+mental model of the API, you may accidentally treat an EA collection
+like a JavaScript array, or forget to call Update(), or misinterpret a
+connector direction.
+
+Understanding the API means you can reason about scripts. You can
+predict what a script will do, debug why something didn’t work, and
+design new scripts with confidence. It is the difference between
+following recipes and actually knowing how to cook.
+
+## The Object Model
+
+The EA API follows the structure of the tool itself:
+
+1.  **Repository** — the root object, representing the entire open
+    model.
+
+2.  **Package** — a container for elements, diagrams, and sub-packages.
+
+3.  **Element** — a UML element (class, component, use case, capability,
+    etc.).
+
+4.  **Connector** — a relationship between elements (association,
+    dependency, trace, etc.).
+
+5.  **Attribute / Operation** — members inside an element.
+
+6.  **TaggedValue** — metadata attached to an element or connector.
+
+Almost every script you write will start with the **Repository** object
+and work downwards.
+
+## Repository
+
+Everything begins with the **Repository** object. This represents the
+currently open EA project — whether it is a .qea file, a database, or a
+shared repository. From Repository, you can access root models
+(Repository.Models), query by SQL (Repository.SQLQuery), retrieve
+selected objects (GetTreeSelectedPackage, GetTreeSelectedObject), or
+refresh the UI (RefreshModelView).
+
+Think of the Repository as your **gateway**. You cannot script without
+it, because it is the only object that is always available.
+
+The Repository object is provided automatically when running a script
+inside EA. It represents the current model. From it you can query
+packages, elements, and diagrams, or run SQL directly.
+
+```{.js filename="Example 4.1 – Output repository name"}
+// -------------------------------------------------------
+// Example 4.1 – Output repository name
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    // The Repository object is available by default
+    var modelName = Repository.ConnectionString;
+    Session.Output("Connected to: " + modelName);
+}
+
+main();
+
+```
+
+Repository.ConnectionString tells you the path or database connection
+for the open model.
+
+Use Session.Output instead of console.log — EA doesn’t know what a
+console is.
+
+## Packages
+
+The next level down is the **Package**. Packages are containers. They
+hold elements, diagrams, and child packages. Traversing the model
+usually means starting at a package and working your way down through
+its sub-packages and elements.
+
+A key safety note: don’t assume a user has selected a package. Always
+check the object type. If you write a script that expects a package but
+gets a diagram, you will get confusing errors.
+
+```{.js filename="Example 4.2 – Traverse top-level packages"}
+// -------------------------------------------------------
+// Example 4.2 – Traverse top-level packages
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var models = Repository.Models;  // Collection of root packages
+    for (var i = 0; i < models.Count; i++) {
+        var model = models.GetAt(i);
+        Session.Output("Root package: " + model.Name);
+    }
+}
+
+main();
+```
+
+Key notes:
+
+- EA collections use .Count and .GetAt(i).
+
+- Root packages are accessed through Repository.Models.
+
+## Elements
+
+The **Element** is the heart of the EA API. Every class, requirement,
+actor, capability, or component is an Element. Elements have properties
+(Name, Type, Notes, Status), collections (Attributes, Methods,
+Connectors, TaggedValues), and behaviours (scenarios, responsibilities).
+
+If you learn to script elements, you unlock most of EA’s power. The most
+common tasks involve creating elements, updating their properties, and
+traversing their relationships.
+
+```{.js filename="Example 4.3 – List all elements in selected package"}
+// -------------------------------------------------------
+// Example 4.3 – List all elements in selected package
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var package = Repository.GetTreeSelectedPackage();
+    if (!package) {
+        Session.Prompt("Please select a package in the Project Browser.", promptOK);
+        return;
+    }
+
+    var elements = package.Elements;
+    for (var i = 0; i < elements.Count; i++) {
+        var element = elements.GetAt(i);
+        Session.Output("Element: " + element.Name + " (Type: " + element.Type + ")");
+    }
+}
+
+main();
+```
+
+Notes:
+
+- Always check for null — if nothing is selected,
+  GetTreeSelectedPackage() returns null.
+
+- element.Type returns the UML type (e.g. Class, Requirement, Activity).
+
+## Connectors
+
+Architecture is about relationships. In EA, those are represented by
+**Connectors**. An element’s Connectors collection lists all
+relationships where that element is either client or supplier. A
+connector has a Type (“Association,” “Dependency,” “Realisation”), plus
+source and target IDs.
+
+A common beginner’s mistake is to assume connectors are directional in a
+UML sense. In practice, EA stores them with ClientID and SupplierID, and
+the interpretation depends on connector type. Scripts must take care to
+assign the correct ends.
+
+```{.js filename="Example 4.4 – Show connectors from a selected element"}
+// -------------------------------------------------------
+// Example 4.4 – Show connectors from a selected element
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var element as EA.Element;
+    element = Repository.GetTreeSelectedObject();
+    if (!element || element.ObjectType != otElement) {
+        Session.Prompt("Please select an element in the Project Browser.", promptOK);
+        return;
+    }
+
+    var connectors = element.Connectors;
+    for (var i = 0; i < connectors.Count; i++) {
+        var conn = connectors.GetAt(i);
+        Session.Output("Connector: " + conn.Type + 
+                       " from " + conn.ClientID + 
+                       " to " + conn.SupplierID);
+    }
+}
+
+main();
+```
+
+Notes:
+
+- Connectors is a collection of relationships.
+
+- ClientID and SupplierID are IDs of the connected elements. You can
+  resolve them with Repository.GetElementByID().
+
+## Attribute and Method: Details of Elements
+
+Attributes and methods live inside elements. They are relevant mostly
+for data models and software design. If you are modelling business
+capabilities or processes, you may never touch them. But for class
+modelling, they are essential. The API treats them like small objects
+with Name, Type, Notes, and collections of tagged values.
+
+```{.js filename="Example 4.5 – Add Attribute and Method"}
+// -------------------------------------------------------
+// Example 4.5 – Add Attribute and Method
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var el = Repository.GetTreeSelectedObject();
+    if (el.ObjectType != otElement || el.Type != "Class") {
+        Session.Prompt("Select a Class element first.", promptOK);
+        return;
+    }
+
+    // List existing attributes and methods
+    for (var i = 0; i < el.Attributes.Count; i++)
+        Session.Output("Attribute: " + el.Attributes.GetAt(i).Name);
+    for (var j = 0; j < el.Methods.Count; j++)
+        Session.Output("Method: " + el.Methods.GetAt(j).Name + "()");
+
+    // Add one of each
+    el.Attributes.AddNew("exampleAttr", "String").Update();
+    el.Methods.AddNew("exampleMethod", "").Update();
+    el.Update();
+    Repository.RefreshModelView(el.PackageID);
+    Session.Output("Added exampleAttr and exampleMethod.");
+}
+
+main();
+```
+
+## Tagged Values
+
+Perhaps the most important part of the API for governance is **Tagged
+Values**. Tagged values let you attach metadata to elements, connectors,
+attributes, and more. They are the bridge between generic modelling and
+your organisation’s specific needs. For example, you can tag every
+application with “Owner” or every requirement with “Source System.”
+
+In scripts, tagged values are indispensable. They let you propagate
+metadata, check for compliance, and integrate with external registries.
+
+```{.js filename="Example 4.6 – Read and update tagged values"}
+// -------------------------------------------------------
+// Example 4.6 – Read and update tagged values
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var element = Repository.GetTreeSelectedObject();
+    if (!element || element.ObjectType != otElement) {
+        Session.Prompt("Please select an element.", promptOK);
+        return;
+    }
+
+    var tags = element.TaggedValues;
+    for (var i = 0; i < tags.Count; i++) {
+        var tag = tags.GetAt(i);
+        Session.Output("Tag: " + tag.Name + " = " + tag.Value);
+    }
+
+    // Add or update a tagged value
+    var newTag = element.TaggedValues.AddNew("Status", "Draft");
+    newTag.Update();
+
+    // Remember to call Update() on the element itself
+    element.Update();
+    Session.Output("Tagged value added/updated.");
+}
+
+main();
+```
+
+Key rules:
+
+- Tagged values are stored as a collection on the element.
+
+- After modifying, call Update() to persist.
+
+- Always refresh the model view if you want changes to show immediately.
+
+## SQL vs API
+
+EA exposes its data model both as an **object API** and as a **database
+schema**. You can query directly with Repository.SQLQuery(sql), which
+returns XML. This is often faster for reads, especially when you need
+thousands of rows. But you should never write to the database directly.
+The object API enforces rules, cascades updates, and ensures integrity.
+
+The safe pattern is: **SQL for read, API for write**. Query with SQL,
+act with API.
+
+```{.js filename="Example 4.7 – Use SQLQuery for performance"}
+// -------------------------------------------------------
+// Example 4.7 – Use SQLQuery for performance
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    // Simple SQL query – always returns XML
+    var result = Repository.SQLQuery(
+        "SELECT Name FROM t_object WHERE Object_Type='Class'"
+        );
+    Session.Output("Result XML: " + result);
+}
+
+main();
+```
+
+- SQL queries return XML, not rows. You must parse the XML manually.
+
+- SQL is much faster for bulk queries but dangerous if you don’t
+  understand EA’s schema.
+
+## Update and RefreshModelView
+
+If there is one golden rule in the EA API, it is this: **nothing changes
+until you call Update()**. Setting element.Name = "X" does nothing
+unless you follow with element.Update(). Forget this, and you will
+wonder why your script “didn’t work.”
+
+The second golden rule is: **the UI doesn’t refresh automatically**.
+After bulk changes, call Repository.RefreshModelView() to force the
+Project Browser to update. Without it, changes may exist in the database
+but remain invisible until EA is restarted.
+
+## The 80/20 Principle in Practice
+
+Although EA has many more objects — Diagrams, DiagramObjects, Scenarios,
+Issues, Tests — most automation tasks use the same handful: Repository,
+Package, Element, Connector, Attribute, TaggedValue. Master these, and
+you can already do 80% of practical scripting.
+
+The rest of the API is there for advanced needs. You don’t need to learn
+it all at once. By focusing on the essentials, you avoid overwhelm and
+build confidence quickly.
+
+## Learning Through Patterns
+
+The examples later in this chapter illustrate common patterns:
+
+- Traversal (loop through all elements in a package).
+
+- Creation (add a new element and update).
+
+- Relationship management (add connectors).
+
+- Metadata (set tagged values).
+
+- SQL vs object trade-offs (query then act).
+
+These patterns recur constantly. Once you know them, you can adapt them
+to almost any task.
+
+## Common Pitfalls
+
+Even at the API essentials level, there are traps:
+
+- Misusing EA collections (they are not arrays).
+
+- Forgetting Update() or RefreshModelView().
+
+- Confusing stereotype with StereotypeEx (use the latter for
+  profile-qualified stereotypes).
+
+- Assuming element names are unique (they are not; always prefer GUID or
+  ID).
+
+- Overusing Session.Output in large loops (slow).
+
+These pitfalls are avoidable once you internalise the essentials.
+
+## Looking Ahead
+
+This chapter covered the essentials: Repository, Package, Element,
+Connector, and TaggedValue. You now know how to retrieve, inspect, and
+modify them. In the next chapter we will look at working **inside EA
+with JScript**, including common pitfalls, utility functions, and
+debugging strategies.

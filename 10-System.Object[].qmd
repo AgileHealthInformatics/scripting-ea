@@ -1,0 +1,695 @@
+# Chapter 9: Imports & Exports
+
+One of the first serious challenges you encounter when scripting
+Enterprise Architect is how to move data in and out of the repository. A
+model is rarely a self-contained island. Requirements may start life in
+Jira or Excel. Application inventories may be stored in a CMDB. Metadata
+may need to be exported to registries or analytics platforms. Architects
+frequently face the practical need to **import content into EA** or
+**export content from EA** to other systems.
+
+This chapter focuses on imports and exports — arguably the most common
+automation tasks in EA. At first glance, they may seem trivial: read
+from CSV, create elements, write back. But once you attempt real-world
+imports and exports, you quickly discover subtle complexities: handling
+GUIDs, avoiding duplicates, ensuring round-trip consistency, and dealing
+with encoding.
+
+Understanding these complexities is essential. A poorly designed import
+script can flood your repository with duplicates. A naïve export may
+omit critical metadata or lose relationships. The goal of this chapter
+is to build robust patterns for imports and exports that are safe,
+repeatable, and auditable.
+
+## Why Imports Matter
+
+Imports are the way EA connects to upstream sources of truth. In many
+organisations, architects are not the ones who originate requirements,
+applications, or datasets. Those live in other systems. EA is where they
+are curated, connected, and visualised.
+
+For example:
+
+- Requirements authored in Jira need to be imported into EA for
+  traceability.
+
+- Application inventories stored in Excel need to be imported as
+  elements with tagged values.
+
+- Data elements defined in a registry need to be imported into EA’s
+  logical data model.
+
+Without imports, EA risks becoming a disconnected silo. With imports, it
+becomes part of the wider enterprise information flow.
+
+## Why Exports Matter
+
+The opposite direction is just as important. Many stakeholders do not
+use EA directly. They expect to see outputs in Excel, JSON, Confluence,
+or dashboards. Exports make EA’s content consumable.
+
+For example:
+
+- Exporting element inventories to CSV for analysis in Excel.
+
+- Exporting model metadata to JSON for loading into a data catalog.
+
+- Exporting governance reports to Confluence for project teams.
+
+Exports also serve as safety tools: before running a script that
+modifies content, export a snapshot for comparison.
+
+## The Round-Trip Challenge
+
+In theory, import and export should be symmetrical: export, modify
+externally, import back. In practice, this is hard because of
+**identity**. How do you know that a row in CSV corresponds to the same
+element in EA?
+
+If you match by name, duplicates are inevitable. If you match by ID, the
+ID may change across repositories. The robust solution is to use
+**GUIDs**. Every element, package, and connector in EA has a GUID. By
+exporting and re-importing GUIDs, you can round-trip reliably.
+
+This chapter emphasises the importance of GUID handling in all
+import/export scripts.
+
+## Common Pitfalls
+
+Beginners often stumble into a few traps when writing import/export
+scripts:
+
+- **Duplicate creation**: forgetting to check if an element already
+  exists before creating a new one.
+
+- **Lost metadata**: exporting only names, not tags, stereotypes, or
+  relationships.
+
+- **Encoding errors**: CSV exports losing accented characters due to
+  ANSI encoding.
+
+- **Uncontrolled scope**: importing thousands of rows without dry-run or
+  logging.
+
+Each of these pitfalls can damage model integrity. The patterns in this
+chapter address them with checks, dry-runs, and logs.
+
+## Choosing a Format
+
+The two most common formats for imports and exports are **CSV** and
+**JSON**.
+
+- **CSV** is simple, widely supported, and easy to review in Excel. It
+  works best for tabular data: lists of requirements, applications, or
+  tagged values.
+
+- **JSON** is richer, supporting nested structures and hierarchies. It
+  is more natural for hierarchical data, such as package trees or nested
+  attributes.
+
+EA scripts can handle CSV easily using FileSystemObject. JSON is
+trickier because JScript lacks a parser, but you can still generate JSON
+strings. For parsing JSON, external automation (Python, C#) is usually
+better.
+
+## GUIDs, Keys, and Identity
+
+As mentioned earlier, GUIDs are the key to round-trip imports/exports.
+Best practice is:
+
+- **Always export the GUID** alongside names and types.
+
+- **When importing**, check if the GUID exists in EA. If yes, update. If
+  no, create.
+
+- **If GUIDs are absent** (e.g., external system), generate your own
+  external ID tag (e.g., JiraKey). Use this as the round-trip identity.
+
+Scripts should never rely on element names alone for identity.
+
+## Curated Imports
+
+Another best practice is to **curate before commit**. Instead of blindly
+importing all rows, first log what would be created or updated. Write
+the proposed changes to a CSV, review them, then re-run the script with
+DRY_RUN = false.
+
+This two-phase approach mirrors the “Curate-then-Write” pattern
+described in Chapter 7. It prevents surprises and builds trust in
+automation.
+
+## Safety in Exports
+
+Exports may feel safer than imports — after all, they don’t change EA.
+But they come with their own risks. An incomplete export can give
+stakeholders a misleading picture. An unfiltered export may expose
+sensitive data.
+
+Safe export practices include:
+
+- Logging the scope of what was exported.
+
+- Including metadata fields like GUIDs, stereotypes, and tags.
+
+- Confirming encoding (e.g., use external Python for UTF-8).
+
+## Integrating Imports/Exports into Workflows
+
+Imports and exports are rarely ends in themselves. They usually form
+part of a wider workflow. For example:
+
+1.  Export application inventory from EA to CSV.
+
+2.  Send CSV to data owners for updates.
+
+3.  Import CSV back into EA with changes.
+
+Or:
+
+1.  Import requirements from Jira.
+
+2.  Trace them to capabilities and applications in EA.
+
+3.  Export traceability report to Confluence.
+
+Thinking of imports/exports as workflow steps encourages you to script
+them with logging, curation, and repeatability.
+
+## What you’ll use
+
+Inside EA: JScript (ES3), FileSystemObject, Excel.Application (ActiveX),
+EA API.
+
+Outside EA: Python (pywin32) for JSON parsing and advanced integrations.
+
+We’ll assume you have the **Shared Helpers** from Chapter 6
+(\_Common.Helpers) available: ensureOutputTab, browseForFolder,
+CsvWriter, string helpers, and nowMs().
+
+### CSV Round-Trip (in-EA)
+
+CSV is the simplest review format for non-technical stakeholders. The
+safest pattern is **two-phase**: export a proposal → humans curate in
+Excel → apply only rows marked “YES”.
+
+### Export elements (recursive) to CSV
+
+```{.js filename="Example 9.1 - - ExportCSV_PackageRecursive.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 9.1 - ExportCSV_PackageRecursive.js – JScript (ES3)
+// Purpose: Export elements of the selected package (and subpackages) to CSV
+// Usage: Select a package in the Project Browser → run script
+// Output: directory-only chooser; filename auto-derived
+// Assumptions:
+//   - ES3 only; EA collections use Count/GetAt(i)
+//   - Includes key fields for round-trip (IDs, GUIDs, parent package)
+// Dependencies: _Common.Helpers
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "ExportCSV";
+    ensureOutputTab(TAB);
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package to export.", promptOK); return; }
+
+    var outDir = browseForFolder("Select output folder (CSV)");
+    if (!outDir) { log(TAB, "Cancelled."); return; }
+
+    var stamp = (new Date()).getTime();
+    var path  = outDir + "\\export_elements_" + safeName(pkg.Name) + "_" + stamp + ".csv";
+    var csv   = new CsvWriter(path);
+    csv.writeHeader("Apply,ElementID,GUID,PackageID,PackageName,Name,Type,Stereotype,Status,Notes");
+
+    var count = walkPackage(pkg, function(el, p) {
+        csv.writeRow([
+            "NO",                    // Apply = NO by default (curate later)
+            el.ElementID,
+            el.ElementGUID,
+            p.PackageID,
+            p.Name,
+            el.Name,
+            el.Type,
+            String(el.Stereotype||""),
+            String(el.Status||""),
+            sanitize(el.Notes)
+        ]);
+    });
+
+    csv.close();
+    log(TAB, "Exported " + count + " element(s) → " + path);
+}
+
+function walkPackage(pkg, onElement) {
+    var n = 0, i;
+    var els = pkg.Elements;
+    for (i=0; i<els.Count; i++) {
+        onElement(els.GetAt(i), pkg); n++;
+    }
+    var kids = pkg.Packages;
+    for (i=0; i<kids.Count; i++) {
+        n += walkPackage(kids.GetAt(i), onElement);
+    }
+    return n;
+}
+
+function sanitize(s) {
+    // Compress newlines for CSV readability (optional)
+    s = String(s||"");
+    s = s.replace(/\r\n/g, " ").replace(/\n/g, " ").replace(/\r/g, " ");
+    return s;
+}
+function safeName(s) { return String(s||"").replace(/[^A-Za-z0-9_]+/g, "_"); }
+
+main();
+```
+
+### Apply curated CSV to update elements
+
+CSV edited by humans is brittle; we keep parsing simple and only support
+a few controlled changes. We’ll update Name, Stereotype, Status, and
+optionally one tag**ged value** (e.g., Owner). Only rows with Apply=YES
+will execute.
+
+```{.js filename="Example 9.2 - ImportCSV_UpdateElements.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 9.2 - ImportCSV_UpdateElements.js – JScript (ES3)
+// Purpose: Apply curated updates to elements from a CSV (round-trip)
+// Usage: Place curated CSV in a folder → run script → pick folder
+// Safety: Only Apply=YES rows are executed; ElementID/GUID matching
+// Dependencies: _Common.Helpers
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "ImportCSV";
+    ensureOutputTab(TAB);
+
+    var dir = browseForFolder("Select folder containing curated CSV (export_elements_*.csv)");
+    if (!dir) { log(TAB, "Cancelled."); return; }
+
+    var file = newestCsv(dir, "export_elements_");
+    if (!file) { log(TAB, "No matching CSV found."); return; }
+    log(TAB, "Applying from: " + file.Path);
+
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var ts  = fso.OpenTextFile(file.Path, 1); // ForReading
+    if (!ts.AtEndOfStream) ts.ReadLine();     // skip header
+
+    var applied=0, considered=0;
+    while (!ts.AtEndOfStream) {
+        var line  = ts.ReadLine();
+        if (trim(line) === "") continue;
+        var cells = splitCsvLine(line);       // naive split (works if reviewers avoided stray commas)
+
+        // Expected header: Apply,ElementID,GUID,PackageID,PackageName,Name,Type,Stereotype,Status,Notes
+        var apply    = trim(getCell(cells,0));
+        var elementID= parseInt(getCell(cells,1),10);
+        var guid     = trim(getCell(cells,2));
+        var newName  = trim(getCell(cells,5));
+        var newStereo= trim(getCell(cells,7));
+        var newStatus= trim(getCell(cells,8));
+
+        considered++;
+
+        if (equalsIgnoreCase(apply,"YES")) {
+            var el = null;
+            // Prefer GUID match if provided
+            if (guid !== "") {
+                el = Repository.GetElementByGuid ? Repository.GetElementByGuid(guid) : Repository.GetElementByGUID(guid);
+            }
+            if (!el && elementID > 0) {
+                el = Repository.GetElementByID(elementID);
+            }
+            if (!el) { log(TAB, "Row skipped: element not found (GUID="+guid+" ID="+elementID+")"); continue; }
+
+            var dirty = false;
+            if (newName !== "" && el.Name != newName) { el.Name = newName; dirty = true; }
+            if (newStereo !== "" && String(el.Stereotype||"") != newStereo) { el.Stereotype = newStereo; dirty = true; }
+            if (newStatus !== "" && String(el.Status||"") != newStatus) { el.Status = newStatus; dirty = true; }
+
+            if (dirty) { el.Update(); applied++; }
+        }
+    }
+    ts.Close();
+
+    if (applied>0) Repository.RefreshModelView(0);
+    log(TAB, "Applied " + applied + " curated change(s) out of " + considered + " row(s).");
+}
+
+// Return newest CSV whose name starts with prefix
+function newestCsv(dir, prefix) {
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var folder = fso.GetFolder(dir);
+    var en = new Enumerator(folder.Files);
+    var newest=null, t=0;
+    for (; !en.atEnd(); en.moveNext()) {
+        var f = en.item();
+        if (endsWith(f.Name.toLowerCase(), ".csv") && startsWith(f.Name, prefix)) {
+            var m = f.DateLastModified.getTime();
+            if (m > t) { newest=f; t=m; }
+        }
+    }
+    return newest;
+}
+
+// Very simple CSV splitting (assumes reviewers didn’t add embedded commas/quotes)
+function splitCsvLine(line) { return line.split(","); }
+function getCell(arr, idx) { return idx < arr.length ? arr[idx] : ""; }
+function endsWith(s, suffix){ s=String(s||""); var i=s.lastIndexOf(suffix); return i>=0 && (i+suffix.length===s.length); }
+
+main();
+```
+
+**Tip**: If you must support commas/quotes in curated text, switch to
+the **external Python importer** in §8.4; it uses the csv module to
+parse safely.
+
+### Excel via COM (in-EA)
+
+Sometimes you must deliver a real **.xlsx** instead of a CSV. You can
+drive Excel via ActiveX.
+
+**Export to Excel (.xlsx)**
+
+```{.js filename="Example 9.3 - ExportExcel_PackageSimple.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 9.3 - ExportExcel_PackageSimple.js – JScript (ES3)
+// Purpose: Write selected package elements to an .xlsx via Excel COM
+// Usage: Select a package → run script → pick output folder
+// Requirements: Microsoft Excel installed (same bitness as EA)
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "ExportExcel";
+    ensureOutputTab(TAB);
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var outDir = browseForFolder("Select output folder (.xlsx)");
+    if (!outDir) { log(TAB, "Cancelled."); return; }
+
+    var stamp = (new Date()).getTime();
+    var filePath = outDir + "\\export_" + safeName(pkg.Name) + "_" + stamp + ".xlsx";
+
+    var xl = new ActiveXObject("Excel.Application");
+    xl.Visible = false;
+    var wb = xl.Workbooks.Add();
+    var ws = wb.ActiveSheet;
+    ws.Name = "Elements";
+
+    // Header
+    ws.Cells(1,1).Value = "ElementID";
+    ws.Cells(1,2).Value = "GUID";
+    ws.Cells(1,3).Value = "Name";
+    ws.Cells(1,4).Value = "Type";
+    ws.Cells(1,5).Value = "Stereotype";
+
+    var r = 2;
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++, r++) {
+        var e = els.GetAt(i);
+        ws.Cells(r,1).Value = e.ElementID;
+        ws.Cells(r,2).Value = e.ElementGUID;
+        ws.Cells(r,3).Value = e.Name;
+        ws.Cells(r,4).Value = e.Type;
+        ws.Cells(r,5).Value = String(e.Stereotype||"");
+    }
+
+    // Autosize
+    ws.Columns.AutoFit();
+
+    // Save and clean up
+    wb.SaveAs(filePath);
+    wb.Close(false);
+    xl.Quit();
+
+    wb = null; ws = null; xl = null; // release COM references
+    log(TAB, "Excel written → " + filePath);
+}
+function safeName(s){ return String(s||"").replace(/[^A-Za-z0-9_]+/g,"_"); }
+
+main();
+```
+
+**Note**: Reading **from** Excel in JScript is also possible (open
+workbook, loop rows until blank). For reliability and parsing
+complexity, prefer CSV for imports, or use the Python importer below.
+
+### JSON Pipelines
+
+**Why JSON?** It’s friendly to automation and works nicely in Git. EA’s
+internal JScript has no JSON parser, so we recommend: **export JSON
+inside EA**, **import JSON externally** (Python).
+
+**Export JSON (simple structure) inside EA**
+
+```{.js filename="Example 9.4 - ExportJSON_Package.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 9.4 - ExportJSON_Package.js – JScript (ES3)
+// Purpose: Export selected package elements to a JSON file
+// Usage: Select a package → run script → pick output folder
+// Notes: JScript has no JSON.stringify, so we build JSON manually.
+//        Keep values escaped and simple.
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "ExportJSON";
+    ensureOutputTab(TAB);
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var outDir = browseForFolder("Select output folder (JSON)");
+    if (!outDir) { log(TAB, "Cancelled."); return; }
+
+    var stamp = (new Date()).getTime();
+    var path  = outDir + "\\export_" + safeName(pkg.Name) + "_" + stamp + ".json";
+
+    var fso  = new ActiveXObject("Scripting.FileSystemObject");
+    var file = fso.OpenTextFile(path, 2, true); // 2=ForWriting
+
+    file.WriteLine("[");
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var line = "  {" +
+            "\"elementId\":" + e.ElementID + "," +
+            "\"guid\":\"" + jsonEscape(e.ElementGUID) + "\"," +
+            "\"name\":\"" + jsonEscape(e.Name) + "\"," +
+            "\"type\":\"" + jsonEscape(e.Type) + "\"," +
+            "\"stereotype\":\"" + jsonEscape(String(e.Stereotype||"")) + "\"" +
+        "}";
+        if (i < els.Count-1) line += ",";
+        file.WriteLine(line);
+    }
+    file.WriteLine("]");
+
+    file.Close();
+    log(TAB, "JSON written → " + path);
+}
+function jsonEscape(s){ s=String(s||""); return s.replace(/\\/g,"\\\\").replace(/"/g,'\\"'); }
+function safeName(s){ return String(s||"").replace(/[^A-Za-z0-9_]+/g,"_"); }
+
+main();
+```
+
+### Import JSON externally (Python)
+
+This importer:
+
+- Tries **GUID** first (GetElementByGuid/GetElementByGUID).
+
+- Falls back to **name + type within a package** (to avoid dupes).
+
+- Creates new elements if missing *(note: EA does not let you set GUIDs
+  via API; new elements get new GUIDs—store a mapping if you need
+  cross-walks)*.
+
+```{.py filename="Example 9.5 - import_json_into_ea.py – Python 3 (pywin32)"}
+# -------------------------------------------------------
+# Example 9.5 - import_json_into_ea.py – Python 3 (pywin32)
+# Purpose: Import elements from JSON into a target package
+# Usage: python import_json_into_ea.py "C:\...\export_Package_123.json" 1234
+#   where 1234 is the target PackageID in EA
+# Safety:
+#   - Avoid duplicates by GUID first, else by (name,type,package)
+#   - Log new GUIDs so you can maintain a cross-walk
+# -------------------------------------------------------
+import sys, json, win32com.client
+
+def find_by_name_type(pkg, name, etype):
+    els = pkg.Elements
+    for i in range(els.Count):
+        e = els.GetAt(i)
+        if e.Name == name and e.Type == etype:
+            return e
+    return None
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: import_json_into_ea.py <json_path> <target_package_id>")
+        return
+
+    json_path = sys.argv[1]
+    target_pkg_id = int(sys.argv[2])
+
+    ea = win32com.client.Dispatch("EA.App")
+    repo = ea.Repository
+    pkg = repo.GetPackageByID(target_pkg_id)
+    if not pkg:
+        print("Target package not found:", target_pkg_id); return
+
+    data = json.load(open(json_path, "r"))
+
+    created, updated = 0, 0
+    for item in data:
+        guid = item.get("guid","")
+        name = item.get("name","")
+        etype= item.get("type","Class")
+        stereo=item.get("stereotype","")
+
+        el = None
+        if guid:
+            try:
+                el = repo.GetElementByGuid(guid)  # newer EA
+            except:
+                try:
+                    el = repo.GetElementByGUID(guid)  # older EA
+                except:
+                    el = None
+
+        if not el:
+            el = find_by_name_type(pkg, name, etype)
+
+        if not el:
+            el = pkg.Elements.AddNew(name, etype)
+            el.Stereotype = stereo
+            el.Update()
+            created += 1
+            # NOTE: el.ElementGUID is NEW and cannot be set via API.
+            print(f"Created: {name} ({etype}) NEW_GUID={el.ElementGUID}")
+        else:
+            dirty = False
+            if stereo and el.Stereotype != stereo:
+                el.Stereotype = stereo; dirty = True
+            if dirty:
+                el.Update(); updated += 1
+
+    if created or updated:
+        repo.RefreshModelView(pkg.PackageID)
+
+    print(f"Done. Created={created}, Updated={updated}")
+
+if __name__ == "__main__":
+    main()
+```
+
+**GUID reality check**: EA’s API exposes ElementGUID but does **not**
+let you set it for new elements. If you must preserve GUIDs from an
+external master, consider **XMI import** or EA’s native importers.
+Otherwise, store a **cross-walk CSV** of {external_id → EA GUID} after
+creation.
+
+## Managing GUIDs & Avoiding Duplicates
+
+**Best-practice order of matching:**
+
+- **GUID** (strongest identity) → GetElementByGUID/GetElementByGuid.
+
+- **Stable external key** (your own code) if you maintain one as a
+  tagged value, e.g., ExternalID.
+
+- **Name + Type + Package** (weaker; beware rename collisions).
+
+**For new items:**
+
+- You cannot set EA GUIDs via API; EA assigns them.
+
+- Immediately log {externalKey → new EA GUID} to a CSV so future updates
+  can target the same element.
+
+**Avoiding duplicates:**
+
+- Before creating, **search for existing** by GUID or external key.
+
+- If you must use name/type, scope the search to the target package (or
+  run an **SQLQuery** to check repository-wide).
+
+- Build imports as **two-phase**: curate first, then apply, so humans
+  can resolve ambiguous matches.
+
+## Scaling Up (Performance)
+
+- Use **SQL for finding**, **API for writing** (Pattern 5 in Chapter 6).
+
+- Batch large updates (e.g., 250 elements) and refresh the UI at the
+  end.
+
+- Keep logs: write a CSV of every change (old → new).
+
+**Example**: fast existence check before creating
+
+```{.js filename="Example 9.6 - ExistsByNameType_SQL.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 9.6 - ExistsByNameType_SQL.js – JScript (ES3)
+// Purpose: Repository-wide check if (Name,Type) exists; returns first Object_ID
+// Notes: SQLQuery returns XML; we do a tiny string parse
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function existsByNameType(name, type) {
+    var sql = "SELECT TOP 1 Object_ID FROM t_object WHERE Name='" + esc(name) + "' AND Object_Type='" + esc(type) + "'";
+    var xml = Repository.SQLQuery(sql);
+    var id = between(xml, "<Object_ID>", "</Object_ID>");
+    return id ? parseInt(id,10) : 0;
+}
+
+function esc(s){ 
+  return String(s||"").replace(/'/g,"''"); 
+}
+
+function between(h, a, b){ 
+  var i=h.indexOf(a); 
+  if(i<0) return ""; 
+  var j=h.indexOf(b,i+a.length); 
+  return j<0?"":h.substring(i+a.length,j); 
+}
+```
+
+## Safety Checklist
+
+- **Dry-run first** (or export-curate-apply).
+
+- **Back up** repositories (or work on a copy).
+
+- **Log everything** (CSV with old/new values).
+
+- **Update()** every modified object; **RefreshModelView()** to show
+  changes.
+
+- Prefer **CSV/JSON for input**, Excel only when required.
+
+- For rich parsing, do it **externally** (Python) and keep in-EA scripts
+  small and safe.
+
+## What to use when
+
+- Quick exports for review → CSV export (8.1.1).
+
+- Curated updates → CSV apply (8.1.2) or Python CSV/JSON importer
+  (8.3.2).
+
+- Stakeholder-friendly spreadsheet → Excel export (8.2.1).
+
+- Dev pipelines / Git → JSON export (8.3.1) + Python importer (8.3.2).
+
+- Strong identity → prefer GUIDs or your own ExternalID tagged value.

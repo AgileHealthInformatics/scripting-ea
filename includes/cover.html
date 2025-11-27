@@ -1,0 +1,20 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+  const toc    = document.querySelector('nav#TOC');
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+  if (!sidebar) return; // no margin column on this layout
+
+  const holder = document.createElement('div');
+  holder.className = 'cover-above-toc';
+  holder.innerHTML = `
+    <a href="index.html">
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+    </a>
+  `;
+  sidebar.prepend(holder);
+});
+</script>
+

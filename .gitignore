@@ -1,0 +1,18 @@
+# Quarto internal cache and temp
+.quarto/
+.quarto-project/
+.quarto-cache/
+.quarto/**
+
+# Alternative older build dir (you do not need both)
+_book/
+
+# RStudio odds and ends (if you ever use it)
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# OS cruft
+.DS_Store
+Thumbs.db

@@ -1,0 +1,495 @@
+# Chapter 12: Cookbook of Examples
+
+After learning the essentials of EA scripting, exploring design
+patterns, and examining governance automation, you are ready for a
+different kind of resource: a **cookbook**. This chapter serves as a
+library of practical scripts — small, focused recipes that solve common
+problems.
+
+Why a cookbook? Because most architects and modellers do not want to
+read abstract descriptions of APIs or design principles when they are
+under pressure to deliver. They want to grab a working example, tweak a
+few lines, and get results. A cookbook provides exactly that: practical,
+runnable scripts that cover the typical scenarios you will encounter in
+everyday work with Enterprise Architect.
+
+This introduction explains how to use the cookbook effectively, why
+examples are powerful learning tools, what safety precautions to take,
+and how to adapt recipes to your organisation’s context.
+
+## The Value of Worked Examples
+
+Learning by example is one of the fastest ways to acquire scripting
+skills. You see the structure of a script, copy it, run it, and modify
+it. Each time you adapt an example, you internalise a little more of the
+API. Over time, the examples stop being magic incantations and start
+becoming familiar patterns.
+
+This mirrors how many people learn to cook. Few start by reading
+chemistry textbooks. They follow recipes, taste the results, and
+gradually learn to improvise. A scripting cookbook provides the same
+bridge: from passive reading to active doing.
+
+## The Scope of the Cookbook
+
+The examples in this chapter span a wide range of tasks:
+
+- Simple utilities (rename elements, list tagged values).
+
+- Governance checks (enforce naming conventions, detect orphans).
+
+- Import/export helpers (CSV, JSON).
+
+- Diagram utilities (rename objects on diagrams, layout tweaks).
+
+- Advanced recipes (generate XMI, bulk stereotype changes).
+
+Together, these recipes form a library you can draw on again and again.
+
+## Why Not Just Copy from the Internet?
+
+It is true that you can find EA script snippets on forums, blogs, or Q&A
+sites. But they are often incomplete, outdated, or written without
+safety in mind. Some use direct SQL writes that risk corrupting the
+repository. Some assume modern JavaScript features that EA’s JScript
+engine does not support.
+
+The difference here is that every recipe in this cookbook is:
+
+- Fully runnable in EA’s script environment.
+
+- Corrected for ES3 constraints.
+
+- Structured with a standard header, dry-run flag, and logging.
+
+- Explained line by line with comments.
+
+This makes them safer and more reliable than random fragments you might
+stumble across online.
+
+## Safety First in a Cookbook
+
+Even though these are examples, they still modify repositories. That
+means the safety principles of Chapter 3 apply even more strongly here.
+
+Every modifying recipe includes:
+
+- A **DRY_RUN flag** set to true by default.
+
+- **Session.Output** logging for feedback.
+
+- Clear documentation of purpose, assumptions, and usage.
+
+- Where relevant, CSV logging so you can review results.
+
+Your responsibility as a user is to:
+
+1.  Run in dry-run mode first.
+
+2.  Review the logs.
+
+3.  Only then set DRY_RUN = false and rerun.
+
+Used this way, the cookbook is safe and predictable.
+
+## Adapting Recipes to Your Context
+
+No recipe is ever perfect out of the box. Just as you might add more
+spice or substitute an ingredient in cooking, you will adapt these
+scripts to your organisation’s needs. That might mean:
+
+- Changing the stereotype names to match your MDG.
+
+- Adding extra tagged values.
+
+- Adjusting logging paths to your file system.
+
+- Expanding filters to cover additional element types.
+
+The important thing is that you do not start from zero. You begin with a
+working, commented script and adapt it.
+
+## The Teaching Role of Recipes
+
+Examples do more than solve immediate problems. They also teach. By
+comparing two recipes, you begin to notice similarities — the same
+.Count and .GetAt() loops, the same Update() calls, the same
+RefreshModelView(). You start to see the skeleton of the EA API
+underneath. This is how cookbook use deepens understanding: repetition
+makes the patterns obvious.
+
+## Building a Shared Library
+
+One of the most powerful practices is to build a **shared library of
+scripts** for your team. Start with this cookbook, adapt recipes, and
+store them in version control (Git). Over time, your organisation
+develops its own tailored cookbook, aligned to your MDGs, governance
+rules, and workflows. This not only saves time but also enforces
+consistency across projects.
+
+## Cookbook Limitations
+
+A cookbook is not a substitute for deeper understanding. If you only
+ever copy and paste without comprehension, you risk misuse. That is why
+every recipe is heavily commented — to explain not only *what* happens
+but *why*. The goal is not just to give you fish but to teach you how to
+fish.
+
+## AI and Cookbook Expansion
+
+One interesting modern twist is that AI can generate new recipes on
+demand. You might start with a cookbook script and then ask an AI to
+adapt it: “Modify this script to export to JSON instead of CSV.”
+However, as we saw in earlier chapters, AI often hallucinates. That is
+why having a solid cookbook matters: you can use AI to vary a reliable
+base, rather than trusting AI to invent code from scratch.
+
+### Rename All Elements in a Package
+
+```{.js filename="Example 12.1 - RenameElements_Prefix.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.1 - RenameElements_Prefix.js – JScript (ES3)
+// Purpose: Add a prefix to all element names in the selected package
+// Assumptions: User selects a package in Project Browser
+// Safety: DRY_RUN = true by default
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var PREFIX = "ARCH_";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package first.", promptOK); return; }
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Name.indexOf(PREFIX) != 0) {
+            var newName = PREFIX + e.Name;
+            Session.Output("Would rename: " + e.Name + " → " + newName);
+            if (!DRY_RUN) {
+                e.Name = newName;
+                e.Update();
+            }
+        }
+    }
+    if (!DRY_RUN) Repository.RefreshModelView(pkg.PackageID);
+}
+
+main();
+```
+
+### Add a Tagged Value to All Elements
+
+```{.js filename="Example 12.2 - AddTag_AllElements.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.2 - AddTag_AllElements.js – JScript (ES3)
+// Purpose: Add or update a tagged value across all elements in a package
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var TAG_NAME = "Owner";
+    var TAG_VALUE = "ArchitectureTeam";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var tags = e.TaggedValues;
+        var found = false;
+
+        for (var j=0; j<tags.Count; j++) {
+            var t = tags.GetAt(j);
+            if (t.Name == TAG_NAME) {
+                found = true;
+                if (t.Value != TAG_VALUE) {
+                    Session.Output("Update tag for " + e.Name);
+                    if (!DRY_RUN) { t.Value = TAG_VALUE; t.Update(); e.Update(); }
+                }
+            }
+        }
+        if (!found) {
+            Session.Output("Add tag for " + e.Name);
+            if (!DRY_RUN) {
+                var nt = tags.AddNew(TAG_NAME, TAG_VALUE);
+                nt.Update(); e.Update();
+            }
+        }
+    }
+    if (!DRY_RUN) Repository.RefreshModelView(pkg.PackageID);
+}
+
+main();
+```
+
+### Export All Requirements to CSV
+
+```{.js filename="Example 12.3 - ExportRequirements_CSV.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.3 - ExportRequirements_CSV.js – JScript (ES3)
+// Purpose: Write requirement names and notes to CSV
+// Output: File written to chosen folder
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var shell = new ActiveXObject("Shell.Application");
+    var folder = shell.BrowseForFolder(0, "Select output folder", 0, 0);
+    if (!folder) return;
+    var dir = folder.Self.Path;
+
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var file = fso.CreateTextFile(dir + "\\requirements.csv", true);
+
+    file.WriteLine("ID,Name,Notes");
+
+    var sql = "SELECT Object_ID, Name, Note FROM t_object WHERE Object_Type='Requirement'";
+    var xml = Repository.SQLQuery(sql);
+
+    // Parse simple XML rows
+    var rows = xml.split("<Row>");
+    for (var i=1; i<rows.length; i++) {
+        var row = rows[i];
+        var id = between(row,"<Object_ID>","</Object_ID>");
+        var nm = between(row,"<Name>","</Name>");
+        var nt = between(row,"<Note>","</Note>");
+        file.WriteLine(id + ",\"" + nm + "\",\"" + nt + "\"");
+    }
+
+    file.Close();
+    Session.Output("Requirements exported.");
+}
+
+function between(h,a,b){ var i=h.indexOf(a); if(i<0) return ""; var j=h.indexOf(b,i+a.length); return j<0?"":h.substring(i+a.length,j); }
+
+main();
+```
+
+### Find Orphaned Elements
+
+```{.js filename="Example 12.4 - FindOrphans.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.4 - FindOrphans.js – JScript (ES3)
+// Purpose: Report elements with no connectors
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var els = pkg.Elements;
+    var orphans=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Connectors.Count == 0) {
+            orphans++;
+            Session.Output("Orphan: " + e.Name);
+        }
+    }
+    Session.Output("Total orphans: " + orphans);
+}
+
+main();
+
+
+### List Elements by Stereotype
+```{.js filename="Example 12.5 - ListByStereotype.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.5 - ListByStereotype.js – JScript (ES3)
+// Purpose: Output all elements with a given stereotype
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var STEREOTYPE = "Capability";
+
+    var sql = "SELECT ea_guid, Name FROM t_object WHERE Stereotype='" + STEREOTYPE + "'";
+    var xml = Repository.SQLQuery(sql);
+
+    var rows = xml.split("<Row>");
+    for (var i=1; i<rows.length; i++) {
+        var row = rows[i];
+        var guid = between(row,"<ea_guid>","</ea_guid>");
+        var nm = between(row,"<Name>","</Name>");
+        Session.Output("Capability: " + nm + " (" + guid + ")");
+    }
+}
+function between(h,a,b){ var i=h.indexOf(a); if(i<0) return ""; var j=h.indexOf(b,i+a.length); return j<0?"":h.substring(i+a.length,j); }
+
+main();
+```
+
+### Create a Trace Link Between Selected Elements
+
+```{.js filename="Example 12.6 - CreateTrace.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.6 - CreateTrace.js – JScript (ES3)
+// Purpose: Create a Realisation connector between two elements selected in a diagram
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var dia = Repository.GetCurrentDiagram();
+    if (!dia) { Session.Prompt("Open a diagram and select two elements.", promptOK); return; }
+
+    if (dia.SelectedObjects.Count != 2) {
+        Session.Prompt("Select exactly two elements.", promptOK);
+        return;
+    }
+
+    var el1 = Repository.GetElementByID(dia.SelectedObjects.GetAt(0).ElementID);
+    var el2 = Repository.GetElementByID(dia.SelectedObjects.GetAt(1).ElementID);
+
+    var conn = el1.Connectors.AddNew("", "Realisation");
+    conn.SupplierID = el2.ElementID;
+    conn.Update();
+
+    Repository.RefreshModelView(el1.PackageID);
+    Session.Output("Trace created: " + el1.Name + " → " + el2.Name);
+}
+
+main();
+```
+
+### Report Elements Missing Documentation
+
+```{.js filename="Example 12.7 - FindMissingNotes.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.7 - FindMissingNotes.js – JScript (ES3)
+// Purpose: List elements without notes (documentation)
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (trim(e.Notes) == "") {
+            Session.Output("Missing notes: " + e.Name);
+        }
+    }
+}
+function trim(str){ return str==null?"":String(str).replace(/^\s+|\s+$/g,""); }
+
+main();
+```
+
+### Export Class Attributes
+
+```{.js filename="Example 12.8 - ExportClassAttributes.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.8 - ExportClassAttributes.js – JScript (ES3)
+// Purpose: Export attributes of all classes in a package
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Type == "Class") {
+            var attrs = e.Attributes;
+            for (var j=0; j<attrs.Count; j++) {
+                var a = attrs.GetAt(j);
+                Session.Output("Class " + e.Name + " attr: " + a.Name + ":" + a.Type);
+            }
+        }
+    }
+}
+
+main();
+```
+
+### Bulk Set Status
+
+```{.js filename="Example 12.9 - BulkSetStatus.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.9 - BulkSetStatus.js – JScript (ES3)
+// Purpose: Set the Status of all elements in a package
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var NEW_STATUS = "Proposed";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        if (e.Status != NEW_STATUS) {
+            Session.Output("Change status: " + e.Name + " → " + NEW_STATUS);
+            if (!DRY_RUN) { e.Status = NEW_STATUS; e.Update(); }
+        }
+    }
+    if (!DRY_RUN) Repository.RefreshModelView(pkg.PackageID);
+}
+
+main();
+```
+
+### Delete Elements Safely
+
+```{.js filename="Example 12.10 - SafeDelete.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 12.10 - SafeDelete.js – JScript (ES3)
+// Purpose: Delete all elements of a given type in a package
+// Safety: DRY_RUN = true by default
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var DRY_RUN = true;
+    var TYPE_FILTER = "UseCase";
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) return;
+
+    var els = pkg.Elements;
+    // Iterate backwards when deleting
+    for (var i=els.Count-1; i>=0; i--) {
+        var e = els.GetAt(i);
+        if (e.Type == TYPE_FILTER) {
+            Session.Output("Would delete: " + e.Name);
+            if (!DRY_RUN) {
+                els.DeleteAt(i, false); // false = don't refresh each time
+            }
+        }
+    }
+    if (!DRY_RUN) {
+        pkg.Update();
+        Repository.RefreshModelView(pkg.PackageID);
+    }
+}
+
+main();
+```
+
+## Summary
+
+This cookbook chapter delivers **ready-to-use recipes**:
+
+- Bulk editing (11.1, 11.2, 11.9, 11.10).
+
+- Reporting (11.4, 11.5, 11.7, 11.8).
+
+- Traceability utilities (11.6).
+
+- Import/export utilities (11.3).
+
+Each follows the **constraints of EA’s JScript engine** (ES3 only,
+ActiveX for files, .Count/.GetAt() for collections).

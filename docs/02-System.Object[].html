@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Chapter 1: Why Script EA? – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03-System.Object[].html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-System.Object[].html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#benefits-of-automation-in-modelling" id="toc-benefits-of-automation-in-modelling" class="nav-link active" data-scroll-target="#benefits-of-automation-in-modelling"><span class="header-section-number">2.1</span> Benefits of Automation in Modelling</a></li>
+  <li><a href="#typical-use-cases" id="toc-typical-use-cases" class="nav-link" data-scroll-target="#typical-use-cases"><span class="header-section-number">2.2</span> Typical Use Cases</a></li>
+  <li><a href="#when-not-to-script" id="toc-when-not-to-script" class="nav-link" data-scroll-target="#when-not-to-script"><span class="header-section-number">2.3</span> When Not to Script</a></li>
+  <li><a href="#why-scripting-matters-for-governance" id="toc-why-scripting-matters-for-governance" class="nav-link" data-scroll-target="#why-scripting-matters-for-governance"><span class="header-section-number">2.4</span> Why Scripting Matters for Governance</a></li>
+  <li><a href="#your-first-hello-ea-script" id="toc-your-first-hello-ea-script" class="nav-link" data-scroll-target="#your-first-hello-ea-script"><span class="header-section-number">2.5</span> Your First “Hello EA” Script</a></li>
+  <li><a href="#safe-practice-the-dry-run-principle" id="toc-safe-practice-the-dry-run-principle" class="nav-link" data-scroll-target="#safe-practice-the-dry-run-principle"><span class="header-section-number">2.6</span> Safe Practice: The Dry Run Principle</a></li>
+  <li><a href="#a-different-way-of-modelling" id="toc-a-different-way-of-modelling" class="nav-link" data-scroll-target="#a-different-way-of-modelling"><span class="header-section-number">2.7</span> A Different Way of Modelling</a></li>
+  <li><a href="#preparing-for-the-examples" id="toc-preparing-for-the-examples" class="nav-link" data-scroll-target="#preparing-for-the-examples"><span class="header-section-number">2.8</span> Preparing for the Examples</a></li>
+  <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead"><span class="header-section-number">2.9</span> Looking Ahead</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Enterprise Architect is a powerful modelling environment out of the box. You can draw diagrams, generate documentation, and configure Model Driven Generation (MDG) technologies without touching a single line of code. So why would anyone want to add scripting on top?</p>
+<p>The answer is the same in modelling as it is in software engineering: <strong>automation saves time, reduces errors, and enforces consistency</strong>. Every modeller has encountered repetitive or fiddly tasks that drag attention away from design thinking. With scripting, you can let the tool do the heavy lifting.</p>
+<section id="benefits-of-automation-in-modelling" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="benefits-of-automation-in-modelling"><span class="header-section-number">2.1</span> Benefits of Automation in Modelling</h2>
+<p>Scripting opens up the underlying API of EA. That API gives you programmatic access to repositories, packages, elements, connectors, attributes, tagged values, and diagrams. With it you can:</p>
+<ul>
+<li><p><strong>Eliminate repetition.</strong> Instead of manually renaming hundreds of elements, you can script a simple loop that applies a naming rule across the entire model.</p></li>
+<li><p><strong>Standardise quality.</strong> Governance checks, linting rules, and model “smell” detection can run in seconds rather than hours of manual review.</p></li>
+<li><p><strong>Accelerate integration.</strong> Exports to CSV, JSON, or XML can be automated. You can generate reports in custom formats, or sync model content with Jira, Confluence, or Git.</p></li>
+<li><p><strong>Boost productivity.</strong> What once took hours of manual clicking can be done in minutes — freeing modellers to focus on architecture, not administration.</p></li>
+</ul>
+<p>Automation is not about doing something new, but about doing the same things faster, more reliably, and at greater scale.</p>
+</section>
+<section id="typical-use-cases" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="typical-use-cases"><span class="header-section-number">2.2</span> Typical Use Cases</h2>
+<p>Some of the most common applications of EA scripting include:</p>
+<ul>
+<li><p><strong>Bulk editing.</strong> Update tagged values, stereotypes, or connector types across entire packages.</p></li>
+<li><p><strong>Model hygiene.</strong> Detect and fix duplicates, missing names, or invalid references.</p></li>
+<li><p><strong>Data imports.</strong> Read CSV or Excel files and convert them into EA elements automatically.</p></li>
+<li><p><strong>Round-tripping.</strong> Export a model to JSON or Excel, allow external review, and then re-import changes.</p></li>
+<li><p><strong>Governance and QA.</strong> Apply rules such as “all classes must have documentation” or “all business processes must trace to capabilities.”</p></li>
+<li><p><strong>Integration.</strong> Connect EA to external tools — e.g.&nbsp;push backlog items into Jira, or register metadata in a catalogue.</p></li>
+</ul>
+<p>Each of these tasks is achievable through EA’s menus, but scripting transforms them from <em>manual chores</em> into <em>repeatable processes</em>.</p>
+</section>
+<section id="when-not-to-script" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="when-not-to-script"><span class="header-section-number">2.3</span> When Not to Script</h2>
+<p>Not everything benefits from automation. EA already has built-in features that solve common problems. Before reaching for the scripting console, ask:</p>
+<ul>
+<li><p><strong>Is there a native feature?</strong> Diagram filters, search definitions, model validation, and MDG profiles often cover the same ground.</p></li>
+<li><p><strong>Is the effort justified?</strong> Writing, testing, and maintaining scripts takes time. A one-off change to five elements is faster by hand.</p></li>
+<li><p><strong>Could it cause damage?</strong> Poorly written scripts can corrupt a model — deleting content, overwriting GUIDs, or applying unintended changes at scale.</p></li>
+</ul>
+<p>The golden rule: script only when the benefit outweighs the risk and effort.</p>
+</section>
+<section id="why-scripting-matters-for-governance" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="why-scripting-matters-for-governance"><span class="header-section-number">2.4</span> Why Scripting Matters for Governance</h2>
+<p>Beyond productivity, scripting is one of the strongest tools for governance. A script does not forget the rules. It applies the same checks the same way every time. That makes it a reliable companion in quality assurance, regulatory compliance, or enterprise standards adoption.</p>
+<p>For example, a governance script can enforce naming conventions or ensure that all system components are linked to business capabilities. This kind of automation embeds policy into practice — turning guidelines into enforceable, repeatable checks.</p>
+</section>
+<section id="your-first-hello-ea-script" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="your-first-hello-ea-script"><span class="header-section-number">2.5</span> Your First “Hello EA” Script</h2>
+<p>Before diving into the technicalities of scripting languages and APIs in Chapter 2, it is worth seeing what a minimal script looks like. The following example is deliberately simple: it retrieves the package currently selected in the Project Browser and lists all the elements it contains.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 1.1 - HelloEA</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Example 1.1 - HelloEA"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">//</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">// -----------------------------------------------------------------</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">// Example 1.1 – HelloEA</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">// Purpose: Output the names of all elements in the selected package</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">// -----------------------------------------------------------------</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">function</span> <span class="fu">main</span>() </span>
+<span id="cb1-10"><a href="#cb1-10"></a>  {</span>
+<span id="cb1-11"><a href="#cb1-11"></a>  <span class="kw">var</span> <span class="im">package</span> <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="im">package</span>) </span>
+<span id="cb1-13"><a href="#cb1-13"></a>    {</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select a package in the Project Browser."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>    <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>    }</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a>  <span class="kw">var</span> elements <span class="op">=</span> <span class="im">package</span><span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>  <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> elements<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) </span>
+<span id="cb1-20"><a href="#cb1-20"></a>    {</span>
+<span id="cb1-21"><a href="#cb1-21"></a>    <span class="kw">var</span> element <span class="op">=</span> elements<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Element: "</span> <span class="op">+</span> element<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>    }</span>
+<span id="cb1-24"><a href="#cb1-24"></a>  }</span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Run this script from the <em>Scripts</em> window after selecting a package in the Project Browser. The output window will list the names of each element in that package. It may not look impressive, but this is the scripting equivalent of “Hello World.” It proves the loop works, the API responds, and you are in control.</p>
+<p>This tiny fragment also illustrates some key rules that will come up repeatedly in later chapters:</p>
+<ul>
+<li><p>EA collections (like package.Elements) are not arrays, so you use .Count and .GetAt(i).</p></li>
+<li><p>Update() is required after any change to persist modifications.</p></li>
+<li><p>Session.Output() is your friend when debugging.</p></li>
+</ul>
+<p>With this in place, you have taken the first step from <em>manual modeller</em> to <em>toolsmith</em> — someone who bends the tool to fit the workflow, rather than the other way round.</p>
+</section>
+<section id="safe-practice-the-dry-run-principle" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="safe-practice-the-dry-run-principle"><span class="header-section-number">2.6</span> Safe Practice: The Dry Run Principle</h2>
+<p>Throughout this handbook, you will notice a recurring pattern: every modifying script begins with a line like var DRY_RUN = true;. This is not cosmetic. It is the single most important safety feature in EA scripting. A dry run means the script logs what it <em>would do</em>, but does not commit changes. Only once the log looks correct do you flip DRY_RUN = false and let the script update the repository.</p>
+<p>This principle is vital because EA does not have a transaction rollback. Once you delete, it is gone. Once you rename, it sticks. Scripts without dry-run mode are dangerous. Scripts with dry-run mode are tools of governance.</p>
+</section>
+<section id="a-different-way-of-modelling" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="a-different-way-of-modelling"><span class="header-section-number">2.7</span> A Different Way of Modelling</h2>
+<p>Scripting changes the way you think about modelling. Instead of asking <em>“what diagram should I draw?”</em> you begin to ask <em>“what structure should I generate?”</em>. You start to see the repository as data, not just pictures. A model becomes a dataset: a structured set of packages, elements, and relationships. Scripting makes it possible to treat modelling as <strong>data curation</strong>: build, transform, export, integrate.</p>
+<p>This shift is liberating. It allows architects to keep models aligned with fast-moving environments, to connect architecture with delivery tools, and to maintain integrity at scale.</p>
+</section>
+<section id="preparing-for-the-examples" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="preparing-for-the-examples"><span class="header-section-number">2.8</span> Preparing for the Examples</h2>
+<p>The rest of this chapter (and indeed this book) is practical. We will show code snippets that run inside EA, fully commented so you understand every line. They start simple (“Hello World”), then build into patterns for traversal, creation, updating, deleting, and exporting.</p>
+<p>Before diving into the examples, remember the key lessons of this introduction:</p>
+<ol type="1">
+<li><p>Script when scale, consistency, integration, or governance require it.</p></li>
+<li><p>Don’t script when EA has a built-in feature that meets your need.</p></li>
+<li><p>Always script safely: dry-run, backup, and log.</p></li>
+<li><p>Treat the model as a dataset, not just diagrams.</p></li>
+</ol>
+<p>With these principles, you are ready to move from being a modeller who only draws diagrams to an architect who <strong>shapes models programmatically</strong>.</p>
+</section>
+<section id="looking-ahead" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="looking-ahead"><span class="header-section-number">2.9</span> Looking Ahead</h2>
+<p>This chapter has introduced the “why” of scripting, and given you a working starter example. The chapters that follow explain the “how.” We will explore the scripting engines available in EA, the core API, and the safe patterns you should follow to avoid breaking your model. Later parts of this book will offer a cookbook of practical examples, patterns for common tasks, and even ways of using AI assistants to accelerate script development.</p>
+<p>By the end, you should have the confidence to create scripts that save time, improve quality, and make Enterprise Architect work for you, not the other way around.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Scripting Sparx Enterprise Architect">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03-System.Object[].html" class="pagination-link" aria-label="Chapter 2: Automation Landscape">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu"># Chapter 1: Why Script EA?</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>Enterprise Architect is a powerful modelling environment out of the box.</span>
+<span id="cb2-4"><a href="#cb2-4"></a>You can draw diagrams, generate documentation, and configure Model</span>
+<span id="cb2-5"><a href="#cb2-5"></a>Driven Generation (MDG) technologies without touching a single line of</span>
+<span id="cb2-6"><a href="#cb2-6"></a>code. So why would anyone want to add scripting on top?</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a>The answer is the same in modelling as it is in software engineering:</span>
+<span id="cb2-9"><a href="#cb2-9"></a>**automation saves time, reduces errors, and enforces consistency**.</span>
+<span id="cb2-10"><a href="#cb2-10"></a>Every modeller has encountered repetitive or fiddly tasks that drag</span>
+<span id="cb2-11"><a href="#cb2-11"></a>attention away from design thinking. With scripting, you can let the</span>
+<span id="cb2-12"><a href="#cb2-12"></a>tool do the heavy lifting.</span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="fu">## Benefits of Automation in Modelling</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a></span>
+<span id="cb2-16"><a href="#cb2-16"></a>Scripting opens up the underlying API of EA. That API gives you</span>
+<span id="cb2-17"><a href="#cb2-17"></a>programmatic access to repositories, packages, elements, connectors,</span>
+<span id="cb2-18"><a href="#cb2-18"></a>attributes, tagged values, and diagrams. With it you can:</span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="ss">- </span>**Eliminate repetition.** Instead of manually renaming hundreds of</span>
+<span id="cb2-21"><a href="#cb2-21"></a>  elements, you can script a simple loop that applies a naming rule</span>
+<span id="cb2-22"><a href="#cb2-22"></a>  across the entire model.</span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="ss">- </span>**Standardise quality.** Governance checks, linting rules, and model</span>
+<span id="cb2-25"><a href="#cb2-25"></a>  “smell” detection can run in seconds rather than hours of manual</span>
+<span id="cb2-26"><a href="#cb2-26"></a>  review.</span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="ss">- </span>**Accelerate integration.** Exports to CSV, JSON, or XML can be</span>
+<span id="cb2-29"><a href="#cb2-29"></a>  automated. You can generate reports in custom formats, or sync model</span>
+<span id="cb2-30"><a href="#cb2-30"></a>  content with Jira, Confluence, or Git.</span>
+<span id="cb2-31"><a href="#cb2-31"></a></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="ss">- </span>**Boost productivity.** What once took hours of manual clicking can be</span>
+<span id="cb2-33"><a href="#cb2-33"></a>  done in minutes — freeing modellers to focus on architecture, not</span>
+<span id="cb2-34"><a href="#cb2-34"></a>  administration.</span>
+<span id="cb2-35"><a href="#cb2-35"></a></span>
+<span id="cb2-36"><a href="#cb2-36"></a>Automation is not about doing something new, but about doing the same</span>
+<span id="cb2-37"><a href="#cb2-37"></a>things faster, more reliably, and at greater scale.</span>
+<span id="cb2-38"><a href="#cb2-38"></a></span>
+<span id="cb2-39"><a href="#cb2-39"></a><span class="fu">## Typical Use Cases</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a></span>
+<span id="cb2-41"><a href="#cb2-41"></a>Some of the most common applications of EA scripting include:</span>
+<span id="cb2-42"><a href="#cb2-42"></a></span>
+<span id="cb2-43"><a href="#cb2-43"></a><span class="ss">- </span>**Bulk editing.** Update tagged values, stereotypes, or connector</span>
+<span id="cb2-44"><a href="#cb2-44"></a>  types across entire packages.</span>
+<span id="cb2-45"><a href="#cb2-45"></a></span>
+<span id="cb2-46"><a href="#cb2-46"></a><span class="ss">- </span>**Model hygiene.** Detect and fix duplicates, missing names, or</span>
+<span id="cb2-47"><a href="#cb2-47"></a>  invalid references.</span>
+<span id="cb2-48"><a href="#cb2-48"></a></span>
+<span id="cb2-49"><a href="#cb2-49"></a><span class="ss">- </span>**Data imports.** Read CSV or Excel files and convert them into EA</span>
+<span id="cb2-50"><a href="#cb2-50"></a>  elements automatically.</span>
+<span id="cb2-51"><a href="#cb2-51"></a></span>
+<span id="cb2-52"><a href="#cb2-52"></a><span class="ss">- </span>**Round-tripping.** Export a model to JSON or Excel, allow external</span>
+<span id="cb2-53"><a href="#cb2-53"></a>  review, and then re-import changes.</span>
+<span id="cb2-54"><a href="#cb2-54"></a></span>
+<span id="cb2-55"><a href="#cb2-55"></a><span class="ss">- </span>**Governance and QA.** Apply rules such as “all classes must have</span>
+<span id="cb2-56"><a href="#cb2-56"></a>  documentation” or “all business processes must trace to capabilities.”</span>
+<span id="cb2-57"><a href="#cb2-57"></a></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="ss">- </span>**Integration.** Connect EA to external tools — e.g. push backlog</span>
+<span id="cb2-59"><a href="#cb2-59"></a>  items into Jira, or register metadata in a catalogue.</span>
+<span id="cb2-60"><a href="#cb2-60"></a></span>
+<span id="cb2-61"><a href="#cb2-61"></a>Each of these tasks is achievable through EA’s menus, but scripting</span>
+<span id="cb2-62"><a href="#cb2-62"></a>transforms them from *manual chores* into *repeatable processes*.</span>
+<span id="cb2-63"><a href="#cb2-63"></a></span>
+<span id="cb2-64"><a href="#cb2-64"></a><span class="fu">## When Not to Script</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a></span>
+<span id="cb2-66"><a href="#cb2-66"></a>Not everything benefits from automation. EA already has built-in</span>
+<span id="cb2-67"><a href="#cb2-67"></a>features that solve common problems. Before reaching for the scripting</span>
+<span id="cb2-68"><a href="#cb2-68"></a>console, ask:</span>
+<span id="cb2-69"><a href="#cb2-69"></a></span>
+<span id="cb2-70"><a href="#cb2-70"></a><span class="ss">- </span>**Is there a native feature?** Diagram filters, search definitions,</span>
+<span id="cb2-71"><a href="#cb2-71"></a>  model validation, and MDG profiles often cover the same ground.</span>
+<span id="cb2-72"><a href="#cb2-72"></a></span>
+<span id="cb2-73"><a href="#cb2-73"></a><span class="ss">- </span>**Is the effort justified?** Writing, testing, and maintaining scripts</span>
+<span id="cb2-74"><a href="#cb2-74"></a>  takes time. A one-off change to five elements is faster by hand.</span>
+<span id="cb2-75"><a href="#cb2-75"></a></span>
+<span id="cb2-76"><a href="#cb2-76"></a><span class="ss">- </span>**Could it cause damage?** Poorly written scripts can corrupt a model</span>
+<span id="cb2-77"><a href="#cb2-77"></a>  — deleting content, overwriting GUIDs, or applying unintended changes</span>
+<span id="cb2-78"><a href="#cb2-78"></a>  at scale.</span>
+<span id="cb2-79"><a href="#cb2-79"></a></span>
+<span id="cb2-80"><a href="#cb2-80"></a>The golden rule: script only when the benefit outweighs the risk and</span>
+<span id="cb2-81"><a href="#cb2-81"></a>effort.</span>
+<span id="cb2-82"><a href="#cb2-82"></a></span>
+<span id="cb2-83"><a href="#cb2-83"></a><span class="fu">## Why Scripting Matters for Governance</span></span>
+<span id="cb2-84"><a href="#cb2-84"></a></span>
+<span id="cb2-85"><a href="#cb2-85"></a>Beyond productivity, scripting is one of the strongest tools for</span>
+<span id="cb2-86"><a href="#cb2-86"></a>governance. A script does not forget the rules. It applies the same</span>
+<span id="cb2-87"><a href="#cb2-87"></a>checks the same way every time. That makes it a reliable companion in</span>
+<span id="cb2-88"><a href="#cb2-88"></a>quality assurance, regulatory compliance, or enterprise standards</span>
+<span id="cb2-89"><a href="#cb2-89"></a>adoption.</span>
+<span id="cb2-90"><a href="#cb2-90"></a></span>
+<span id="cb2-91"><a href="#cb2-91"></a>For example, a governance script can enforce naming conventions or</span>
+<span id="cb2-92"><a href="#cb2-92"></a>ensure that all system components are linked to business capabilities.</span>
+<span id="cb2-93"><a href="#cb2-93"></a>This kind of automation embeds policy into practice — turning guidelines</span>
+<span id="cb2-94"><a href="#cb2-94"></a>into enforceable, repeatable checks.</span>
+<span id="cb2-95"><a href="#cb2-95"></a></span>
+<span id="cb2-96"><a href="#cb2-96"></a><span class="fu">## Your First “Hello EA” Script</span></span>
+<span id="cb2-97"><a href="#cb2-97"></a></span>
+<span id="cb2-98"><a href="#cb2-98"></a>Before diving into the technicalities of scripting languages and APIs in</span>
+<span id="cb2-99"><a href="#cb2-99"></a>Chapter 2, it is worth seeing what a minimal script looks like. The</span>
+<span id="cb2-100"><a href="#cb2-100"></a>following example is deliberately simple: it retrieves the package</span>
+<span id="cb2-101"><a href="#cb2-101"></a>currently selected in the Project Browser and lists all the elements it</span>
+<span id="cb2-102"><a href="#cb2-102"></a>contains.</span>
+<span id="cb2-103"><a href="#cb2-103"></a></span>
+<span id="cb2-104"><a href="#cb2-104"></a><span class="in">```{.js filename="Example 1.1 - HelloEA"}</span></span>
+<span id="cb2-105"><a href="#cb2-105"></a><span class="co">//</span></span>
+<span id="cb2-106"><a href="#cb2-106"></a><span class="co">// -----------------------------------------------------------------</span></span>
+<span id="cb2-107"><a href="#cb2-107"></a><span class="co">// Example 1.1 – HelloEA</span></span>
+<span id="cb2-108"><a href="#cb2-108"></a><span class="co">// Purpose: Output the names of all elements in the selected package</span></span>
+<span id="cb2-109"><a href="#cb2-109"></a><span class="co">// -----------------------------------------------------------------</span></span>
+<span id="cb2-110"><a href="#cb2-110"></a></span>
+<span id="cb2-111"><a href="#cb2-111"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb2-112"><a href="#cb2-112"></a></span>
+<span id="cb2-113"><a href="#cb2-113"></a><span class="kw">function</span> <span class="fu">main</span>() </span>
+<span id="cb2-114"><a href="#cb2-114"></a>  {</span>
+<span id="cb2-115"><a href="#cb2-115"></a>  <span class="kw">var</span> <span class="im">package</span> <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb2-116"><a href="#cb2-116"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="im">package</span>) </span>
+<span id="cb2-117"><a href="#cb2-117"></a>    {</span>
+<span id="cb2-118"><a href="#cb2-118"></a>    Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select a package in the Project Browser."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb2-119"><a href="#cb2-119"></a>    <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-120"><a href="#cb2-120"></a>    }</span>
+<span id="cb2-121"><a href="#cb2-121"></a></span>
+<span id="cb2-122"><a href="#cb2-122"></a>  <span class="kw">var</span> elements <span class="op">=</span> <span class="im">package</span><span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb2-123"><a href="#cb2-123"></a>  <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> elements<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) </span>
+<span id="cb2-124"><a href="#cb2-124"></a>    {</span>
+<span id="cb2-125"><a href="#cb2-125"></a>    <span class="kw">var</span> element <span class="op">=</span> elements<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb2-126"><a href="#cb2-126"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Element: "</span> <span class="op">+</span> element<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb2-127"><a href="#cb2-127"></a>    }</span>
+<span id="cb2-128"><a href="#cb2-128"></a>  }</span>
+<span id="cb2-129"><a href="#cb2-129"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb2-130"><a href="#cb2-130"></a><span class="in">```</span></span>
+<span id="cb2-131"><a href="#cb2-131"></a></span>
+<span id="cb2-132"><a href="#cb2-132"></a></span>
+<span id="cb2-133"><a href="#cb2-133"></a>Run this script from the *Scripts* window after selecting a package in</span>
+<span id="cb2-134"><a href="#cb2-134"></a>the Project Browser. The output window will list the names of each</span>
+<span id="cb2-135"><a href="#cb2-135"></a>element in that package. It may not look impressive, but this is the</span>
+<span id="cb2-136"><a href="#cb2-136"></a>scripting equivalent of “Hello World.” It proves the loop works, the API</span>
+<span id="cb2-137"><a href="#cb2-137"></a>responds, and you are in control.</span>
+<span id="cb2-138"><a href="#cb2-138"></a></span>
+<span id="cb2-139"><a href="#cb2-139"></a>This tiny fragment also illustrates some key rules that will come up</span>
+<span id="cb2-140"><a href="#cb2-140"></a>repeatedly in later chapters:</span>
+<span id="cb2-141"><a href="#cb2-141"></a></span>
+<span id="cb2-142"><a href="#cb2-142"></a><span class="ss">- </span>EA collections (like package.Elements) are not arrays, so you use</span>
+<span id="cb2-143"><a href="#cb2-143"></a>  .Count and .GetAt(i).</span>
+<span id="cb2-144"><a href="#cb2-144"></a></span>
+<span id="cb2-145"><a href="#cb2-145"></a><span class="ss">- </span>Update() is required after any change to persist modifications.</span>
+<span id="cb2-146"><a href="#cb2-146"></a></span>
+<span id="cb2-147"><a href="#cb2-147"></a><span class="ss">- </span>Session.Output() is your friend when debugging.</span>
+<span id="cb2-148"><a href="#cb2-148"></a></span>
+<span id="cb2-149"><a href="#cb2-149"></a>With this in place, you have taken the first step from *manual modeller*</span>
+<span id="cb2-150"><a href="#cb2-150"></a>to *toolsmith* — someone who bends the tool to fit the workflow, rather</span>
+<span id="cb2-151"><a href="#cb2-151"></a>than the other way round.</span>
+<span id="cb2-152"><a href="#cb2-152"></a></span>
+<span id="cb2-153"><a href="#cb2-153"></a><span class="fu">## Safe Practice: The Dry Run Principle</span></span>
+<span id="cb2-154"><a href="#cb2-154"></a></span>
+<span id="cb2-155"><a href="#cb2-155"></a>Throughout this handbook, you will notice a recurring pattern: every</span>
+<span id="cb2-156"><a href="#cb2-156"></a>modifying script begins with a line like var DRY_RUN = true;. This is</span>
+<span id="cb2-157"><a href="#cb2-157"></a>not cosmetic. It is the single most important safety feature in EA</span>
+<span id="cb2-158"><a href="#cb2-158"></a>scripting. A dry run means the script logs what it *would do*, but does</span>
+<span id="cb2-159"><a href="#cb2-159"></a>not commit changes. Only once the log looks correct do you flip DRY_RUN</span>
+<span id="cb2-160"><a href="#cb2-160"></a>= false and let the script update the repository.</span>
+<span id="cb2-161"><a href="#cb2-161"></a></span>
+<span id="cb2-162"><a href="#cb2-162"></a>This principle is vital because EA does not have a transaction rollback.</span>
+<span id="cb2-163"><a href="#cb2-163"></a>Once you delete, it is gone. Once you rename, it sticks. Scripts without</span>
+<span id="cb2-164"><a href="#cb2-164"></a>dry-run mode are dangerous. Scripts with dry-run mode are tools of</span>
+<span id="cb2-165"><a href="#cb2-165"></a>governance.</span>
+<span id="cb2-166"><a href="#cb2-166"></a></span>
+<span id="cb2-167"><a href="#cb2-167"></a><span class="fu">## A Different Way of Modelling</span></span>
+<span id="cb2-168"><a href="#cb2-168"></a></span>
+<span id="cb2-169"><a href="#cb2-169"></a>Scripting changes the way you think about modelling. Instead of asking</span>
+<span id="cb2-170"><a href="#cb2-170"></a>*“what diagram should I draw?”* you begin to ask *“what structure should</span>
+<span id="cb2-171"><a href="#cb2-171"></a>I generate?”*. You start to see the repository as data, not just</span>
+<span id="cb2-172"><a href="#cb2-172"></a>pictures. A model becomes a dataset: a structured set of packages,</span>
+<span id="cb2-173"><a href="#cb2-173"></a>elements, and relationships. Scripting makes it possible to treat</span>
+<span id="cb2-174"><a href="#cb2-174"></a>modelling as **data curation**: build, transform, export, integrate.</span>
+<span id="cb2-175"><a href="#cb2-175"></a></span>
+<span id="cb2-176"><a href="#cb2-176"></a>This shift is liberating. It allows architects to keep models aligned</span>
+<span id="cb2-177"><a href="#cb2-177"></a>with fast-moving environments, to connect architecture with delivery</span>
+<span id="cb2-178"><a href="#cb2-178"></a>tools, and to maintain integrity at scale.</span>
+<span id="cb2-179"><a href="#cb2-179"></a></span>
+<span id="cb2-180"><a href="#cb2-180"></a><span class="fu">## Preparing for the Examples</span></span>
+<span id="cb2-181"><a href="#cb2-181"></a></span>
+<span id="cb2-182"><a href="#cb2-182"></a>The rest of this chapter (and indeed this book) is practical. We will</span>
+<span id="cb2-183"><a href="#cb2-183"></a>show code snippets that run inside EA, fully commented so you understand</span>
+<span id="cb2-184"><a href="#cb2-184"></a>every line. They start simple (“Hello World”), then build into patterns</span>
+<span id="cb2-185"><a href="#cb2-185"></a>for traversal, creation, updating, deleting, and exporting.</span>
+<span id="cb2-186"><a href="#cb2-186"></a></span>
+<span id="cb2-187"><a href="#cb2-187"></a>Before diving into the examples, remember the key lessons of this</span>
+<span id="cb2-188"><a href="#cb2-188"></a>introduction:</span>
+<span id="cb2-189"><a href="#cb2-189"></a></span>
+<span id="cb2-190"><a href="#cb2-190"></a><span class="ss">1.  </span>Script when scale, consistency, integration, or governance require</span>
+<span id="cb2-191"><a href="#cb2-191"></a>    it.</span>
+<span id="cb2-192"><a href="#cb2-192"></a></span>
+<span id="cb2-193"><a href="#cb2-193"></a><span class="ss">2.  </span>Don’t script when EA has a built-in feature that meets your need.</span>
+<span id="cb2-194"><a href="#cb2-194"></a></span>
+<span id="cb2-195"><a href="#cb2-195"></a><span class="ss">3.  </span>Always script safely: dry-run, backup, and log.</span>
+<span id="cb2-196"><a href="#cb2-196"></a></span>
+<span id="cb2-197"><a href="#cb2-197"></a><span class="ss">4.  </span>Treat the model as a dataset, not just diagrams.</span>
+<span id="cb2-198"><a href="#cb2-198"></a></span>
+<span id="cb2-199"><a href="#cb2-199"></a>With these principles, you are ready to move from being a modeller who</span>
+<span id="cb2-200"><a href="#cb2-200"></a>only draws diagrams to an architect who **shapes models</span>
+<span id="cb2-201"><a href="#cb2-201"></a>programmatically**.</span>
+<span id="cb2-202"><a href="#cb2-202"></a></span>
+<span id="cb2-203"><a href="#cb2-203"></a><span class="fu">## Looking Ahead</span></span>
+<span id="cb2-204"><a href="#cb2-204"></a></span>
+<span id="cb2-205"><a href="#cb2-205"></a>This chapter has introduced the “why” of scripting, and given you a</span>
+<span id="cb2-206"><a href="#cb2-206"></a>working starter example. The chapters that follow explain the “how.” We</span>
+<span id="cb2-207"><a href="#cb2-207"></a>will explore the scripting engines available in EA, the core API, and</span>
+<span id="cb2-208"><a href="#cb2-208"></a>the safe patterns you should follow to avoid breaking your model. Later</span>
+<span id="cb2-209"><a href="#cb2-209"></a>parts of this book will offer a cookbook of practical examples, patterns</span>
+<span id="cb2-210"><a href="#cb2-210"></a>for common tasks, and even ways of using AI assistants to accelerate</span>
+<span id="cb2-211"><a href="#cb2-211"></a>script development.</span>
+<span id="cb2-212"><a href="#cb2-212"></a></span>
+<span id="cb2-213"><a href="#cb2-213"></a>By the end, you should have the confidence to create scripts that save</span>
+<span id="cb2-214"><a href="#cb2-214"></a>time, improve quality, and make Enterprise Architect work for you, not</span>
+<span id="cb2-215"><a href="#cb2-215"></a>the other way around.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

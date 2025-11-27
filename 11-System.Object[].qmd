@@ -1,0 +1,613 @@
+# Chapter 10: MDG-Aware Scripting
+
+By now, we’ve looked at the essentials of EA scripting, design patterns,
+and the mechanics of importing and exporting. But Enterprise Architect
+is more than just a generic UML tool. Its true power lies in **MDG
+Technologies** (Model Driven Generation). MDGs extend EA with
+domain-specific languages, toolboxes, and stereotypes that tailor the
+tool to specific contexts: ArchiMate, BPMN, SysML, TOGAF, and countless
+custom frameworks.
+
+For script authors, MDGs present both opportunities and challenges. On
+one hand, they give structure — a controlled set of stereotypes, tagged
+values, and toolboxes. On the other hand, they introduce complexity —
+multiple profiles, extended stereotypes, and hidden differences between
+what the GUI shows and what the API actually stores.
+
+This chapter explores how to make your scripts **MDG-aware**. It
+explains what MDGs are, how stereotypes and tagged values are defined,
+why you must use StereotypeEx instead of Stereotype, and how to validate
+models against MDG definitions. Without MDG awareness, your scripts may
+appear to work but silently misalign with the modelling framework your
+organisation depends on. With MDG awareness, your scripts become
+governance tools that reinforce standards and prevent drift.
+
+## What Are MDGs?
+
+MDG Technologies are EA’s mechanism for packaging modelling extensions.
+They define:
+
+- **Stereotypes**: specialisations of UML element types (e.g., ArchiMate
+  ApplicationComponent).
+
+- **Toolboxes**: palettes of elements and connectors available to
+  modellers.
+
+- **Tagged Values**: metadata fields automatically attached to
+  stereotyped elements.
+
+- **Profiles and MetaModels**: rules about what elements and connectors
+  can be created.
+
+An MDG is essentially a bundle that turns EA from a generic modelling
+tool into a domain-specific environment.
+
+## Why MDGs Matter for Scripting
+
+When you script EA, you are not usually working with plain UML classes
+or components. You are working with **stereotyped elements defined by
+MDGs**. For example, if you are automating ArchiMate models, your script
+needs to distinguish ApplicationComponents from BusinessActors. If you
+are automating BPMN, you need to treat Tasks, Gateways, and Events
+differently.
+
+Scripts that ignore MDGs risk breaking models. A script might rename or
+move elements without preserving stereotypes. Or it might overwrite a
+stereotype by writing to Element.Stereotype instead of
+Element.StereotypeEx. These mistakes create elements that look right in
+the Project Browser but misbehave in diagrams or reports.
+
+## Important Tips
+
+### The Stereotype vs. StereotypeEx Trap
+
+One of the most notorious pitfalls in EA scripting is the difference
+between Stereotype and StereotypeEx.
+
+- **Stereotype** returns only the primary stereotype string, stripped of
+  profile information.
+
+- **StereotypeEx** returns the fully qualified stereotype, including the
+  profile (profile::stereotype).
+
+If you rely on Stereotype, your script may confuse two stereotypes with
+the same name from different profiles. Worse, if you set Stereotype, you
+may erase MDG metadata.
+
+The safe rule is: **always use StereotypeEx** when working with MDG
+stereotypes.
+
+### Tagged Value Definitions
+
+MDGs often define tagged values that attach automatically to elements
+with a given stereotype. For example, an ArchiMate ApplicationComponent
+may come with tagged values like “Layer” or “Technology.”
+
+Scripts must handle these tagged values carefully. You should:
+
+- Check if the tag exists before adding a new one.
+
+- Use the correct tag names from the MDG definition.
+
+- Avoid overwriting tags with unexpected values.
+
+Proper handling ensures your automation works with, not against, the
+MDG.
+
+### Toolboxes and Element Creation
+
+When creating elements via script, it’s important to align with MDG
+toolboxes. If your organisation uses a custom MDG that defines “Business
+Capability” as MyProfile::Capability, then your script must create
+elements with that stereotype. Creating a plain UML Class and renaming
+it “Capability” will cause confusion.
+
+The safe pattern is to:
+
+- Identify the correct stereotype from the MDG.
+
+- Use Elements.AddNew(name, baseType) followed by StereotypeEx =
+  "profile::stereo".
+
+- Call Update() and RefreshModelView().
+
+### Validating MDG Usage
+
+MDG-aware scripting isn’t only about creating elements correctly. It’s
+also about validating existing models. Common checks include:
+
+- Elements of stereotype X must have certain tagged values populated.
+
+- Connectors of type Y may only connect specific element types.
+
+- Packages must only contain elements from an approved toolbox.
+
+By writing MDG-aware validation scripts, you can enforce compliance and
+prevent “model drift” where users create incorrect structures.
+
+### When MDGs Change
+
+Another challenge is that MDGs evolve. Stereotypes may be renamed,
+tagged values may be added, or toolboxes reorganised. Scripts must be
+robust to such changes. That means:
+
+- Avoid hardcoding stereotypes wherever possible — use configuration
+  files or central mappings.
+
+- Log when unknown stereotypes are encountered.
+
+- Keep scripts version-controlled and updated alongside MDG changes.
+
+## MDGs in External Automation
+
+Everything we’ve said so far applies inside EA’s scripting engine, but
+it also applies in external automation. If you are pulling EA content
+into Python or C#, you still need to handle stereotypes correctly. That
+means reading StereotypeEx, exporting tagged values, and mapping them to
+your enterprise data models.
+
+In fact, external automation often makes MDG handling easier because you
+can use richer libraries (YAML, JSON) to store stereotype/tag mappings.
+
+## Safety and Governance
+
+MDG-aware scripting is not just a technical detail. It is a matter of
+governance. In large organisations, MDGs embody agreed standards: what
+modelling constructs are allowed, how they are tagged, and how they
+interrelate. Scripts that respect MDGs reinforce governance. Scripts
+that ignore them undermine it.
+
+By making scripts MDG-aware, you align automation with enterprise
+architecture frameworks, regulatory requirements, and industry
+standards.
+
+## Examples 
+
+### Stereotypes 101 (MDG-aware)
+
+- **Element.Stereotype**: the “plain” stereotype string (often just the
+  short name).
+
+- **Element.StereotypeEx**: the **fully-qualified** list (may contain
+  profile::stereotype, comma-separated).
+
+- **Multiple stereotypes**: use StereotypeEx.
+
+- **Best practice**: when working with MDGs, **set and test against
+  StereotypeEx** with the profile::stereo form.
+
+```{.js filename="Example 10.1 - MDG_ApplyStereotype.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 10.1 - MDG_ApplyStereotype.js – JScript (ES3)
+// Purpose: Ensure elements in the selected package have a specific MDG stereotype
+// Notes:
+//  - Uses profile::stereotype form via StereotypeEx
+//  - Safe by default with DRY_RUN flag
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+
+function main() {
+    var TAB = "MDG_ApplyStereo";
+    ensureOutputTab(TAB);
+
+    // ---- Config ----
+    var DRY_RUN = true;                        // switch to false to commit
+    var PROFILE = "MyProfile";                 // MDG profile name
+    var STEREO  = "BusinessCapability";        // Stereotype short name
+    var FQ      = PROFILE + "::" + STEREO;     // fully-qualified
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a target package.", promptOK); return; }
+
+    var els = pkg.Elements, changed = 0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+
+        // Skip non-matching base types if you want (e.g., only Classes)
+        // if (e.Type != "Class") continue;
+
+        if (!hasFQStereotype(e, FQ)) {
+            log(TAB, "Apply stereotype to '" + e.Name + "': " + FQ);
+            if (!DRY_RUN) {
+                // Add (or replace) StereotypeEx preserving any existing ones
+                e.StereotypeEx = addFQStereotype(e.StereotypeEx, FQ);
+                e.Update();
+            }
+            changed++;
+        }
+    }
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(pkg.PackageID);
+    log(TAB, "Updated " + changed + " element(s). Dry-run=" + DRY_RUN);
+}
+
+function hasFQStereotype(e, fq) {
+    var list = String(e.StereotypeEx||"");
+    // simple token check; EA uses comma-separated list
+    var items = list.split(",");
+    for (var i=0; i<items.length; i++) {
+        if (equalsIgnoreCase(trim(items[i]), fq)) return true;
+    }
+    return false;
+}
+function addFQStereotype(current, fq) {
+    current = String(current||"").trim();
+    if (current === "") return fq;
+    // Avoid dupes
+    var items = current.split(","), i;
+    for (i=0; i<items.length; i++) {
+        if (equalsIgnoreCase(trim(items[i]), fq)) return current;
+    }
+    return current + "," + fq;
+}
+
+main();
+```
+
+### Tagged Value Definitions (MDG-driven)
+
+MDGs typically define tagged value **types** (lists, refs, memo) and
+**required** tags per stereotype. From scripts you usually don’t read
+MDG metadata directly; instead you **encode your project’s rules** in a
+small configuration map and then **enforce** those rules.
+
+```{.js filename="Example 10.2 - MDG_Rulebook.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 10.2 - MDG_Rulebook.js – JScript (ES3)
+// Purpose: Central config for your MDG validation/repair scripts
+// Notes: Express stereotypes fully-qualified as PROFILE::STEREO
+// -------------------------------------------------------
+var MDG_RULES = {
+    "MyProfile::BusinessCapability": {
+        baseType: "Class",                         // optional; skip other base types
+        requiredTags: [
+            { name: "Owner",       defaultValue: "ArchitectureTeam" },
+            { name: "Lifecycle",   defaultValue: "Active" },
+            { name: "ExternalID",  defaultValue: "" }     // leave blank; must be filled by users/imports
+        ],
+        namePrefix: "BC_"                           // optional naming convention
+    },
+    "MyProfile::ApplicationService": {
+        baseType: "Class",
+        requiredTags: [
+            { name: "Owner",      defaultValue: "AppTeam" },
+            { name: "Criticality", defaultValue: "Medium" }
+        ],
+        namePrefix: "AS_"
+    }
+};
+```
+
+Keep this in one place (e.g., \_Common.MDG_Rulebook) and !INC it in
+validator and repair scripts.
+
+### MDG Validator (report-only)
+
+This script reports deviations: wrong/missing stereotype, missing tags,
+blank required values, naming violations. It **never writes**; use it in
+governance jobs and daily hygiene.
+
+```{.js filename="Example 10.3 - MDG_Lint.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 10.3 - MDG_Lint.js – JScript (ES3)
+// Purpose: Report MDG violations for elements in selected package (read-only)
+// Output: Output tab + CSV (directory-only chooser)
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+!INC _Common.MDG_Rulebook
+
+function main() {
+    var TAB = "MDG_Lint";
+    ensureOutputTab(TAB);
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package to lint.", promptOK); return; }
+
+    var outDir = browseForFolder("Select output folder for MDG lint report");
+    var csv = null;
+    if (outDir) {
+        var stamp = (new Date()).getTime();
+        csv = new CsvWriter(outDir + "\\mdg_lint_" + stamp + ".csv");
+        csv.writeHeader("ElementID,GUID,Name,Type,AppliedStereotypes,Issue,Details,ExpectedProfileStereo");
+    }
+
+    var els = pkg.Elements, issues=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var applied = String(e.StereotypeEx||"");
+        var expectedFQ = pickRuleKey(e, applied);   // finds the rule, if any
+
+        if (!expectedFQ) continue; // element not in scope of our rulebook
+
+        var rule = MDG_RULES[expectedFQ];
+
+        // 1) Base type check (optional)
+        if (rule.baseType && rule.baseType != e.Type) {
+            issues += emit(csv, e, applied, "BaseTypeMismatch", "Expected base type "+rule.baseType, expectedFQ);
+            continue; // don’t check tags if base type is wrong
+        }
+
+        // 2) Stereotype check
+        if (!hasFQStereo(applied, expectedFQ)) {
+            issues += emit(csv, e, applied, "MissingStereotype", "Apply "+expectedFQ, expectedFQ);
+        }
+
+        // 3) Required tags
+        for (var t=0; t<rule.requiredTags.length; t++) {
+            var tn = rule.requiredTags[t].name;
+            var tv = readTag(e, tn);
+            if (trim(tv) === "") {
+                issues += emit(csv, e, applied, "MissingTag", "Tag '"+tn+"' is required", expectedFQ);
+            }
+        }
+
+        // 4) Naming convention (optional)
+        if (rule.namePrefix && !startsWith(e.Name, rule.namePrefix)) {
+            issues += emit(csv, e, applied, "NamePrefix", "Should start with '"+rule.namePrefix+"'", expectedFQ);
+        }
+    }
+
+    if (csv) csv.close();
+    log(TAB, "MDG lint complete. Issues: " + issues);
+}
+
+function pickRuleKey(e, appliedList) {
+    // Strategy:
+    //  - If any rule key is present in StereotypeEx, prefer it.
+    //  - Else if base type matches exactly one rule, use that rule for “expected” check.
+    var keys = keysOf(MDG_RULES);
+    // prefer explicit match
+    for (var i=0; i<keys.length; i++) {
+        if (hasFQStereo(appliedList, keys[i])) return keys[i];
+    }
+    // fallback: base type inference if unambiguous
+    var chosen=null;
+    for (i=0; i<keys.length; i++) {
+        var r = MDG_RULES[keys[i]];
+        if (r.baseType && r.baseType == e.Type) {
+            if (chosen && chosen != keys[i]) return null; // ambiguous
+            chosen = keys[i];
+        }
+    }
+    return chosen;
+}
+
+function hasFQStereo(applied, fq) {
+    var items = String(applied||"").split(",");
+    for (var i=0; i<items.length; i++) {
+        if (equalsIgnoreCase(trim(items[i]), fq)) return true;
+    }
+    return false;
+}
+function readTag(e, name) {
+    var tvs = e.TaggedValues;
+    for (var i=0; i<tvs.Count; i++) {
+        var tv = tvs.GetAt(i);
+        if (equalsIgnoreCase(tv.Name, name)) return String(tv.Value||"");
+    }
+    return "";
+}
+function emit(csv, e, applied, issue, details, expected) {
+    var line = e.ElementID + " " + e.Name + " – " + issue + ": " + details;
+    log("MDG_Lint", line);
+    if (csv) csv.writeRow([e.ElementID, e.ElementGUID, e.Name, e.Type, applied, issue, details, expected||""]);
+    return 1;
+}
+function keysOf(o){ var r=[],k; for(k in o){ if(o.hasOwnProperty(k)) r.push(k);} return r; }
+
+main();
+```
+
+### MDG Repair (guided and safe)
+
+This companion script **fixes** the issues reported by the linter. It
+uses a **dry-run** flag and writes a CSV log of every attempted change.
+
+```{.js filename="Example 10.4 - MDG_Repair.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 10.4 - MDG_Repair.js – JScript (ES3)
+// Purpose: Apply MDG fixes (stereotype, required tags, naming prefix)
+// Safety: DRY_RUN=true by default; logs every change
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+!INC _Common.MDG_Rulebook
+
+function main() {
+    var TAB = "MDG_Repair";
+    ensureOutputTab(TAB);
+
+    // ---- Config ----
+    var DRY_RUN = true;
+
+    var pkg = Repository.GetTreeSelectedPackage();
+    if (!pkg) { Session.Prompt("Select a package.", promptOK); return; }
+
+    var outDir = browseForFolder("Select output folder for MDG repair log");
+    var csv = null;
+    if (outDir) {
+        var stamp = (new Date()).getTime();
+        csv = new CsvWriter(outDir + "\\mdg_repair_" + stamp + ".csv");
+        csv.writeHeader("Action,ElementID,GUID,Name,Details");
+    }
+
+    var els = pkg.Elements, changed=0;
+    for (var i=0; i<els.Count; i++) {
+        var e = els.GetAt(i);
+        var expectedFQ = pickRuleKey(e, String(e.StereotypeEx||""));
+        if (!expectedFQ) continue;
+
+        var rule = MDG_RULES[expectedFQ];
+
+        // 1) Enforce stereotype (fully-qualified)
+        if (!hasFQStereo(String(e.StereotypeEx||""), expectedFQ)) {
+            log(TAB, "Apply stereotype: " + expectedFQ + " on '" + e.Name + "'");
+            if (csv) csv.writeRow(["ApplyStereo", e.ElementID, e.ElementGUID, e.Name, expectedFQ]);
+            if (!DRY_RUN) { e.StereotypeEx = addFQStereo(e.StereotypeEx, expectedFQ); e.Update(); changed++; }
+        }
+
+        // 2) Ensure required tags (create if missing, fill default if blank)
+        for (var t=0; t<rule.requiredTags.length; t++) {
+            var tn = rule.requiredTags[t].name;
+            var dv = String(rule.requiredTags[t].defaultValue||"");
+            var cur = readTag(e, tn);
+            if (trim(cur) === "" && dv !== "") {
+                log(TAB, "Set tag '" + tn + "'='" + dv + "' on '" + e.Name + "'");
+                if (csv) csv.writeRow(["SetTag", e.ElementID, e.ElementGUID, e.Name, tn+"="+dv]);
+                if (!DRY_RUN) { writeTag(e, tn, dv); changed++; }
+            } else if (cur === "") {
+                // missing and no default → warn only
+                if (csv) csv.writeRow(["MissingTag", e.ElementID, e.ElementGUID, e.Name, tn+" (no default)"]);
+            }
+        }
+
+        // 3) Naming prefix (optional)
+        if (rule.namePrefix && !startsWith(e.Name, rule.namePrefix)) {
+            var newName = rule.namePrefix + e.Name;
+            log(TAB, "Rename '" + e.Name + "' → '" + newName + "'");
+            if (csv) csv.writeRow(["Rename", e.ElementID, e.ElementGUID, e.Name, "→ "+newName]);
+            if (!DRY_RUN) { e.Name = newName; e.Update(); changed++; }
+        }
+    }
+
+    if (!DRY_RUN && changed>0) Repository.RefreshModelView(pkg.PackageID);
+    log(TAB, "Repair complete. Changes=" + changed + ", Dry-run=" + DRY_RUN);
+}
+
+// Helpers (subset specialised for this script)
+function pickRuleKey(e, applied){ var keys=keysOf(MDG_RULES); var i;
+    for(i=0;i<keys.length;i++) if(hasFQStereo(applied, keys[i])) return keys[i];
+    // optional baseType inference
+    var chosen=null; for(i=0;i<keys.length;i++){ var r=MDG_RULES[keys[i]]; if(r.baseType && r.baseType==e.Type){ if(chosen && chosen!=keys[i]) return null; chosen=keys[i]; } }
+    return chosen;
+}
+function hasFQStereo(applied, fq){ var items=String(applied||"").split(","); for(var i=0;i<items.length;i++){ if(equalsIgnoreCase(trim(items[i]),fq)) return true; } return false;}
+function addFQStereo(current, fq){ current=String(current||"").trim(); if(current==="") return fq; var items=current.split(","),i; for(i=0;i<items.length;i++){ if(equalsIgnoreCase(trim(items[i]),fq)) return current; } return current + "," + fq;}
+function readTag(e, name){ var tvs=e.TaggedValues; for(var i=0;i<tvs.Count;i++){ var tv=tvs.GetAt(i); if(equalsIgnoreCase(tv.Name,name)) return String(tv.Value||""); } return ""; }
+function writeTag(e, name, value){ var tvs=e.TaggedValues, i; for(i=0;i<tvs.Count;i++){ var tv=tvs.GetAt(i); if(equalsIgnoreCase(tv.Name,name)){ tv.Value=String(value); tv.Update(); e.Update(); return; } } var nt=tvs.AddNew(name,String(value)); nt.Update(); e.Update(); }
+function keysOf(o){ var r=[],k; for(k in o){ if(o.hasOwnProperty(k)) r.push(k);} return r; }
+
+main();
+```
+
+### Validating toolbox conformance (lightweight)
+
+You usually enforce toolbox usage **indirectly**:
+
+- **Base type** matches your profile expectation (e.g., Class).
+
+- **Stereotype** is the one from your profile (profile::stereo).
+
+- **Required tags** exist (often defined by your MDG).
+
+If all three pass, the modeller effectively used your toolbox.
+
+For stricter checks, you can augment the rulebook with **allowed
+connector types** and **required relationships** per stereotype, then
+lint them the same way.
+
+```{.js filename="Example 10.5 - Add to MDG_RULES:"}
+// Example 10.5 - Add to MDG_RULES:
+"MyProfile::BusinessCapability": {
+  baseType: "Class",
+  requiredTags: [{name:"Owner", defaultValue:"ArchitectureTeam"}],
+  namePrefix: "BC_",
+  requiresOutgoing: [ { type:"Realization", toStereo:"MyProfile::ApplicationService" } ]
+}
+Then in your linter:
+// After tag checks:
+if (rule.requiresOutgoing) {
+    for (var r=0; r<rule.requiresOutgoing.length; r++) {
+        var req = rule.requiresOutgoing[r];
+        if (!hasOutgoing(e, req.type, req.toStereo)) {
+            issues += emit(csv, e, applied, "MissingLink",
+                "Require outgoing " + req.type + " to " + req.toStereo, expectedFQ);
+        }
+    }
+}
+function hasOutgoing(e, connType, toFQStereo){
+    var cons = e.Connectors;
+    for (var i=0; i<cons.Count; i++) {
+        var c = cons.GetAt(i);
+        if (c.Type != connType) continue;
+        var supplier = Repository.GetElementByID(c.SupplierID);
+        if (!supplier) continue;
+        if (hasFQStereo(String(supplier.StereotypeEx||""), toFQStereo)) return true;
+    }
+    return false;
+}
+```
+
+### Bulk discovery using SQL (fast find, safe check)
+
+On very large repositories, **find with SQL** then verify via the API.
+
+```{.js filename="Example 10.6 - MDG_SQL_FindMissingTag.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 10.6 - MDG_SQL_FindMissingTag.js – JScript (ES3)
+// Purpose: Pre-filter candidates with SQL, then verify with API
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+!INC _Common.Helpers
+!INC _Common.MDG_Rulebook
+function main() {
+    var TAB="MDG_SQL_Find";
+    ensureOutputTab(TAB);
+
+    var key = "MyProfile::BusinessCapability";
+    var rule = MDG_RULES[key];
+    var tagName = "Owner";
+
+    // Fast repo-wide prefilter: base type & stereotype absent or wrong (rough)
+    // NOTE: Stereotypes are stored in multiple places; we prefilter by type and post-check StereotypeEx via API.
+    var sql = "SELECT Object_ID FROM t_object WHERE Object_Type='" + rule.baseType + "'";
+    var xml = Repository.SQLQuery(sql);
+    var ids = extractAll(xml, "<Object_ID>", "</Object_ID>");
+    var offenders = 0;
+
+    for (var i=0; i<ids.length; i++) {
+        var el = Repository.GetElementByID(parseInt(ids[i],10));
+        if (!el) continue;
+        if (!hasFQ(String(el.StereotypeEx||""), key)) continue; // truly in scope
+        var tv = readTag(el, tagName);
+        if (trim(tv) === "") {
+            offenders++;
+            Session.Output("Missing tag '" + tagName + "': " + el.Name + " (" + el.ElementID + ")");
+        }
+    }
+    log(TAB, "Offenders (missing "+tagName+"): " + offenders);
+}
+
+function extractAll(h,a,b){ var r=[],s=0; while(true){ var i=h.indexOf(a,s); if(i<0) break; var j=h.indexOf(b,i+a.length); if(j<0) break; r.push(h.substring(i+a.length,j)); s=j+b.length; } return r; }
+function hasFQ(applied,fq){ var arr=String(applied||"").split(","); for(var i=0;i<arr.length;i++){ if(equalsIgnoreCase(trim(arr[i]),fq)) return true; } return false; }
+function readTag(e,n){ var tvs=e.TaggedValues; for(var i=0;i<tvs.Count;i++){ var t=tvs.GetAt(i); if(equalsIgnoreCase(t.Name,n)) return String(t.Value||""); } return ""; }
+
+main();
+```
+
+## Safety & governance notes
+
+- Always prefer StereotypeEx for MDG accuracy.
+
+- Never raw-update MDG metadata in EA tables unless you absolutely must
+  (and then only when you fully understand the schema).
+
+- Centralise rules in a small “rulebook” map; your linter and repairer
+  both use it.
+
+- Dry-run first and log CSVs of changes for audit.
+
+- Use SQL to find, API to fix at scale.
+
+## What to use when (cheat-sheet)
+
+- **Apply a profile stereotype** to many items → Example 9.1.
+
+- **Report MDG drift** (tags/names/stereos) → Example 9.3 (linter).
+
+- **Fix drift** with defaults and renaming → Example 9.4 (repairer).
+
+- **Enforce relationships** between MDG types → 9.5 extension.
+
+- **Huge repositories** → 9.6 SQL pre-filter + API verification.

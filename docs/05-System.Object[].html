@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; Chapter 4: API Essentials – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./06-System.Object[].html" rel="next">
+<link href="./04-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-System.Object[].html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-understand-the-api" id="toc-why-understand-the-api" class="nav-link active" data-scroll-target="#why-understand-the-api"><span class="header-section-number">5.1</span> Why Understand the API?</a></li>
+  <li><a href="#the-object-model" id="toc-the-object-model" class="nav-link" data-scroll-target="#the-object-model"><span class="header-section-number">5.2</span> The Object Model</a></li>
+  <li><a href="#repository" id="toc-repository" class="nav-link" data-scroll-target="#repository"><span class="header-section-number">5.3</span> Repository</a></li>
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages"><span class="header-section-number">5.4</span> Packages</a></li>
+  <li><a href="#elements" id="toc-elements" class="nav-link" data-scroll-target="#elements"><span class="header-section-number">5.5</span> Elements</a></li>
+  <li><a href="#connectors" id="toc-connectors" class="nav-link" data-scroll-target="#connectors"><span class="header-section-number">5.6</span> Connectors</a></li>
+  <li><a href="#attribute-and-method-details-of-elements" id="toc-attribute-and-method-details-of-elements" class="nav-link" data-scroll-target="#attribute-and-method-details-of-elements"><span class="header-section-number">5.7</span> Attribute and Method: Details of Elements</a></li>
+  <li><a href="#tagged-values" id="toc-tagged-values" class="nav-link" data-scroll-target="#tagged-values"><span class="header-section-number">5.8</span> Tagged Values</a></li>
+  <li><a href="#sql-vs-api" id="toc-sql-vs-api" class="nav-link" data-scroll-target="#sql-vs-api"><span class="header-section-number">5.9</span> SQL vs API</a></li>
+  <li><a href="#update-and-refreshmodelview" id="toc-update-and-refreshmodelview" class="nav-link" data-scroll-target="#update-and-refreshmodelview"><span class="header-section-number">5.10</span> Update and RefreshModelView</a></li>
+  <li><a href="#the-8020-principle-in-practice" id="toc-the-8020-principle-in-practice" class="nav-link" data-scroll-target="#the-8020-principle-in-practice"><span class="header-section-number">5.11</span> The 80/20 Principle in Practice</a></li>
+  <li><a href="#learning-through-patterns" id="toc-learning-through-patterns" class="nav-link" data-scroll-target="#learning-through-patterns"><span class="header-section-number">5.12</span> Learning Through Patterns</a></li>
+  <li><a href="#common-pitfalls" id="toc-common-pitfalls" class="nav-link" data-scroll-target="#common-pitfalls"><span class="header-section-number">5.13</span> Common Pitfalls</a></li>
+  <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead"><span class="header-section-number">5.14</span> Looking Ahead</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Enterprise Architect is first and foremost a modelling tool. But beneath its diagrams, toolboxes, and properties windows lies a structured <strong>object model</strong> — a formal API (Application Programming Interface) that represents everything you see in the repository. Packages, elements, connectors, diagrams, attributes, tagged values: all are exposed as objects with properties and methods.</p>
+<p>The EA Automation API can feel intimidating at first. It includes dozens of classes, hundreds of properties, and subtle rules about when you must call Update() or RefreshModelView(). But in practice, you do not need the whole surface of the API to be productive. In fact, like many large systems, EA’s object model follows the <strong>80/20 rule</strong>: about 20% of the classes and methods cover 80% of what you will ever need.</p>
+<p>This chapter focuses on that 20%. It introduces the core objects — Repository, Package, Element, Connector, Attribute, and TaggedValue — and explains their roles in the automation model. It also explains how to navigate between them, when to use the object API and when to use SQL, and the importance of persisting changes. By the end of this introduction, you will understand the “grammar” of the EA API, which will make the worked examples far easier to follow.</p>
+<section id="why-understand-the-api" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="why-understand-the-api"><span class="header-section-number">5.1</span> Why Understand the API?</h2>
+<p>It might seem obvious: if you are going to script EA, you need to know the API. But there is a deeper point. Many beginners approach scripting by copying and pasting snippets without understanding what is happening. This can work for small tasks, but it is risky at scale. Without a mental model of the API, you may accidentally treat an EA collection like a JavaScript array, or forget to call Update(), or misinterpret a connector direction.</p>
+<p>Understanding the API means you can reason about scripts. You can predict what a script will do, debug why something didn’t work, and design new scripts with confidence. It is the difference between following recipes and actually knowing how to cook.</p>
+</section>
+<section id="the-object-model" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="the-object-model"><span class="header-section-number">5.2</span> The Object Model</h2>
+<p>The EA API follows the structure of the tool itself:</p>
+<ol type="1">
+<li><p><strong>Repository</strong> — the root object, representing the entire open model.</p></li>
+<li><p><strong>Package</strong> — a container for elements, diagrams, and sub-packages.</p></li>
+<li><p><strong>Element</strong> — a UML element (class, component, use case, capability, etc.).</p></li>
+<li><p><strong>Connector</strong> — a relationship between elements (association, dependency, trace, etc.).</p></li>
+<li><p><strong>Attribute / Operation</strong> — members inside an element.</p></li>
+<li><p><strong>TaggedValue</strong> — metadata attached to an element or connector.</p></li>
+</ol>
+<p>Almost every script you write will start with the <strong>Repository</strong> object and work downwards.</p>
+</section>
+<section id="repository" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="repository"><span class="header-section-number">5.3</span> Repository</h2>
+<p>Everything begins with the <strong>Repository</strong> object. This represents the currently open EA project — whether it is a .qea file, a database, or a shared repository. From Repository, you can access root models (Repository.Models), query by SQL (Repository.SQLQuery), retrieve selected objects (GetTreeSelectedPackage, GetTreeSelectedObject), or refresh the UI (RefreshModelView).</p>
+<p>Think of the Repository as your <strong>gateway</strong>. You cannot script without it, because it is the only object that is always available.</p>
+<p>The Repository object is provided automatically when running a script inside EA. It represents the current model. From it you can query packages, elements, and diagrams, or run SQL directly.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.1 – Output repository name</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Example 4.1 – Output repository name"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">// Example 4.1 – Output repository name</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="co">// The Repository object is available by default</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="kw">var</span> modelName <span class="op">=</span> Repository<span class="op">.</span><span class="at">ConnectionString</span><span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Connected to: "</span> <span class="op">+</span> modelName)<span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>}</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Repository.ConnectionString tells you the path or database connection for the open model.</p>
+<p>Use Session.Output instead of console.log — EA doesn’t know what a console is.</p>
+</section>
+<section id="packages" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="packages"><span class="header-section-number">5.4</span> Packages</h2>
+<p>The next level down is the <strong>Package</strong>. Packages are containers. They hold elements, diagrams, and child packages. Traversing the model usually means starting at a package and working your way down through its sub-packages and elements.</p>
+<p>A key safety note: don’t assume a user has selected a package. Always check the object type. If you write a script that expects a package but gets a diagram, you will get confusing errors.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.2 – Traverse top-level packages</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Example 4.2 – Traverse top-level packages"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">// Example 4.2 – Traverse top-level packages</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    <span class="kw">var</span> models <span class="op">=</span> Repository<span class="op">.</span><span class="at">Models</span><span class="op">;</span>  <span class="co">// Collection of root packages</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> models<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        <span class="kw">var</span> model <span class="op">=</span> models<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Root package: "</span> <span class="op">+</span> model<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    }</span>
+<span id="cb2-13"><a href="#cb2-13"></a>}</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Key notes:</p>
+<ul>
+<li><p>EA collections use .Count and .GetAt(i).</p></li>
+<li><p>Root packages are accessed through Repository.Models.</p></li>
+</ul>
+</section>
+<section id="elements" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="elements"><span class="header-section-number">5.5</span> Elements</h2>
+<p>The <strong>Element</strong> is the heart of the EA API. Every class, requirement, actor, capability, or component is an Element. Elements have properties (Name, Type, Notes, Status), collections (Attributes, Methods, Connectors, TaggedValues), and behaviours (scenarios, responsibilities).</p>
+<p>If you learn to script elements, you unlock most of EA’s power. The most common tasks involve creating elements, updating their properties, and traversing their relationships.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.3 – List all elements in selected package</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Example 4.3 – List all elements in selected package"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">// Example 4.3 – List all elements in selected package</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb3-8"><a href="#cb3-8"></a>    <span class="kw">var</span> <span class="im">package</span> <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="im">package</span>) {</span>
+<span id="cb3-10"><a href="#cb3-10"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select a package in the Project Browser."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>    }</span>
+<span id="cb3-13"><a href="#cb3-13"></a></span>
+<span id="cb3-14"><a href="#cb3-14"></a>    <span class="kw">var</span> elements <span class="op">=</span> <span class="im">package</span><span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> elements<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb3-16"><a href="#cb3-16"></a>        <span class="kw">var</span> element <span class="op">=</span> elements<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Element: "</span> <span class="op">+</span> element<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" (Type: "</span> <span class="op">+</span> element<span class="op">.</span><span class="at">Type</span> <span class="op">+</span> <span class="st">")"</span>)<span class="op">;</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>    }</span>
+<span id="cb3-19"><a href="#cb3-19"></a>}</span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Notes:</p>
+<ul>
+<li><p>Always check for null — if nothing is selected, GetTreeSelectedPackage() returns null.</p></li>
+<li><p>element.Type returns the UML type (e.g.&nbsp;Class, Requirement, Activity).</p></li>
+</ul>
+</section>
+<section id="connectors" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="connectors"><span class="header-section-number">5.6</span> Connectors</h2>
+<p>Architecture is about relationships. In EA, those are represented by <strong>Connectors</strong>. An element’s Connectors collection lists all relationships where that element is either client or supplier. A connector has a Type (“Association,” “Dependency,” “Realisation”), plus source and target IDs.</p>
+<p>A common beginner’s mistake is to assume connectors are directional in a UML sense. In practice, EA stores them with ClientID and SupplierID, and the interpretation depends on connector type. Scripts must take care to assign the correct ends.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.4 – Show connectors from a selected element</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Example 4.4 – Show connectors from a selected element"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">// Example 4.4 – Show connectors from a selected element</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="kw">var</span> element <span class="im">as</span> EA<span class="op">.</span><span class="at">Element</span><span class="op">;</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>    element <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="cf">if</span> (<span class="op">!</span>element <span class="op">||</span> element<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement) {</span>
+<span id="cb4-11"><a href="#cb4-11"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select an element in the Project Browser."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>    }</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a>    <span class="kw">var</span> connectors <span class="op">=</span> element<span class="op">.</span><span class="at">Connectors</span><span class="op">;</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> connectors<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb4-17"><a href="#cb4-17"></a>        <span class="kw">var</span> conn <span class="op">=</span> connectors<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Connector: "</span> <span class="op">+</span> conn<span class="op">.</span><span class="at">Type</span> <span class="op">+</span> </span>
+<span id="cb4-19"><a href="#cb4-19"></a>                       <span class="st">" from "</span> <span class="op">+</span> conn<span class="op">.</span><span class="at">ClientID</span> <span class="op">+</span> </span>
+<span id="cb4-20"><a href="#cb4-20"></a>                       <span class="st">" to "</span> <span class="op">+</span> conn<span class="op">.</span><span class="at">SupplierID</span>)<span class="op">;</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a>    }</span>
+<span id="cb4-22"><a href="#cb4-22"></a>}</span>
+<span id="cb4-23"><a href="#cb4-23"></a></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Notes:</p>
+<ul>
+<li><p>Connectors is a collection of relationships.</p></li>
+<li><p>ClientID and SupplierID are IDs of the connected elements. You can resolve them with Repository.GetElementByID().</p></li>
+</ul>
+</section>
+<section id="attribute-and-method-details-of-elements" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="attribute-and-method-details-of-elements"><span class="header-section-number">5.7</span> Attribute and Method: Details of Elements</h2>
+<p>Attributes and methods live inside elements. They are relevant mostly for data models and software design. If you are modelling business capabilities or processes, you may never touch them. But for class modelling, they are essential. The API treats them like small objects with Name, Type, Notes, and collections of tagged values.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.5 – Add Attribute and Method</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Example 4.5 – Add Attribute and Method"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">// Example 4.5 – Add Attribute and Method</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="kw">var</span> el <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="cf">if</span> (el<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement <span class="op">||</span> el<span class="op">.</span><span class="at">Type</span> <span class="op">!=</span> <span class="st">"Class"</span>) {</span>
+<span id="cb5-10"><a href="#cb5-10"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a Class element first."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    }</span>
+<span id="cb5-13"><a href="#cb5-13"></a></span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="co">// List existing attributes and methods</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> el<span class="op">.</span><span class="at">Attributes</span><span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>)</span>
+<span id="cb5-16"><a href="#cb5-16"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Attribute: "</span> <span class="op">+</span> el<span class="op">.</span><span class="at">Attributes</span><span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a>    <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> el<span class="op">.</span><span class="at">Methods</span><span class="op">.</span><span class="at">Count</span><span class="op">;</span> j<span class="op">++</span>)</span>
+<span id="cb5-18"><a href="#cb5-18"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Method: "</span> <span class="op">+</span> el<span class="op">.</span><span class="at">Methods</span><span class="op">.</span><span class="fu">GetAt</span>(j)<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">"()"</span>)<span class="op">;</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a></span>
+<span id="cb5-20"><a href="#cb5-20"></a>    <span class="co">// Add one of each</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>    el<span class="op">.</span><span class="at">Attributes</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"exampleAttr"</span><span class="op">,</span> <span class="st">"String"</span>)<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>    el<span class="op">.</span><span class="at">Methods</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"exampleMethod"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a>    el<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a>    Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(el<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Added exampleAttr and exampleMethod."</span>)<span class="op">;</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a>}</span>
+<span id="cb5-27"><a href="#cb5-27"></a></span>
+<span id="cb5-28"><a href="#cb5-28"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="tagged-values" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="tagged-values"><span class="header-section-number">5.8</span> Tagged Values</h2>
+<p>Perhaps the most important part of the API for governance is <strong>Tagged Values</strong>. Tagged values let you attach metadata to elements, connectors, attributes, and more. They are the bridge between generic modelling and your organisation’s specific needs. For example, you can tag every application with “Owner” or every requirement with “Source System.”</p>
+<p>In scripts, tagged values are indispensable. They let you propagate metadata, check for compliance, and integrate with external registries.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.6 – Read and update tagged values</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Example 4.6 – Read and update tagged values"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">// Example 4.6 – Read and update tagged values</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="kw">var</span> element <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>    <span class="cf">if</span> (<span class="op">!</span>element <span class="op">||</span> element<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement) {</span>
+<span id="cb6-10"><a href="#cb6-10"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select an element."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>    }</span>
+<span id="cb6-13"><a href="#cb6-13"></a></span>
+<span id="cb6-14"><a href="#cb6-14"></a>    <span class="kw">var</span> tags <span class="op">=</span> element<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb6-16"><a href="#cb6-16"></a>        <span class="kw">var</span> tag <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Tag: "</span> <span class="op">+</span> tag<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" = "</span> <span class="op">+</span> tag<span class="op">.</span><span class="at">Value</span>)<span class="op">;</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>    }</span>
+<span id="cb6-19"><a href="#cb6-19"></a></span>
+<span id="cb6-20"><a href="#cb6-20"></a>    <span class="co">// Add or update a tagged value</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a>    <span class="kw">var</span> newTag <span class="op">=</span> element<span class="op">.</span><span class="at">TaggedValues</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"Status"</span><span class="op">,</span> <span class="st">"Draft"</span>)<span class="op">;</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a>    newTag<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a></span>
+<span id="cb6-24"><a href="#cb6-24"></a>    <span class="co">// Remember to call Update() on the element itself</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>    element<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Tagged value added/updated."</span>)<span class="op">;</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a>}</span>
+<span id="cb6-28"><a href="#cb6-28"></a></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Key rules:</p>
+<ul>
+<li><p>Tagged values are stored as a collection on the element.</p></li>
+<li><p>After modifying, call Update() to persist.</p></li>
+<li><p>Always refresh the model view if you want changes to show immediately.</p></li>
+</ul>
+</section>
+<section id="sql-vs-api" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="sql-vs-api"><span class="header-section-number">5.9</span> SQL vs API</h2>
+<p>EA exposes its data model both as an <strong>object API</strong> and as a <strong>database schema</strong>. You can query directly with Repository.SQLQuery(sql), which returns XML. This is often faster for reads, especially when you need thousands of rows. But you should never write to the database directly. The object API enforces rules, cascades updates, and ensures integrity.</p>
+<p>The safe pattern is: <strong>SQL for read, API for write</strong>. Query with SQL, act with API.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 4.7 – Use SQLQuery for performance</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Example 4.7 – Use SQLQuery for performance"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">// Example 4.7 – Use SQLQuery for performance</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="co">// Simple SQL query – always returns XML</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="kw">var</span> result <span class="op">=</span> Repository<span class="op">.</span><span class="fu">SQLQuery</span>(</span>
+<span id="cb7-10"><a href="#cb7-10"></a>        <span class="st">"SELECT Name FROM t_object WHERE Object_Type='Class'"</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>        )<span class="op">;</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Result XML: "</span> <span class="op">+</span> result)<span class="op">;</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>}</span>
+<span id="cb7-14"><a href="#cb7-14"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p>SQL queries return XML, not rows. You must parse the XML manually.</p></li>
+<li><p>SQL is much faster for bulk queries but dangerous if you don’t understand EA’s schema.</p></li>
+</ul>
+</section>
+<section id="update-and-refreshmodelview" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="update-and-refreshmodelview"><span class="header-section-number">5.10</span> Update and RefreshModelView</h2>
+<p>If there is one golden rule in the EA API, it is this: <strong>nothing changes until you call Update()</strong>. Setting element.Name = “X” does nothing unless you follow with element.Update(). Forget this, and you will wonder why your script “didn’t work.”</p>
+<p>The second golden rule is: <strong>the UI doesn’t refresh automatically</strong>. After bulk changes, call Repository.RefreshModelView() to force the Project Browser to update. Without it, changes may exist in the database but remain invisible until EA is restarted.</p>
+</section>
+<section id="the-8020-principle-in-practice" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="the-8020-principle-in-practice"><span class="header-section-number">5.11</span> The 80/20 Principle in Practice</h2>
+<p>Although EA has many more objects — Diagrams, DiagramObjects, Scenarios, Issues, Tests — most automation tasks use the same handful: Repository, Package, Element, Connector, Attribute, TaggedValue. Master these, and you can already do 80% of practical scripting.</p>
+<p>The rest of the API is there for advanced needs. You don’t need to learn it all at once. By focusing on the essentials, you avoid overwhelm and build confidence quickly.</p>
+</section>
+<section id="learning-through-patterns" class="level2" data-number="5.12">
+<h2 data-number="5.12" class="anchored" data-anchor-id="learning-through-patterns"><span class="header-section-number">5.12</span> Learning Through Patterns</h2>
+<p>The examples later in this chapter illustrate common patterns:</p>
+<ul>
+<li><p>Traversal (loop through all elements in a package).</p></li>
+<li><p>Creation (add a new element and update).</p></li>
+<li><p>Relationship management (add connectors).</p></li>
+<li><p>Metadata (set tagged values).</p></li>
+<li><p>SQL vs object trade-offs (query then act).</p></li>
+</ul>
+<p>These patterns recur constantly. Once you know them, you can adapt them to almost any task.</p>
+</section>
+<section id="common-pitfalls" class="level2" data-number="5.13">
+<h2 data-number="5.13" class="anchored" data-anchor-id="common-pitfalls"><span class="header-section-number">5.13</span> Common Pitfalls</h2>
+<p>Even at the API essentials level, there are traps:</p>
+<ul>
+<li><p>Misusing EA collections (they are not arrays).</p></li>
+<li><p>Forgetting Update() or RefreshModelView().</p></li>
+<li><p>Confusing stereotype with StereotypeEx (use the latter for profile-qualified stereotypes).</p></li>
+<li><p>Assuming element names are unique (they are not; always prefer GUID or ID).</p></li>
+<li><p>Overusing Session.Output in large loops (slow).</p></li>
+</ul>
+<p>These pitfalls are avoidable once you internalise the essentials.</p>
+</section>
+<section id="looking-ahead" class="level2" data-number="5.14">
+<h2 data-number="5.14" class="anchored" data-anchor-id="looking-ahead"><span class="header-section-number">5.14</span> Looking Ahead</h2>
+<p>This chapter covered the essentials: Repository, Package, Element, Connector, and TaggedValue. You now know how to retrieve, inspect, and modify them. In the next chapter we will look at working <strong>inside EA with JScript</strong>, including common pitfalls, utility functions, and debugging strategies.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04-System.Object[].html" class="pagination-link" aria-label="Chapter 3: Getting Started">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./06-System.Object[].html" class="pagination-link" aria-label="Chapter 5: Inside EA with JScript">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu"># Chapter 4: API Essentials</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a>Enterprise Architect is first and foremost a modelling tool. But beneath</span>
+<span id="cb8-4"><a href="#cb8-4"></a>its diagrams, toolboxes, and properties windows lies a structured</span>
+<span id="cb8-5"><a href="#cb8-5"></a>**object model** — a formal API (Application Programming Interface) that</span>
+<span id="cb8-6"><a href="#cb8-6"></a>represents everything you see in the repository. Packages, elements,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>connectors, diagrams, attributes, tagged values: all are exposed as</span>
+<span id="cb8-8"><a href="#cb8-8"></a>objects with properties and methods.</span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a>The EA Automation API can feel intimidating at first. It includes dozens</span>
+<span id="cb8-11"><a href="#cb8-11"></a>of classes, hundreds of properties, and subtle rules about when you must</span>
+<span id="cb8-12"><a href="#cb8-12"></a>call Update() or RefreshModelView(). But in practice, you do not need</span>
+<span id="cb8-13"><a href="#cb8-13"></a>the whole surface of the API to be productive. In fact, like many large</span>
+<span id="cb8-14"><a href="#cb8-14"></a>systems, EA’s object model follows the **80/20 rule**: about 20% of the</span>
+<span id="cb8-15"><a href="#cb8-15"></a>classes and methods cover 80% of what you will ever need.</span>
+<span id="cb8-16"><a href="#cb8-16"></a></span>
+<span id="cb8-17"><a href="#cb8-17"></a>This chapter focuses on that 20%. It introduces the core objects —</span>
+<span id="cb8-18"><a href="#cb8-18"></a>Repository, Package, Element, Connector, Attribute, and TaggedValue —</span>
+<span id="cb8-19"><a href="#cb8-19"></a>and explains their roles in the automation model. It also explains how</span>
+<span id="cb8-20"><a href="#cb8-20"></a>to navigate between them, when to use the object API and when to use</span>
+<span id="cb8-21"><a href="#cb8-21"></a>SQL, and the importance of persisting changes. By the end of this</span>
+<span id="cb8-22"><a href="#cb8-22"></a>introduction, you will understand the “grammar” of the EA API, which</span>
+<span id="cb8-23"><a href="#cb8-23"></a>will make the worked examples far easier to follow.</span>
+<span id="cb8-24"><a href="#cb8-24"></a></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="fu">## Why Understand the API?</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a></span>
+<span id="cb8-27"><a href="#cb8-27"></a>It might seem obvious: if you are going to script EA, you need to know</span>
+<span id="cb8-28"><a href="#cb8-28"></a>the API. But there is a deeper point. Many beginners approach scripting</span>
+<span id="cb8-29"><a href="#cb8-29"></a>by copying and pasting snippets without understanding what is happening.</span>
+<span id="cb8-30"><a href="#cb8-30"></a>This can work for small tasks, but it is risky at scale. Without a</span>
+<span id="cb8-31"><a href="#cb8-31"></a>mental model of the API, you may accidentally treat an EA collection</span>
+<span id="cb8-32"><a href="#cb8-32"></a>like a JavaScript array, or forget to call Update(), or misinterpret a</span>
+<span id="cb8-33"><a href="#cb8-33"></a>connector direction.</span>
+<span id="cb8-34"><a href="#cb8-34"></a></span>
+<span id="cb8-35"><a href="#cb8-35"></a>Understanding the API means you can reason about scripts. You can</span>
+<span id="cb8-36"><a href="#cb8-36"></a>predict what a script will do, debug why something didn’t work, and</span>
+<span id="cb8-37"><a href="#cb8-37"></a>design new scripts with confidence. It is the difference between</span>
+<span id="cb8-38"><a href="#cb8-38"></a>following recipes and actually knowing how to cook.</span>
+<span id="cb8-39"><a href="#cb8-39"></a></span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="fu">## The Object Model</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a></span>
+<span id="cb8-42"><a href="#cb8-42"></a>The EA API follows the structure of the tool itself:</span>
+<span id="cb8-43"><a href="#cb8-43"></a></span>
+<span id="cb8-44"><a href="#cb8-44"></a><span class="ss">1.  </span>**Repository** — the root object, representing the entire open</span>
+<span id="cb8-45"><a href="#cb8-45"></a>    model.</span>
+<span id="cb8-46"><a href="#cb8-46"></a></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="ss">2.  </span>**Package** — a container for elements, diagrams, and sub-packages.</span>
+<span id="cb8-48"><a href="#cb8-48"></a></span>
+<span id="cb8-49"><a href="#cb8-49"></a><span class="ss">3.  </span>**Element** — a UML element (class, component, use case, capability,</span>
+<span id="cb8-50"><a href="#cb8-50"></a>    etc.).</span>
+<span id="cb8-51"><a href="#cb8-51"></a></span>
+<span id="cb8-52"><a href="#cb8-52"></a><span class="ss">4.  </span>**Connector** — a relationship between elements (association,</span>
+<span id="cb8-53"><a href="#cb8-53"></a>    dependency, trace, etc.).</span>
+<span id="cb8-54"><a href="#cb8-54"></a></span>
+<span id="cb8-55"><a href="#cb8-55"></a><span class="ss">5.  </span>**Attribute / Operation** — members inside an element.</span>
+<span id="cb8-56"><a href="#cb8-56"></a></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="ss">6.  </span>**TaggedValue** — metadata attached to an element or connector.</span>
+<span id="cb8-58"><a href="#cb8-58"></a></span>
+<span id="cb8-59"><a href="#cb8-59"></a>Almost every script you write will start with the **Repository** object</span>
+<span id="cb8-60"><a href="#cb8-60"></a>and work downwards.</span>
+<span id="cb8-61"><a href="#cb8-61"></a></span>
+<span id="cb8-62"><a href="#cb8-62"></a><span class="fu">## Repository</span></span>
+<span id="cb8-63"><a href="#cb8-63"></a></span>
+<span id="cb8-64"><a href="#cb8-64"></a>Everything begins with the **Repository** object. This represents the</span>
+<span id="cb8-65"><a href="#cb8-65"></a>currently open EA project — whether it is a .qea file, a database, or a</span>
+<span id="cb8-66"><a href="#cb8-66"></a>shared repository. From Repository, you can access root models</span>
+<span id="cb8-67"><a href="#cb8-67"></a>(Repository.Models), query by SQL (Repository.SQLQuery), retrieve</span>
+<span id="cb8-68"><a href="#cb8-68"></a>selected objects (GetTreeSelectedPackage, GetTreeSelectedObject), or</span>
+<span id="cb8-69"><a href="#cb8-69"></a>refresh the UI (RefreshModelView).</span>
+<span id="cb8-70"><a href="#cb8-70"></a></span>
+<span id="cb8-71"><a href="#cb8-71"></a>Think of the Repository as your **gateway**. You cannot script without</span>
+<span id="cb8-72"><a href="#cb8-72"></a>it, because it is the only object that is always available.</span>
+<span id="cb8-73"><a href="#cb8-73"></a></span>
+<span id="cb8-74"><a href="#cb8-74"></a>The Repository object is provided automatically when running a script</span>
+<span id="cb8-75"><a href="#cb8-75"></a>inside EA. It represents the current model. From it you can query</span>
+<span id="cb8-76"><a href="#cb8-76"></a>packages, elements, and diagrams, or run SQL directly.</span>
+<span id="cb8-77"><a href="#cb8-77"></a></span>
+<span id="cb8-78"><a href="#cb8-78"></a><span class="in">```{.js filename="Example 4.1 – Output repository name"}</span></span>
+<span id="cb8-79"><a href="#cb8-79"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-80"><a href="#cb8-80"></a><span class="co">// Example 4.1 – Output repository name</span></span>
+<span id="cb8-81"><a href="#cb8-81"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-82"><a href="#cb8-82"></a></span>
+<span id="cb8-83"><a href="#cb8-83"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-84"><a href="#cb8-84"></a></span>
+<span id="cb8-85"><a href="#cb8-85"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-86"><a href="#cb8-86"></a>    <span class="co">// The Repository object is available by default</span></span>
+<span id="cb8-87"><a href="#cb8-87"></a>    <span class="kw">var</span> modelName <span class="op">=</span> Repository<span class="op">.</span><span class="at">ConnectionString</span><span class="op">;</span></span>
+<span id="cb8-88"><a href="#cb8-88"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Connected to: "</span> <span class="op">+</span> modelName)<span class="op">;</span></span>
+<span id="cb8-89"><a href="#cb8-89"></a>}</span>
+<span id="cb8-90"><a href="#cb8-90"></a></span>
+<span id="cb8-91"><a href="#cb8-91"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-92"><a href="#cb8-92"></a></span>
+<span id="cb8-93"><a href="#cb8-93"></a><span class="in">```</span></span>
+<span id="cb8-94"><a href="#cb8-94"></a></span>
+<span id="cb8-95"><a href="#cb8-95"></a>Repository.ConnectionString tells you the path or database connection</span>
+<span id="cb8-96"><a href="#cb8-96"></a>for the open model.</span>
+<span id="cb8-97"><a href="#cb8-97"></a></span>
+<span id="cb8-98"><a href="#cb8-98"></a>Use Session.Output instead of console.log — EA doesn’t know what a</span>
+<span id="cb8-99"><a href="#cb8-99"></a>console is.</span>
+<span id="cb8-100"><a href="#cb8-100"></a></span>
+<span id="cb8-101"><a href="#cb8-101"></a><span class="fu">## Packages</span></span>
+<span id="cb8-102"><a href="#cb8-102"></a></span>
+<span id="cb8-103"><a href="#cb8-103"></a>The next level down is the **Package**. Packages are containers. They</span>
+<span id="cb8-104"><a href="#cb8-104"></a>hold elements, diagrams, and child packages. Traversing the model</span>
+<span id="cb8-105"><a href="#cb8-105"></a>usually means starting at a package and working your way down through</span>
+<span id="cb8-106"><a href="#cb8-106"></a>its sub-packages and elements.</span>
+<span id="cb8-107"><a href="#cb8-107"></a></span>
+<span id="cb8-108"><a href="#cb8-108"></a>A key safety note: don’t assume a user has selected a package. Always</span>
+<span id="cb8-109"><a href="#cb8-109"></a>check the object type. If you write a script that expects a package but</span>
+<span id="cb8-110"><a href="#cb8-110"></a>gets a diagram, you will get confusing errors.</span>
+<span id="cb8-111"><a href="#cb8-111"></a></span>
+<span id="cb8-112"><a href="#cb8-112"></a><span class="in">```{.js filename="Example 4.2 – Traverse top-level packages"}</span></span>
+<span id="cb8-113"><a href="#cb8-113"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-114"><a href="#cb8-114"></a><span class="co">// Example 4.2 – Traverse top-level packages</span></span>
+<span id="cb8-115"><a href="#cb8-115"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-116"><a href="#cb8-116"></a></span>
+<span id="cb8-117"><a href="#cb8-117"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-118"><a href="#cb8-118"></a></span>
+<span id="cb8-119"><a href="#cb8-119"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-120"><a href="#cb8-120"></a>    <span class="kw">var</span> models <span class="op">=</span> Repository<span class="op">.</span><span class="at">Models</span><span class="op">;</span>  <span class="co">// Collection of root packages</span></span>
+<span id="cb8-121"><a href="#cb8-121"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> models<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb8-122"><a href="#cb8-122"></a>        <span class="kw">var</span> model <span class="op">=</span> models<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb8-123"><a href="#cb8-123"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Root package: "</span> <span class="op">+</span> model<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb8-124"><a href="#cb8-124"></a>    }</span>
+<span id="cb8-125"><a href="#cb8-125"></a>}</span>
+<span id="cb8-126"><a href="#cb8-126"></a></span>
+<span id="cb8-127"><a href="#cb8-127"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-128"><a href="#cb8-128"></a><span class="in">```</span></span>
+<span id="cb8-129"><a href="#cb8-129"></a></span>
+<span id="cb8-130"><a href="#cb8-130"></a>Key notes:</span>
+<span id="cb8-131"><a href="#cb8-131"></a></span>
+<span id="cb8-132"><a href="#cb8-132"></a><span class="ss">- </span>EA collections use .Count and .GetAt(i).</span>
+<span id="cb8-133"><a href="#cb8-133"></a></span>
+<span id="cb8-134"><a href="#cb8-134"></a><span class="ss">- </span>Root packages are accessed through Repository.Models.</span>
+<span id="cb8-135"><a href="#cb8-135"></a></span>
+<span id="cb8-136"><a href="#cb8-136"></a><span class="fu">## Elements</span></span>
+<span id="cb8-137"><a href="#cb8-137"></a></span>
+<span id="cb8-138"><a href="#cb8-138"></a>The **Element** is the heart of the EA API. Every class, requirement,</span>
+<span id="cb8-139"><a href="#cb8-139"></a>actor, capability, or component is an Element. Elements have properties</span>
+<span id="cb8-140"><a href="#cb8-140"></a>(Name, Type, Notes, Status), collections (Attributes, Methods,</span>
+<span id="cb8-141"><a href="#cb8-141"></a>Connectors, TaggedValues), and behaviours (scenarios, responsibilities).</span>
+<span id="cb8-142"><a href="#cb8-142"></a></span>
+<span id="cb8-143"><a href="#cb8-143"></a>If you learn to script elements, you unlock most of EA’s power. The most</span>
+<span id="cb8-144"><a href="#cb8-144"></a>common tasks involve creating elements, updating their properties, and</span>
+<span id="cb8-145"><a href="#cb8-145"></a>traversing their relationships.</span>
+<span id="cb8-146"><a href="#cb8-146"></a></span>
+<span id="cb8-147"><a href="#cb8-147"></a><span class="in">```{.js filename="Example 4.3 – List all elements in selected package"}</span></span>
+<span id="cb8-148"><a href="#cb8-148"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-149"><a href="#cb8-149"></a><span class="co">// Example 4.3 – List all elements in selected package</span></span>
+<span id="cb8-150"><a href="#cb8-150"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-151"><a href="#cb8-151"></a></span>
+<span id="cb8-152"><a href="#cb8-152"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-153"><a href="#cb8-153"></a></span>
+<span id="cb8-154"><a href="#cb8-154"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-155"><a href="#cb8-155"></a>    <span class="kw">var</span> <span class="im">package</span> <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb8-156"><a href="#cb8-156"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="im">package</span>) {</span>
+<span id="cb8-157"><a href="#cb8-157"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select a package in the Project Browser."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb8-158"><a href="#cb8-158"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-159"><a href="#cb8-159"></a>    }</span>
+<span id="cb8-160"><a href="#cb8-160"></a></span>
+<span id="cb8-161"><a href="#cb8-161"></a>    <span class="kw">var</span> elements <span class="op">=</span> <span class="im">package</span><span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb8-162"><a href="#cb8-162"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> elements<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb8-163"><a href="#cb8-163"></a>        <span class="kw">var</span> element <span class="op">=</span> elements<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb8-164"><a href="#cb8-164"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Element: "</span> <span class="op">+</span> element<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" (Type: "</span> <span class="op">+</span> element<span class="op">.</span><span class="at">Type</span> <span class="op">+</span> <span class="st">")"</span>)<span class="op">;</span></span>
+<span id="cb8-165"><a href="#cb8-165"></a>    }</span>
+<span id="cb8-166"><a href="#cb8-166"></a>}</span>
+<span id="cb8-167"><a href="#cb8-167"></a></span>
+<span id="cb8-168"><a href="#cb8-168"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-169"><a href="#cb8-169"></a><span class="in">```</span></span>
+<span id="cb8-170"><a href="#cb8-170"></a></span>
+<span id="cb8-171"><a href="#cb8-171"></a>Notes:</span>
+<span id="cb8-172"><a href="#cb8-172"></a></span>
+<span id="cb8-173"><a href="#cb8-173"></a><span class="ss">- </span>Always check for null — if nothing is selected,</span>
+<span id="cb8-174"><a href="#cb8-174"></a>  GetTreeSelectedPackage() returns null.</span>
+<span id="cb8-175"><a href="#cb8-175"></a></span>
+<span id="cb8-176"><a href="#cb8-176"></a><span class="ss">- </span>element.Type returns the UML type (e.g. Class, Requirement, Activity).</span>
+<span id="cb8-177"><a href="#cb8-177"></a></span>
+<span id="cb8-178"><a href="#cb8-178"></a><span class="fu">## Connectors</span></span>
+<span id="cb8-179"><a href="#cb8-179"></a></span>
+<span id="cb8-180"><a href="#cb8-180"></a>Architecture is about relationships. In EA, those are represented by</span>
+<span id="cb8-181"><a href="#cb8-181"></a>**Connectors**. An element’s Connectors collection lists all</span>
+<span id="cb8-182"><a href="#cb8-182"></a>relationships where that element is either client or supplier. A</span>
+<span id="cb8-183"><a href="#cb8-183"></a>connector has a Type (“Association,” “Dependency,” “Realisation”), plus</span>
+<span id="cb8-184"><a href="#cb8-184"></a>source and target IDs.</span>
+<span id="cb8-185"><a href="#cb8-185"></a></span>
+<span id="cb8-186"><a href="#cb8-186"></a>A common beginner’s mistake is to assume connectors are directional in a</span>
+<span id="cb8-187"><a href="#cb8-187"></a>UML sense. In practice, EA stores them with ClientID and SupplierID, and</span>
+<span id="cb8-188"><a href="#cb8-188"></a>the interpretation depends on connector type. Scripts must take care to</span>
+<span id="cb8-189"><a href="#cb8-189"></a>assign the correct ends.</span>
+<span id="cb8-190"><a href="#cb8-190"></a></span>
+<span id="cb8-191"><a href="#cb8-191"></a><span class="in">```{.js filename="Example 4.4 – Show connectors from a selected element"}</span></span>
+<span id="cb8-192"><a href="#cb8-192"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-193"><a href="#cb8-193"></a><span class="co">// Example 4.4 – Show connectors from a selected element</span></span>
+<span id="cb8-194"><a href="#cb8-194"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-195"><a href="#cb8-195"></a></span>
+<span id="cb8-196"><a href="#cb8-196"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-197"><a href="#cb8-197"></a></span>
+<span id="cb8-198"><a href="#cb8-198"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-199"><a href="#cb8-199"></a>    <span class="kw">var</span> element <span class="im">as</span> EA<span class="op">.</span><span class="at">Element</span><span class="op">;</span></span>
+<span id="cb8-200"><a href="#cb8-200"></a>    element <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb8-201"><a href="#cb8-201"></a>    <span class="cf">if</span> (<span class="op">!</span>element <span class="op">||</span> element<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement) {</span>
+<span id="cb8-202"><a href="#cb8-202"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select an element in the Project Browser."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb8-203"><a href="#cb8-203"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-204"><a href="#cb8-204"></a>    }</span>
+<span id="cb8-205"><a href="#cb8-205"></a></span>
+<span id="cb8-206"><a href="#cb8-206"></a>    <span class="kw">var</span> connectors <span class="op">=</span> element<span class="op">.</span><span class="at">Connectors</span><span class="op">;</span></span>
+<span id="cb8-207"><a href="#cb8-207"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> connectors<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb8-208"><a href="#cb8-208"></a>        <span class="kw">var</span> conn <span class="op">=</span> connectors<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb8-209"><a href="#cb8-209"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Connector: "</span> <span class="op">+</span> conn<span class="op">.</span><span class="at">Type</span> <span class="op">+</span> </span>
+<span id="cb8-210"><a href="#cb8-210"></a>                       <span class="st">" from "</span> <span class="op">+</span> conn<span class="op">.</span><span class="at">ClientID</span> <span class="op">+</span> </span>
+<span id="cb8-211"><a href="#cb8-211"></a>                       <span class="st">" to "</span> <span class="op">+</span> conn<span class="op">.</span><span class="at">SupplierID</span>)<span class="op">;</span></span>
+<span id="cb8-212"><a href="#cb8-212"></a>    }</span>
+<span id="cb8-213"><a href="#cb8-213"></a>}</span>
+<span id="cb8-214"><a href="#cb8-214"></a></span>
+<span id="cb8-215"><a href="#cb8-215"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-216"><a href="#cb8-216"></a><span class="in">```</span></span>
+<span id="cb8-217"><a href="#cb8-217"></a></span>
+<span id="cb8-218"><a href="#cb8-218"></a>Notes:</span>
+<span id="cb8-219"><a href="#cb8-219"></a></span>
+<span id="cb8-220"><a href="#cb8-220"></a><span class="ss">- </span>Connectors is a collection of relationships.</span>
+<span id="cb8-221"><a href="#cb8-221"></a></span>
+<span id="cb8-222"><a href="#cb8-222"></a><span class="ss">- </span>ClientID and SupplierID are IDs of the connected elements. You can</span>
+<span id="cb8-223"><a href="#cb8-223"></a>  resolve them with Repository.GetElementByID().</span>
+<span id="cb8-224"><a href="#cb8-224"></a></span>
+<span id="cb8-225"><a href="#cb8-225"></a><span class="fu">## Attribute and Method: Details of Elements</span></span>
+<span id="cb8-226"><a href="#cb8-226"></a></span>
+<span id="cb8-227"><a href="#cb8-227"></a>Attributes and methods live inside elements. They are relevant mostly</span>
+<span id="cb8-228"><a href="#cb8-228"></a>for data models and software design. If you are modelling business</span>
+<span id="cb8-229"><a href="#cb8-229"></a>capabilities or processes, you may never touch them. But for class</span>
+<span id="cb8-230"><a href="#cb8-230"></a>modelling, they are essential. The API treats them like small objects</span>
+<span id="cb8-231"><a href="#cb8-231"></a>with Name, Type, Notes, and collections of tagged values.</span>
+<span id="cb8-232"><a href="#cb8-232"></a></span>
+<span id="cb8-233"><a href="#cb8-233"></a><span class="in">```{.js filename="Example 4.5 – Add Attribute and Method"}</span></span>
+<span id="cb8-234"><a href="#cb8-234"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-235"><a href="#cb8-235"></a><span class="co">// Example 4.5 – Add Attribute and Method</span></span>
+<span id="cb8-236"><a href="#cb8-236"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-237"><a href="#cb8-237"></a></span>
+<span id="cb8-238"><a href="#cb8-238"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-239"><a href="#cb8-239"></a></span>
+<span id="cb8-240"><a href="#cb8-240"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-241"><a href="#cb8-241"></a>    <span class="kw">var</span> el <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb8-242"><a href="#cb8-242"></a>    <span class="cf">if</span> (el<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement <span class="op">||</span> el<span class="op">.</span><span class="at">Type</span> <span class="op">!=</span> <span class="st">"Class"</span>) {</span>
+<span id="cb8-243"><a href="#cb8-243"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a Class element first."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb8-244"><a href="#cb8-244"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-245"><a href="#cb8-245"></a>    }</span>
+<span id="cb8-246"><a href="#cb8-246"></a></span>
+<span id="cb8-247"><a href="#cb8-247"></a>    <span class="co">// List existing attributes and methods</span></span>
+<span id="cb8-248"><a href="#cb8-248"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> el<span class="op">.</span><span class="at">Attributes</span><span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>)</span>
+<span id="cb8-249"><a href="#cb8-249"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Attribute: "</span> <span class="op">+</span> el<span class="op">.</span><span class="at">Attributes</span><span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb8-250"><a href="#cb8-250"></a>    <span class="cf">for</span> (<span class="kw">var</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> el<span class="op">.</span><span class="at">Methods</span><span class="op">.</span><span class="at">Count</span><span class="op">;</span> j<span class="op">++</span>)</span>
+<span id="cb8-251"><a href="#cb8-251"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Method: "</span> <span class="op">+</span> el<span class="op">.</span><span class="at">Methods</span><span class="op">.</span><span class="fu">GetAt</span>(j)<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">"()"</span>)<span class="op">;</span></span>
+<span id="cb8-252"><a href="#cb8-252"></a></span>
+<span id="cb8-253"><a href="#cb8-253"></a>    <span class="co">// Add one of each</span></span>
+<span id="cb8-254"><a href="#cb8-254"></a>    el<span class="op">.</span><span class="at">Attributes</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"exampleAttr"</span><span class="op">,</span> <span class="st">"String"</span>)<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb8-255"><a href="#cb8-255"></a>    el<span class="op">.</span><span class="at">Methods</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"exampleMethod"</span><span class="op">,</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb8-256"><a href="#cb8-256"></a>    el<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb8-257"><a href="#cb8-257"></a>    Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(el<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb8-258"><a href="#cb8-258"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Added exampleAttr and exampleMethod."</span>)<span class="op">;</span></span>
+<span id="cb8-259"><a href="#cb8-259"></a>}</span>
+<span id="cb8-260"><a href="#cb8-260"></a></span>
+<span id="cb8-261"><a href="#cb8-261"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-262"><a href="#cb8-262"></a><span class="in">```</span></span>
+<span id="cb8-263"><a href="#cb8-263"></a></span>
+<span id="cb8-264"><a href="#cb8-264"></a><span class="fu">## Tagged Values</span></span>
+<span id="cb8-265"><a href="#cb8-265"></a></span>
+<span id="cb8-266"><a href="#cb8-266"></a>Perhaps the most important part of the API for governance is **Tagged</span>
+<span id="cb8-267"><a href="#cb8-267"></a>Values**. Tagged values let you attach metadata to elements, connectors,</span>
+<span id="cb8-268"><a href="#cb8-268"></a>attributes, and more. They are the bridge between generic modelling and</span>
+<span id="cb8-269"><a href="#cb8-269"></a>your organisation’s specific needs. For example, you can tag every</span>
+<span id="cb8-270"><a href="#cb8-270"></a>application with “Owner” or every requirement with “Source System.”</span>
+<span id="cb8-271"><a href="#cb8-271"></a></span>
+<span id="cb8-272"><a href="#cb8-272"></a>In scripts, tagged values are indispensable. They let you propagate</span>
+<span id="cb8-273"><a href="#cb8-273"></a>metadata, check for compliance, and integrate with external registries.</span>
+<span id="cb8-274"><a href="#cb8-274"></a></span>
+<span id="cb8-275"><a href="#cb8-275"></a><span class="in">```{.js filename="Example 4.6 – Read and update tagged values"}</span></span>
+<span id="cb8-276"><a href="#cb8-276"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-277"><a href="#cb8-277"></a><span class="co">// Example 4.6 – Read and update tagged values</span></span>
+<span id="cb8-278"><a href="#cb8-278"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-279"><a href="#cb8-279"></a></span>
+<span id="cb8-280"><a href="#cb8-280"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-281"><a href="#cb8-281"></a></span>
+<span id="cb8-282"><a href="#cb8-282"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-283"><a href="#cb8-283"></a>    <span class="kw">var</span> element <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb8-284"><a href="#cb8-284"></a>    <span class="cf">if</span> (<span class="op">!</span>element <span class="op">||</span> element<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement) {</span>
+<span id="cb8-285"><a href="#cb8-285"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Please select an element."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb8-286"><a href="#cb8-286"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-287"><a href="#cb8-287"></a>    }</span>
+<span id="cb8-288"><a href="#cb8-288"></a></span>
+<span id="cb8-289"><a href="#cb8-289"></a>    <span class="kw">var</span> tags <span class="op">=</span> element<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb8-290"><a href="#cb8-290"></a>    <span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb8-291"><a href="#cb8-291"></a>        <span class="kw">var</span> tag <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb8-292"><a href="#cb8-292"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Tag: "</span> <span class="op">+</span> tag<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" = "</span> <span class="op">+</span> tag<span class="op">.</span><span class="at">Value</span>)<span class="op">;</span></span>
+<span id="cb8-293"><a href="#cb8-293"></a>    }</span>
+<span id="cb8-294"><a href="#cb8-294"></a></span>
+<span id="cb8-295"><a href="#cb8-295"></a>    <span class="co">// Add or update a tagged value</span></span>
+<span id="cb8-296"><a href="#cb8-296"></a>    <span class="kw">var</span> newTag <span class="op">=</span> element<span class="op">.</span><span class="at">TaggedValues</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"Status"</span><span class="op">,</span> <span class="st">"Draft"</span>)<span class="op">;</span></span>
+<span id="cb8-297"><a href="#cb8-297"></a>    newTag<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb8-298"><a href="#cb8-298"></a></span>
+<span id="cb8-299"><a href="#cb8-299"></a>    <span class="co">// Remember to call Update() on the element itself</span></span>
+<span id="cb8-300"><a href="#cb8-300"></a>    element<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb8-301"><a href="#cb8-301"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Tagged value added/updated."</span>)<span class="op">;</span></span>
+<span id="cb8-302"><a href="#cb8-302"></a>}</span>
+<span id="cb8-303"><a href="#cb8-303"></a></span>
+<span id="cb8-304"><a href="#cb8-304"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-305"><a href="#cb8-305"></a><span class="in">```</span></span>
+<span id="cb8-306"><a href="#cb8-306"></a></span>
+<span id="cb8-307"><a href="#cb8-307"></a>Key rules:</span>
+<span id="cb8-308"><a href="#cb8-308"></a></span>
+<span id="cb8-309"><a href="#cb8-309"></a><span class="ss">- </span>Tagged values are stored as a collection on the element.</span>
+<span id="cb8-310"><a href="#cb8-310"></a></span>
+<span id="cb8-311"><a href="#cb8-311"></a><span class="ss">- </span>After modifying, call Update() to persist.</span>
+<span id="cb8-312"><a href="#cb8-312"></a></span>
+<span id="cb8-313"><a href="#cb8-313"></a><span class="ss">- </span>Always refresh the model view if you want changes to show immediately.</span>
+<span id="cb8-314"><a href="#cb8-314"></a></span>
+<span id="cb8-315"><a href="#cb8-315"></a><span class="fu">## SQL vs API</span></span>
+<span id="cb8-316"><a href="#cb8-316"></a></span>
+<span id="cb8-317"><a href="#cb8-317"></a>EA exposes its data model both as an **object API** and as a **database</span>
+<span id="cb8-318"><a href="#cb8-318"></a>schema**. You can query directly with Repository.SQLQuery(sql), which</span>
+<span id="cb8-319"><a href="#cb8-319"></a>returns XML. This is often faster for reads, especially when you need</span>
+<span id="cb8-320"><a href="#cb8-320"></a>thousands of rows. But you should never write to the database directly.</span>
+<span id="cb8-321"><a href="#cb8-321"></a>The object API enforces rules, cascades updates, and ensures integrity.</span>
+<span id="cb8-322"><a href="#cb8-322"></a></span>
+<span id="cb8-323"><a href="#cb8-323"></a>The safe pattern is: **SQL for read, API for write**. Query with SQL,</span>
+<span id="cb8-324"><a href="#cb8-324"></a>act with API.</span>
+<span id="cb8-325"><a href="#cb8-325"></a></span>
+<span id="cb8-326"><a href="#cb8-326"></a><span class="in">```{.js filename="Example 4.7 – Use SQLQuery for performance"}</span></span>
+<span id="cb8-327"><a href="#cb8-327"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-328"><a href="#cb8-328"></a><span class="co">// Example 4.7 – Use SQLQuery for performance</span></span>
+<span id="cb8-329"><a href="#cb8-329"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-330"><a href="#cb8-330"></a></span>
+<span id="cb8-331"><a href="#cb8-331"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-332"><a href="#cb8-332"></a></span>
+<span id="cb8-333"><a href="#cb8-333"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-334"><a href="#cb8-334"></a>    <span class="co">// Simple SQL query – always returns XML</span></span>
+<span id="cb8-335"><a href="#cb8-335"></a>    <span class="kw">var</span> result <span class="op">=</span> Repository<span class="op">.</span><span class="fu">SQLQuery</span>(</span>
+<span id="cb8-336"><a href="#cb8-336"></a>        <span class="st">"SELECT Name FROM t_object WHERE Object_Type='Class'"</span></span>
+<span id="cb8-337"><a href="#cb8-337"></a>        )<span class="op">;</span></span>
+<span id="cb8-338"><a href="#cb8-338"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Result XML: "</span> <span class="op">+</span> result)<span class="op">;</span></span>
+<span id="cb8-339"><a href="#cb8-339"></a>}</span>
+<span id="cb8-340"><a href="#cb8-340"></a></span>
+<span id="cb8-341"><a href="#cb8-341"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-342"><a href="#cb8-342"></a><span class="in">```</span></span>
+<span id="cb8-343"><a href="#cb8-343"></a></span>
+<span id="cb8-344"><a href="#cb8-344"></a><span class="ss">- </span>SQL queries return XML, not rows. You must parse the XML manually.</span>
+<span id="cb8-345"><a href="#cb8-345"></a></span>
+<span id="cb8-346"><a href="#cb8-346"></a><span class="ss">- </span>SQL is much faster for bulk queries but dangerous if you don’t</span>
+<span id="cb8-347"><a href="#cb8-347"></a>  understand EA’s schema.</span>
+<span id="cb8-348"><a href="#cb8-348"></a></span>
+<span id="cb8-349"><a href="#cb8-349"></a><span class="fu">## Update and RefreshModelView</span></span>
+<span id="cb8-350"><a href="#cb8-350"></a></span>
+<span id="cb8-351"><a href="#cb8-351"></a>If there is one golden rule in the EA API, it is this: **nothing changes</span>
+<span id="cb8-352"><a href="#cb8-352"></a>until you call Update()**. Setting element.Name = "X" does nothing</span>
+<span id="cb8-353"><a href="#cb8-353"></a>unless you follow with element.Update(). Forget this, and you will</span>
+<span id="cb8-354"><a href="#cb8-354"></a>wonder why your script “didn’t work.”</span>
+<span id="cb8-355"><a href="#cb8-355"></a></span>
+<span id="cb8-356"><a href="#cb8-356"></a>The second golden rule is: **the UI doesn’t refresh automatically**.</span>
+<span id="cb8-357"><a href="#cb8-357"></a>After bulk changes, call Repository.RefreshModelView() to force the</span>
+<span id="cb8-358"><a href="#cb8-358"></a>Project Browser to update. Without it, changes may exist in the database</span>
+<span id="cb8-359"><a href="#cb8-359"></a>but remain invisible until EA is restarted.</span>
+<span id="cb8-360"><a href="#cb8-360"></a></span>
+<span id="cb8-361"><a href="#cb8-361"></a><span class="fu">## The 80/20 Principle in Practice</span></span>
+<span id="cb8-362"><a href="#cb8-362"></a></span>
+<span id="cb8-363"><a href="#cb8-363"></a>Although EA has many more objects — Diagrams, DiagramObjects, Scenarios,</span>
+<span id="cb8-364"><a href="#cb8-364"></a>Issues, Tests — most automation tasks use the same handful: Repository,</span>
+<span id="cb8-365"><a href="#cb8-365"></a>Package, Element, Connector, Attribute, TaggedValue. Master these, and</span>
+<span id="cb8-366"><a href="#cb8-366"></a>you can already do 80% of practical scripting.</span>
+<span id="cb8-367"><a href="#cb8-367"></a></span>
+<span id="cb8-368"><a href="#cb8-368"></a>The rest of the API is there for advanced needs. You don’t need to learn</span>
+<span id="cb8-369"><a href="#cb8-369"></a>it all at once. By focusing on the essentials, you avoid overwhelm and</span>
+<span id="cb8-370"><a href="#cb8-370"></a>build confidence quickly.</span>
+<span id="cb8-371"><a href="#cb8-371"></a></span>
+<span id="cb8-372"><a href="#cb8-372"></a><span class="fu">## Learning Through Patterns</span></span>
+<span id="cb8-373"><a href="#cb8-373"></a></span>
+<span id="cb8-374"><a href="#cb8-374"></a>The examples later in this chapter illustrate common patterns:</span>
+<span id="cb8-375"><a href="#cb8-375"></a></span>
+<span id="cb8-376"><a href="#cb8-376"></a><span class="ss">- </span>Traversal (loop through all elements in a package).</span>
+<span id="cb8-377"><a href="#cb8-377"></a></span>
+<span id="cb8-378"><a href="#cb8-378"></a><span class="ss">- </span>Creation (add a new element and update).</span>
+<span id="cb8-379"><a href="#cb8-379"></a></span>
+<span id="cb8-380"><a href="#cb8-380"></a><span class="ss">- </span>Relationship management (add connectors).</span>
+<span id="cb8-381"><a href="#cb8-381"></a></span>
+<span id="cb8-382"><a href="#cb8-382"></a><span class="ss">- </span>Metadata (set tagged values).</span>
+<span id="cb8-383"><a href="#cb8-383"></a></span>
+<span id="cb8-384"><a href="#cb8-384"></a><span class="ss">- </span>SQL vs object trade-offs (query then act).</span>
+<span id="cb8-385"><a href="#cb8-385"></a></span>
+<span id="cb8-386"><a href="#cb8-386"></a>These patterns recur constantly. Once you know them, you can adapt them</span>
+<span id="cb8-387"><a href="#cb8-387"></a>to almost any task.</span>
+<span id="cb8-388"><a href="#cb8-388"></a></span>
+<span id="cb8-389"><a href="#cb8-389"></a><span class="fu">## Common Pitfalls</span></span>
+<span id="cb8-390"><a href="#cb8-390"></a></span>
+<span id="cb8-391"><a href="#cb8-391"></a>Even at the API essentials level, there are traps:</span>
+<span id="cb8-392"><a href="#cb8-392"></a></span>
+<span id="cb8-393"><a href="#cb8-393"></a><span class="ss">- </span>Misusing EA collections (they are not arrays).</span>
+<span id="cb8-394"><a href="#cb8-394"></a></span>
+<span id="cb8-395"><a href="#cb8-395"></a><span class="ss">- </span>Forgetting Update() or RefreshModelView().</span>
+<span id="cb8-396"><a href="#cb8-396"></a></span>
+<span id="cb8-397"><a href="#cb8-397"></a><span class="ss">- </span>Confusing stereotype with StereotypeEx (use the latter for</span>
+<span id="cb8-398"><a href="#cb8-398"></a>  profile-qualified stereotypes).</span>
+<span id="cb8-399"><a href="#cb8-399"></a></span>
+<span id="cb8-400"><a href="#cb8-400"></a><span class="ss">- </span>Assuming element names are unique (they are not; always prefer GUID or</span>
+<span id="cb8-401"><a href="#cb8-401"></a>  ID).</span>
+<span id="cb8-402"><a href="#cb8-402"></a></span>
+<span id="cb8-403"><a href="#cb8-403"></a><span class="ss">- </span>Overusing Session.Output in large loops (slow).</span>
+<span id="cb8-404"><a href="#cb8-404"></a></span>
+<span id="cb8-405"><a href="#cb8-405"></a>These pitfalls are avoidable once you internalise the essentials.</span>
+<span id="cb8-406"><a href="#cb8-406"></a></span>
+<span id="cb8-407"><a href="#cb8-407"></a><span class="fu">## Looking Ahead</span></span>
+<span id="cb8-408"><a href="#cb8-408"></a></span>
+<span id="cb8-409"><a href="#cb8-409"></a>This chapter covered the essentials: Repository, Package, Element,</span>
+<span id="cb8-410"><a href="#cb8-410"></a>Connector, and TaggedValue. You now know how to retrieve, inspect, and</span>
+<span id="cb8-411"><a href="#cb8-411"></a>modify them. In the next chapter we will look at working **inside EA</span>
+<span id="cb8-412"><a href="#cb8-412"></a>with JScript**, including common pitfalls, utility functions, and</span>
+<span id="cb8-413"><a href="#cb8-413"></a>debugging strategies.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

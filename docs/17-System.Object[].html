@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>17&nbsp; Chapter 16: AI in Daily Workflow – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./18-System.Object[].html" rel="next">
+<link href="./16-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-System.Object[].html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#from-occasional-help-to-daily-companion" id="toc-from-occasional-help-to-daily-companion" class="nav-link active" data-scroll-target="#from-occasional-help-to-daily-companion"><span class="header-section-number">17.1</span> From Occasional Help to Daily Companion</a></li>
+  <li><a href="#the-role-of-a-prompt-library" id="toc-the-role-of-a-prompt-library" class="nav-link" data-scroll-target="#the-role-of-a-prompt-library"><span class="header-section-number">17.2</span> The Role of a Prompt Library</a></li>
+  <li><a href="#automating-boilerplate" id="toc-automating-boilerplate" class="nav-link" data-scroll-target="#automating-boilerplate"><span class="header-section-number">17.3</span> Automating Boilerplate</a></li>
+  <li><a href="#ai-as-a-debugging-partner" id="toc-ai-as-a-debugging-partner" class="nav-link" data-scroll-target="#ai-as-a-debugging-partner"><span class="header-section-number">17.4</span> AI as a Debugging Partner</a></li>
+  <li><a href="#integration-with-version-control" id="toc-integration-with-version-control" class="nav-link" data-scroll-target="#integration-with-version-control"><span class="header-section-number">17.5</span> Integration with Version Control</a></li>
+  <li><a href="#governance-and-reporting" id="toc-governance-and-reporting" class="nav-link" data-scroll-target="#governance-and-reporting"><span class="header-section-number">17.6</span> Governance and Reporting</a></li>
+  <li><a href="#risks-of-daily-ai-use" id="toc-risks-of-daily-ai-use" class="nav-link" data-scroll-target="#risks-of-daily-ai-use"><span class="header-section-number">17.7</span> Risks of Daily AI Use</a></li>
+  <li><a href="#ai-as-a-team-enabler" id="toc-ai-as-a-team-enabler" class="nav-link" data-scroll-target="#ai-as-a-team-enabler"><span class="header-section-number">17.8</span> AI as a Team Enabler</a>
+  <ul class="collapse">
+  <li><a href="#building-habits" id="toc-building-habits" class="nav-link" data-scroll-target="#building-habits"><span class="header-section-number">17.8.1</span> Building Habits</a></li>
+  <li><a href="#build-a-prompt-library" id="toc-build-a-prompt-library" class="nav-link" data-scroll-target="#build-a-prompt-library"><span class="header-section-number">17.8.2</span> Build a Prompt Library</a></li>
+  <li><a href="#use-ai-for-boilerplate" id="toc-use-ai-for-boilerplate" class="nav-link" data-scroll-target="#use-ai-for-boilerplate"><span class="header-section-number">17.8.3</span> Use AI for Boilerplate</a></li>
+  <li><a href="#use-ai-for-daily-queries" id="toc-use-ai-for-daily-queries" class="nav-link" data-scroll-target="#use-ai-for-daily-queries"><span class="header-section-number">17.8.4</span> Use AI for Daily Queries</a></li>
+  <li><a href="#daily-script-with-ai-template" id="toc-daily-script-with-ai-template" class="nav-link" data-scroll-target="#daily-script-with-ai-template"><span class="header-section-number">17.8.5</span> Daily Script with AI Template</a></li>
+  </ul></li>
+  <li><a href="#git-ai-workflow" id="toc-git-ai-workflow" class="nav-link" data-scroll-target="#git-ai-workflow"><span class="header-section-number">17.9</span> Git + AI Workflow</a>
+  <ul class="collapse">
+  <li><a href="#commit-message-prompt" id="toc-commit-message-prompt" class="nav-link" data-scroll-target="#commit-message-prompt"><span class="header-section-number">17.9.1</span> Commit message prompt</a></li>
+  </ul></li>
+  <li><a href="#ai-assisted-governance-check" id="toc-ai-assisted-governance-check" class="nav-link" data-scroll-target="#ai-assisted-governance-check"><span class="header-section-number">17.10</span> AI-Assisted Governance Check</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">17.11</span> Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>By now we have seen how AI can help overcome the blank page problem, generate patterns, translate between languages, and refactor old scripts into safer, clearer versions. All of these uses are valuable, but they still treat AI as something you consult occasionally — a tool you dip into when you need help. The next step is to make AI part of your <strong>daily scripting workflow</strong>.</p>
+<p>This means integrating AI into how you plan, write, document, and share scripts. It means building a personal or team “prompt library” that captures successful ways of asking for code. It means using AI to generate standard headers or loggers automatically. It means involving AI in version control, commit messages, and governance checks. When AI becomes part of your routine, it stops being an add-on and starts being a multiplier.</p>
+<p>This chapter explains what it looks like to work with AI every day as a script writer or modelling architect. It shows how to build habits and structures that make AI useful without making you dependent. It also highlights the risks of over-reliance and the safeguards needed to maintain trust.</p>
+<section id="from-occasional-help-to-daily-companion" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="from-occasional-help-to-daily-companion"><span class="header-section-number">17.1</span> From Occasional Help to Daily Companion</h2>
+<p>For most people, the first time they use AI for scripting is when they are stuck. They don’t know how to write a loop, or they have an old VBScript to translate, or they need a header quickly. That is a good start, but it is still <strong>reactive</strong>: AI is only consulted when there is a problem.</p>
+<p>Daily workflow means turning this reactive use into <strong>proactive integration</strong>. Instead of waiting until you are stuck, you design your process around AI from the start. For example:</p>
+<ul>
+<li><p>Every new script begins with an AI-generated header template.</p></li>
+<li><p>Every new task begins with a search of your prompt library.</p></li>
+<li><p>Every commit is accompanied by an AI-suggested message.</p></li>
+<li><p>Every governance run is explained by an AI-drafted summary.</p></li>
+</ul>
+<p>The point is not that AI replaces your work, but that it saves you from repetitive effort and keeps you moving forward.</p>
+</section>
+<section id="the-role-of-a-prompt-library" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="the-role-of-a-prompt-library"><span class="header-section-number">17.2</span> The Role of a Prompt Library</h2>
+<p>One of the simplest but most effective habits is to maintain a <strong>prompt library</strong>. This is a set of carefully worded instructions you know produce reliable code. For example:</p>
+<ul>
+<li><p>“Write a JScript ES3 script for EA that traverses the selected package, loops with .Count/.GetAt(), and logs each element name to the Output tab. Include DRY_RUN.”</p></li>
+<li><p>“Translate this VBScript into JScript, preserving behaviour, adding DRY_RUN and logging.”</p></li>
+<li><p>“Refactor this script to use backward deletion loops.”</p></li>
+</ul>
+<p>By reusing these prompts, you reduce the chance of errors and improve consistency. You also save time: instead of re-explaining EA’s quirks to AI each time, you paste a standard prompt and focus on the task.</p>
+</section>
+<section id="automating-boilerplate" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="automating-boilerplate"><span class="header-section-number">17.3</span> Automating Boilerplate</h2>
+<p>A surprising amount of scripting effort goes into <strong>boilerplate</strong>: headers, loggers, dry-run wrappers, refresh calls. These are necessary for safety but repetitive to write. AI is very good at generating boilerplate.</p>
+<p>For example, you might ask: <em>“Generate a standard EA script header with fields for Purpose, Usage, Assumptions, Safety, Dependencies, and Update history.”</em> AI will output a block you can paste at the top of every script. You can then refine it once and reuse it many times.</p>
+<p>Similarly, you can ask AI to insert a standard logging helper or dry-run guard into existing scripts. Over time, this ensures all your scripts share a consistent structure.</p>
+</section>
+<section id="ai-as-a-debugging-partner" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="ai-as-a-debugging-partner"><span class="header-section-number">17.4</span> AI as a Debugging Partner</h2>
+<p>Although EA’s scripting environment lacks a debugger, AI can serve as a <strong>debugging partner</strong>. When you get an error, you can paste the message and the relevant code into AI and ask: <em>“Why does this fail in EA JScript?”</em></p>
+<p>AI will often spot issues like:</p>
+<ul>
+<li><p>Using .forEach instead of .GetAt().</p></li>
+<li><p>Forgetting .Update().</p></li>
+<li><p>Using let or const instead of var.</p></li>
+</ul>
+<p>This is not fool-proof, but it gives you quick feedback, reducing trial-and-error.</p>
+</section>
+<section id="integration-with-version-control" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="integration-with-version-control"><span class="header-section-number">17.5</span> Integration with Version Control</h2>
+<p>Many teams now keep their scripts in Git repositories. AI can support this workflow in several ways:</p>
+<ul>
+<li><p><strong>Commit messages</strong>: generate clear, descriptive commit messages summarising what changed.</p></li>
+<li><p><strong>Code reviews</strong>: provide first-pass feedback on whether a script follows safety conventions.</p></li>
+<li><p><strong>Refactoring suggestions</strong>: highlight duplication across scripts.</p></li>
+</ul>
+<p>For example, you might paste a diff into AI and ask: <em>“Summarise these changes in a Git commit message.”</em> It will return a concise summary you can tweak.</p>
+</section>
+<section id="governance-and-reporting" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="governance-and-reporting"><span class="header-section-number">17.6</span> Governance and Reporting</h2>
+<p>AI can also help with governance reporting. After running a governance script that logs issues to CSV, you can feed the results into AI and ask for a plain-English summary: <em>“Explain the key issues found in this log and suggest actions.”</em></p>
+<p>This does not replace human judgement, but it makes governance outputs easier to digest. Stakeholders see not just a list of IDs but an interpretation.</p>
+</section>
+<section id="risks-of-daily-ai-use" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="risks-of-daily-ai-use"><span class="header-section-number">17.7</span> Risks of Daily AI Use</h2>
+<p>Daily use of AI brings its own risks:</p>
+<ul>
+<li><p><strong>Complacency</strong>: relying on AI to generate boilerplate without understanding it.</p></li>
+<li><p><strong>Over-reliance</strong>: forgetting how to write basic loops yourself.</p></li>
+<li><p><strong>False trust</strong>: assuming AI output is always safe.</p></li>
+<li><p><strong>Data exposure</strong>: pasting sensitive content into AI without considering confidentiality.</p></li>
+</ul>
+<p>To mitigate these risks, you should:</p>
+<ul>
+<li><p>Continue practising core scripting skills.</p></li>
+<li><p>Review AI output critically.</p></li>
+<li><p>Use internal AI deployments where data sensitivity is an issue.</p></li>
+<li><p>Keep your own library of trusted patterns.</p></li>
+</ul>
+</section>
+<section id="ai-as-a-team-enabler" class="level2" data-number="17.8">
+<h2 data-number="17.8" class="anchored" data-anchor-id="ai-as-a-team-enabler"><span class="header-section-number">17.8</span> AI as a Team Enabler</h2>
+<p>AI is not only useful for individuals. Teams can adopt it as a shared resource. For example:</p>
+<ul>
+<li><p>Store prompt templates in the same Git repo as scripts.</p></li>
+<li><p>Agree on standard AI guardrails (always include DRY_RUN, never use direct SQL writes).</p></li>
+<li><p>Use AI to explain scripts to non-technical colleagues.</p></li>
+</ul>
+<p>This makes scripting more inclusive. Analysts who cannot code fluently can still understand and contribute by using AI as an interpreter.</p>
+<section id="building-habits" class="level3" data-number="17.8.1">
+<h3 data-number="17.8.1" class="anchored" data-anchor-id="building-habits"><span class="header-section-number">17.8.1</span> Building Habits</h3>
+<p>The key to making AI part of your daily workflow is to build habits:</p>
+<ul>
+<li><p>Start every new script with an AI-generated header.</p></li>
+<li><p>Always run prompts through your standard templates.</p></li>
+<li><p>Use AI for documentation and commit messages.</p></li>
+<li><p>Review output in dry-run mode before trusting it.</p></li>
+</ul>
+<p>Habits ensure consistency and reduce the cognitive load. You don’t have to remember every detail — the process takes care of it.</p>
+</section>
+<section id="build-a-prompt-library" class="level3" data-number="17.8.2">
+<h3 data-number="17.8.2" class="anchored" data-anchor-id="build-a-prompt-library"><span class="header-section-number">17.8.2</span> Build a Prompt Library</h3>
+<p>When you find a prompt that works, don’t rely on memory — <strong>save it</strong>. Treat prompts like reusable code snippets. Keep them in a text file, Git repository, or even within EA as a script comment block.</p>
+<section id="prompt-snippet-saved-for-reuse" class="level4" data-number="17.8.2.1">
+<h4 data-number="17.8.2.1" class="anchored" data-anchor-id="prompt-snippet-saved-for-reuse"><span class="header-section-number">17.8.2.1</span> Prompt snippet saved for reuse</h4>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Prompt: Write a script for Sparx Enterprise Architect using JScript (ES3 only).</p>
+<p>Constraints:</p>
+<p>- Use var (no let/const)</p>
+<p>- EA collections require .Count and .GetAt(i)</p>
+<p>- Use Session.Output (not console.log)</p>
+<p>- Always call Update() after changes</p>
+<p>- Include DRY_RUN flag and verbose comments</p>
+<p>Task: List all Requirement names in a selected package.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="use-ai-for-boilerplate" class="level3" data-number="17.8.3">
+<h3 data-number="17.8.3" class="anchored" data-anchor-id="use-ai-for-boilerplate"><span class="header-section-number">17.8.3</span> Use AI for Boilerplate</h3>
+<p>Instead of re-typing headers or dry-run scaffolding, ask AI to <strong>insert the standard structure</strong> for you.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 16.1 - ListRequirements.js</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Example 16.1 - ListRequirements.js"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">// Example 16.1 - ListRequirements.js</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">// Purpose: Output names of Requirement elements in a package</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">// Usage: Select a package in Project Browser → run</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">// Assumptions: JScript ES3 runtime</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">// Safety: Read-only</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">// Dependencies: none</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">// Update history: 1.0 initial</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">// -------------------------------------------------------</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This header can be generated by AI in seconds and keeps your scripts consistent.</p>
+</section>
+<section id="use-ai-for-daily-queries" class="level3" data-number="17.8.4">
+<h3 data-number="17.8.4" class="anchored" data-anchor-id="use-ai-for-daily-queries"><span class="header-section-number">17.8.4</span> Use AI for Daily Queries</h3>
+<p>You don’t need to remember every API call. Ask AI things like:</p>
+<ul>
+<li><p>“How do I get all connectors from an element in EA JScript?”</p></li>
+<li><p>“Show me how to create a new attribute on a class.”</p></li>
+<li><p>“How do I output the selected diagram’s objects?”</p></li>
+</ul>
+<p>AI can provide scaffolding, but you must <strong>correct it for EA’s environment</strong>.</p>
+</section>
+<section id="daily-script-with-ai-template" class="level3" data-number="17.8.5">
+<h3 data-number="17.8.5" class="anchored" data-anchor-id="daily-script-with-ai-template"><span class="header-section-number">17.8.5</span> Daily Script with AI Template</h3>
+<p>Suppose you often need to <strong>list tagged values</strong> of selected elements. Save a reusable script pattern, which AI can adapt for other tasks.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 16.2 - ListTaggedValues.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Example 16.2 - ListTaggedValues.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">// Example 16.2 - ListTaggedValues.js – JScript (ES3)</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">// Purpose: Show all tagged values for the selected element</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">// Usage: Select element in Project Browser → run script</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">// Safety: Read-only</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb2-10"><a href="#cb2-10"></a>    <span class="kw">var</span> el <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="cf">if</span> (<span class="op">!</span>el <span class="op">||</span> el<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement) {</span>
+<span id="cb2-12"><a href="#cb2-12"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select an element first."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>    }</span>
+<span id="cb2-15"><a href="#cb2-15"></a></span>
+<span id="cb2-16"><a href="#cb2-16"></a>    <span class="kw">var</span> tags <span class="op">=</span> el<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="cf">if</span> (tags<span class="op">.</span><span class="at">Count</span> <span class="op">==</span> <span class="dv">0</span>) {</span>
+<span id="cb2-18"><a href="#cb2-18"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"No tagged values on "</span> <span class="op">+</span> el<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>    }</span>
+<span id="cb2-21"><a href="#cb2-21"></a></span>
+<span id="cb2-22"><a href="#cb2-22"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb2-23"><a href="#cb2-23"></a>        <span class="kw">var</span> tv <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Tag: "</span> <span class="op">+</span> tv<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" = "</span> <span class="op">+</span> tv<span class="op">.</span><span class="at">Value</span>)<span class="op">;</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>    }</span>
+<span id="cb2-26"><a href="#cb2-26"></a>}</span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>When you need a <strong>variation</strong> (e.g.&nbsp;export tags to CSV, update missing tags), prompt AI with <em>“adapt ListTaggedValues.js to write tags to a CSV file, ES3 only”</em>.</p>
+</section>
+</section>
+<section id="git-ai-workflow" class="level2" data-number="17.9">
+<h2 data-number="17.9" class="anchored" data-anchor-id="git-ai-workflow"><span class="header-section-number">17.9</span> Git + AI Workflow</h2>
+<p>Version-control your scripts with Git (or even OneDrive). AI can:</p>
+<ul>
+<li><p>Generate <strong>commit messages</strong> (“Add dry-run safety to SafeRename script”).</p></li>
+<li><p>Suggest <strong>code reviews</strong> (“Highlight where Update() is missing”).</p></li>
+<li><p>Propose <strong>refactors</strong> across multiple scripts.</p></li>
+</ul>
+<section id="commit-message-prompt" class="level3" data-number="17.9.1">
+<h3 data-number="17.9.1" class="anchored" data-anchor-id="commit-message-prompt"><span class="header-section-number">17.9.1</span> Commit message prompt</h3>
+<div class="callout callout-style-default callout-note callout-titled" title="Prompt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Prompt: Write a Git commit message for adding DRY_RUN safety and CSV logging to BulkPrefixRename.js</p>
+</div>
+</div>
+</section>
+</section>
+<section id="ai-assisted-governance-check" class="level2" data-number="17.10">
+<h2 data-number="17.10" class="anchored" data-anchor-id="ai-assisted-governance-check"><span class="header-section-number">17.10</span> AI-Assisted Governance Check</h2>
+<p>Daily workflows often involve governance (naming rules, tags, traceability). Here’s a pattern you can copy, extend, and ask AI to adapt.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">// Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">// Purpose: Report Requirements missing 'Owner' tag</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">// Safety: Read-only; logs only</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb3-9"><a href="#cb3-9"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) { Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb3-11"><a href="#cb3-11"></a></span>
+<span id="cb3-12"><a href="#cb3-12"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>    <span class="kw">var</span> missing<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb3-15"><a href="#cb3-15"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Type</span> <span class="op">==</span> <span class="st">"Requirement"</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu">hasTag</span>(e<span class="op">,</span><span class="st">"Owner"</span>)) {</span>
+<span id="cb3-17"><a href="#cb3-17"></a>            missing<span class="op">++;</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Requirement missing Owner tag: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a>        }</span>
+<span id="cb3-20"><a href="#cb3-20"></a>    }</span>
+<span id="cb3-21"><a href="#cb3-21"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Governance check: "</span> <span class="op">+</span> missing <span class="op">+</span> <span class="st">" missing tags."</span>)<span class="op">;</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23"></a></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="kw">function</span> <span class="fu">hasTag</span>(e<span class="op">,</span> tagName) {</span>
+<span id="cb3-25"><a href="#cb3-25"></a>    <span class="kw">var</span> tags <span class="op">=</span> e<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb3-27"><a href="#cb3-27"></a>        <span class="kw">var</span> t <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a>        <span class="cf">if</span> (t<span class="op">.</span><span class="at">Name</span> <span class="op">==</span> tagName) <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a>    }</span>
+<span id="cb3-30"><a href="#cb3-30"></a>    <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Tomorrow, you might ask AI:</p>
+<p><em>“Extend DailyGovernanceCheck.js to add the tag if missing, with default value ‘ArchitectureTeam’. Keep DRY_RUN enabled.”</em></p>
+<p>AI can refactor this for you, but you must validate the code against EA’s constraints.</p>
+</section>
+<section id="summary" class="level2" data-number="17.11">
+<h2 data-number="17.11" class="anchored" data-anchor-id="summary"><span class="header-section-number">17.11</span> Summary</h2>
+<p>AI becomes part of your <strong>daily workflow</strong> when you:</p>
+<ul>
+<li><p>Save <strong>prompt libraries</strong> for reuse.</p></li>
+<li><p>Use AI to generate <strong>boilerplate headers</strong> and scaffolding.</p></li>
+<li><p>Ask natural-language <strong>API queries</strong> instead of memorising details.</p></li>
+<li><p>Maintain scripts in <strong>Git</strong>, with AI suggesting commit messages and refactors.</p></li>
+<li><p>Start from a <strong>daily pattern script</strong> (like tagged value checks), and let AI adapt it to new use cases.</p></li>
+</ul>
+<p>The key is consistency: you are the architect, AI is your assistant. By building repeatable workflows around AI, you gain speed and safety without losing control.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./16-System.Object[].html" class="pagination-link" aria-label="Chapter 15: AI Refactoring Partner">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./18-System.Object[].html" class="pagination-link" aria-label="Chapter 17: Performance &amp; Scaling">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu"># Chapter 16: AI in Daily Workflow</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a>By now we have seen how AI can help overcome the blank page problem,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>generate patterns, translate between languages, and refactor old scripts</span>
+<span id="cb4-5"><a href="#cb4-5"></a>into safer, clearer versions. All of these uses are valuable, but they</span>
+<span id="cb4-6"><a href="#cb4-6"></a>still treat AI as something you consult occasionally — a tool you dip</span>
+<span id="cb4-7"><a href="#cb4-7"></a>into when you need help. The next step is to make AI part of your</span>
+<span id="cb4-8"><a href="#cb4-8"></a>**daily scripting workflow**.</span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a>This means integrating AI into how you plan, write, document, and share</span>
+<span id="cb4-11"><a href="#cb4-11"></a>scripts. It means building a personal or team “prompt library” that</span>
+<span id="cb4-12"><a href="#cb4-12"></a>captures successful ways of asking for code. It means using AI to</span>
+<span id="cb4-13"><a href="#cb4-13"></a>generate standard headers or loggers automatically. It means involving</span>
+<span id="cb4-14"><a href="#cb4-14"></a>AI in version control, commit messages, and governance checks. When AI</span>
+<span id="cb4-15"><a href="#cb4-15"></a>becomes part of your routine, it stops being an add-on and starts being</span>
+<span id="cb4-16"><a href="#cb4-16"></a>a multiplier.</span>
+<span id="cb4-17"><a href="#cb4-17"></a></span>
+<span id="cb4-18"><a href="#cb4-18"></a>This chapter explains what it looks like to work with AI every day as a</span>
+<span id="cb4-19"><a href="#cb4-19"></a>script writer or modelling architect. It shows how to build habits and</span>
+<span id="cb4-20"><a href="#cb4-20"></a>structures that make AI useful without making you dependent. It also</span>
+<span id="cb4-21"><a href="#cb4-21"></a>highlights the risks of over-reliance and the safeguards needed to</span>
+<span id="cb4-22"><a href="#cb4-22"></a>maintain trust.</span>
+<span id="cb4-23"><a href="#cb4-23"></a></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="fu">## From Occasional Help to Daily Companion</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a></span>
+<span id="cb4-26"><a href="#cb4-26"></a>For most people, the first time they use AI for scripting is when they</span>
+<span id="cb4-27"><a href="#cb4-27"></a>are stuck. They don’t know how to write a loop, or they have an old</span>
+<span id="cb4-28"><a href="#cb4-28"></a>VBScript to translate, or they need a header quickly. That is a good</span>
+<span id="cb4-29"><a href="#cb4-29"></a>start, but it is still **reactive**: AI is only consulted when there is</span>
+<span id="cb4-30"><a href="#cb4-30"></a>a problem.</span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a>Daily workflow means turning this reactive use into **proactive</span>
+<span id="cb4-33"><a href="#cb4-33"></a>integration**. Instead of waiting until you are stuck, you design your</span>
+<span id="cb4-34"><a href="#cb4-34"></a>process around AI from the start. For example:</span>
+<span id="cb4-35"><a href="#cb4-35"></a></span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="ss">- </span>Every new script begins with an AI-generated header template.</span>
+<span id="cb4-37"><a href="#cb4-37"></a></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="ss">- </span>Every new task begins with a search of your prompt library.</span>
+<span id="cb4-39"><a href="#cb4-39"></a></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="ss">- </span>Every commit is accompanied by an AI-suggested message.</span>
+<span id="cb4-41"><a href="#cb4-41"></a></span>
+<span id="cb4-42"><a href="#cb4-42"></a><span class="ss">- </span>Every governance run is explained by an AI-drafted summary.</span>
+<span id="cb4-43"><a href="#cb4-43"></a></span>
+<span id="cb4-44"><a href="#cb4-44"></a>The point is not that AI replaces your work, but that it saves you from</span>
+<span id="cb4-45"><a href="#cb4-45"></a>repetitive effort and keeps you moving forward.</span>
+<span id="cb4-46"><a href="#cb4-46"></a></span>
+<span id="cb4-47"><a href="#cb4-47"></a><span class="fu">## The Role of a Prompt Library</span></span>
+<span id="cb4-48"><a href="#cb4-48"></a></span>
+<span id="cb4-49"><a href="#cb4-49"></a>One of the simplest but most effective habits is to maintain a **prompt</span>
+<span id="cb4-50"><a href="#cb4-50"></a>library**. This is a set of carefully worded instructions you know</span>
+<span id="cb4-51"><a href="#cb4-51"></a>produce reliable code. For example:</span>
+<span id="cb4-52"><a href="#cb4-52"></a></span>
+<span id="cb4-53"><a href="#cb4-53"></a><span class="ss">- </span>“Write a JScript ES3 script for EA that traverses the selected</span>
+<span id="cb4-54"><a href="#cb4-54"></a>  package, loops with .Count/.GetAt(), and logs each element name to the</span>
+<span id="cb4-55"><a href="#cb4-55"></a>  Output tab. Include DRY_RUN.”</span>
+<span id="cb4-56"><a href="#cb4-56"></a></span>
+<span id="cb4-57"><a href="#cb4-57"></a><span class="ss">- </span>“Translate this VBScript into JScript, preserving behaviour, adding</span>
+<span id="cb4-58"><a href="#cb4-58"></a>  DRY_RUN and logging.”</span>
+<span id="cb4-59"><a href="#cb4-59"></a></span>
+<span id="cb4-60"><a href="#cb4-60"></a><span class="ss">- </span>“Refactor this script to use backward deletion loops.”</span>
+<span id="cb4-61"><a href="#cb4-61"></a></span>
+<span id="cb4-62"><a href="#cb4-62"></a>By reusing these prompts, you reduce the chance of errors and improve</span>
+<span id="cb4-63"><a href="#cb4-63"></a>consistency. You also save time: instead of re-explaining EA’s quirks to</span>
+<span id="cb4-64"><a href="#cb4-64"></a>AI each time, you paste a standard prompt and focus on the task.</span>
+<span id="cb4-65"><a href="#cb4-65"></a></span>
+<span id="cb4-66"><a href="#cb4-66"></a><span class="fu">## Automating Boilerplate</span></span>
+<span id="cb4-67"><a href="#cb4-67"></a></span>
+<span id="cb4-68"><a href="#cb4-68"></a>A surprising amount of scripting effort goes into **boilerplate**:</span>
+<span id="cb4-69"><a href="#cb4-69"></a>headers, loggers, dry-run wrappers, refresh calls. These are necessary</span>
+<span id="cb4-70"><a href="#cb4-70"></a>for safety but repetitive to write. AI is very good at generating</span>
+<span id="cb4-71"><a href="#cb4-71"></a>boilerplate.</span>
+<span id="cb4-72"><a href="#cb4-72"></a></span>
+<span id="cb4-73"><a href="#cb4-73"></a>For example, you might ask: *“Generate a standard EA script header with</span>
+<span id="cb4-74"><a href="#cb4-74"></a>fields for Purpose, Usage, Assumptions, Safety, Dependencies, and Update</span>
+<span id="cb4-75"><a href="#cb4-75"></a>history.”* AI will output a block you can paste at the top of every</span>
+<span id="cb4-76"><a href="#cb4-76"></a>script. You can then refine it once and reuse it many times.</span>
+<span id="cb4-77"><a href="#cb4-77"></a></span>
+<span id="cb4-78"><a href="#cb4-78"></a>Similarly, you can ask AI to insert a standard logging helper or dry-run</span>
+<span id="cb4-79"><a href="#cb4-79"></a>guard into existing scripts. Over time, this ensures all your scripts</span>
+<span id="cb4-80"><a href="#cb4-80"></a>share a consistent structure.</span>
+<span id="cb4-81"><a href="#cb4-81"></a></span>
+<span id="cb4-82"><a href="#cb4-82"></a><span class="fu">## AI as a Debugging Partner</span></span>
+<span id="cb4-83"><a href="#cb4-83"></a></span>
+<span id="cb4-84"><a href="#cb4-84"></a>Although EA’s scripting environment lacks a debugger, AI can serve as a</span>
+<span id="cb4-85"><a href="#cb4-85"></a>**debugging partner**. When you get an error, you can paste the message</span>
+<span id="cb4-86"><a href="#cb4-86"></a>and the relevant code into AI and ask: *“Why does this fail in EA</span>
+<span id="cb4-87"><a href="#cb4-87"></a>JScript?”*</span>
+<span id="cb4-88"><a href="#cb4-88"></a></span>
+<span id="cb4-89"><a href="#cb4-89"></a>AI will often spot issues like:</span>
+<span id="cb4-90"><a href="#cb4-90"></a></span>
+<span id="cb4-91"><a href="#cb4-91"></a><span class="ss">- </span>Using .forEach instead of .GetAt().</span>
+<span id="cb4-92"><a href="#cb4-92"></a></span>
+<span id="cb4-93"><a href="#cb4-93"></a><span class="ss">- </span>Forgetting .Update().</span>
+<span id="cb4-94"><a href="#cb4-94"></a></span>
+<span id="cb4-95"><a href="#cb4-95"></a><span class="ss">- </span>Using let or const instead of var.</span>
+<span id="cb4-96"><a href="#cb4-96"></a></span>
+<span id="cb4-97"><a href="#cb4-97"></a>This is not fool-proof, but it gives you quick feedback, reducing</span>
+<span id="cb4-98"><a href="#cb4-98"></a>trial-and-error.</span>
+<span id="cb4-99"><a href="#cb4-99"></a></span>
+<span id="cb4-100"><a href="#cb4-100"></a><span class="fu">## Integration with Version Control</span></span>
+<span id="cb4-101"><a href="#cb4-101"></a></span>
+<span id="cb4-102"><a href="#cb4-102"></a>Many teams now keep their scripts in Git repositories. AI can support</span>
+<span id="cb4-103"><a href="#cb4-103"></a>this workflow in several ways:</span>
+<span id="cb4-104"><a href="#cb4-104"></a></span>
+<span id="cb4-105"><a href="#cb4-105"></a><span class="ss">- </span>**Commit messages**: generate clear, descriptive commit messages</span>
+<span id="cb4-106"><a href="#cb4-106"></a>  summarising what changed.</span>
+<span id="cb4-107"><a href="#cb4-107"></a></span>
+<span id="cb4-108"><a href="#cb4-108"></a><span class="ss">- </span>**Code reviews**: provide first-pass feedback on whether a script</span>
+<span id="cb4-109"><a href="#cb4-109"></a>  follows safety conventions.</span>
+<span id="cb4-110"><a href="#cb4-110"></a></span>
+<span id="cb4-111"><a href="#cb4-111"></a><span class="ss">- </span>**Refactoring suggestions**: highlight duplication across scripts.</span>
+<span id="cb4-112"><a href="#cb4-112"></a></span>
+<span id="cb4-113"><a href="#cb4-113"></a>For example, you might paste a diff into AI and ask: *“Summarise these</span>
+<span id="cb4-114"><a href="#cb4-114"></a>changes in a Git commit message.”* It will return a concise summary you</span>
+<span id="cb4-115"><a href="#cb4-115"></a>can tweak.</span>
+<span id="cb4-116"><a href="#cb4-116"></a></span>
+<span id="cb4-117"><a href="#cb4-117"></a><span class="fu">## Governance and Reporting</span></span>
+<span id="cb4-118"><a href="#cb4-118"></a></span>
+<span id="cb4-119"><a href="#cb4-119"></a>AI can also help with governance reporting. After running a governance</span>
+<span id="cb4-120"><a href="#cb4-120"></a>script that logs issues to CSV, you can feed the results into AI and ask</span>
+<span id="cb4-121"><a href="#cb4-121"></a>for a plain-English summary: *“Explain the key issues found in this log</span>
+<span id="cb4-122"><a href="#cb4-122"></a>and suggest actions.”*</span>
+<span id="cb4-123"><a href="#cb4-123"></a></span>
+<span id="cb4-124"><a href="#cb4-124"></a>This does not replace human judgement, but it makes governance outputs</span>
+<span id="cb4-125"><a href="#cb4-125"></a>easier to digest. Stakeholders see not just a list of IDs but an</span>
+<span id="cb4-126"><a href="#cb4-126"></a>interpretation.</span>
+<span id="cb4-127"><a href="#cb4-127"></a></span>
+<span id="cb4-128"><a href="#cb4-128"></a><span class="fu">## Risks of Daily AI Use</span></span>
+<span id="cb4-129"><a href="#cb4-129"></a></span>
+<span id="cb4-130"><a href="#cb4-130"></a>Daily use of AI brings its own risks:</span>
+<span id="cb4-131"><a href="#cb4-131"></a></span>
+<span id="cb4-132"><a href="#cb4-132"></a><span class="ss">- </span>**Complacency**: relying on AI to generate boilerplate without</span>
+<span id="cb4-133"><a href="#cb4-133"></a>  understanding it.</span>
+<span id="cb4-134"><a href="#cb4-134"></a></span>
+<span id="cb4-135"><a href="#cb4-135"></a><span class="ss">- </span>**Over-reliance**: forgetting how to write basic loops yourself.</span>
+<span id="cb4-136"><a href="#cb4-136"></a></span>
+<span id="cb4-137"><a href="#cb4-137"></a><span class="ss">- </span>**False trust**: assuming AI output is always safe.</span>
+<span id="cb4-138"><a href="#cb4-138"></a></span>
+<span id="cb4-139"><a href="#cb4-139"></a><span class="ss">- </span>**Data exposure**: pasting sensitive content into AI without</span>
+<span id="cb4-140"><a href="#cb4-140"></a>  considering confidentiality.</span>
+<span id="cb4-141"><a href="#cb4-141"></a></span>
+<span id="cb4-142"><a href="#cb4-142"></a>To mitigate these risks, you should:</span>
+<span id="cb4-143"><a href="#cb4-143"></a></span>
+<span id="cb4-144"><a href="#cb4-144"></a><span class="ss">- </span>Continue practising core scripting skills.</span>
+<span id="cb4-145"><a href="#cb4-145"></a></span>
+<span id="cb4-146"><a href="#cb4-146"></a><span class="ss">- </span>Review AI output critically.</span>
+<span id="cb4-147"><a href="#cb4-147"></a></span>
+<span id="cb4-148"><a href="#cb4-148"></a><span class="ss">- </span>Use internal AI deployments where data sensitivity is an issue.</span>
+<span id="cb4-149"><a href="#cb4-149"></a></span>
+<span id="cb4-150"><a href="#cb4-150"></a><span class="ss">- </span>Keep your own library of trusted patterns.</span>
+<span id="cb4-151"><a href="#cb4-151"></a></span>
+<span id="cb4-152"><a href="#cb4-152"></a><span class="fu">## AI as a Team Enabler</span></span>
+<span id="cb4-153"><a href="#cb4-153"></a></span>
+<span id="cb4-154"><a href="#cb4-154"></a>AI is not only useful for individuals. Teams can adopt it as a shared</span>
+<span id="cb4-155"><a href="#cb4-155"></a>resource. For example:</span>
+<span id="cb4-156"><a href="#cb4-156"></a></span>
+<span id="cb4-157"><a href="#cb4-157"></a><span class="ss">- </span>Store prompt templates in the same Git repo as scripts.</span>
+<span id="cb4-158"><a href="#cb4-158"></a></span>
+<span id="cb4-159"><a href="#cb4-159"></a><span class="ss">- </span>Agree on standard AI guardrails (always include DRY_RUN, never use</span>
+<span id="cb4-160"><a href="#cb4-160"></a>  direct SQL writes).</span>
+<span id="cb4-161"><a href="#cb4-161"></a></span>
+<span id="cb4-162"><a href="#cb4-162"></a><span class="ss">- </span>Use AI to explain scripts to non-technical colleagues.</span>
+<span id="cb4-163"><a href="#cb4-163"></a></span>
+<span id="cb4-164"><a href="#cb4-164"></a>This makes scripting more inclusive. Analysts who cannot code fluently</span>
+<span id="cb4-165"><a href="#cb4-165"></a>can still understand and contribute by using AI as an interpreter.</span>
+<span id="cb4-166"><a href="#cb4-166"></a></span>
+<span id="cb4-167"><a href="#cb4-167"></a><span class="fu">### Building Habits</span></span>
+<span id="cb4-168"><a href="#cb4-168"></a></span>
+<span id="cb4-169"><a href="#cb4-169"></a>The key to making AI part of your daily workflow is to build habits:</span>
+<span id="cb4-170"><a href="#cb4-170"></a></span>
+<span id="cb4-171"><a href="#cb4-171"></a><span class="ss">- </span>Start every new script with an AI-generated header.</span>
+<span id="cb4-172"><a href="#cb4-172"></a></span>
+<span id="cb4-173"><a href="#cb4-173"></a><span class="ss">- </span>Always run prompts through your standard templates.</span>
+<span id="cb4-174"><a href="#cb4-174"></a></span>
+<span id="cb4-175"><a href="#cb4-175"></a><span class="ss">- </span>Use AI for documentation and commit messages.</span>
+<span id="cb4-176"><a href="#cb4-176"></a></span>
+<span id="cb4-177"><a href="#cb4-177"></a><span class="ss">- </span>Review output in dry-run mode before trusting it.</span>
+<span id="cb4-178"><a href="#cb4-178"></a></span>
+<span id="cb4-179"><a href="#cb4-179"></a>Habits ensure consistency and reduce the cognitive load. You don’t have</span>
+<span id="cb4-180"><a href="#cb4-180"></a>to remember every detail — the process takes care of it.</span>
+<span id="cb4-181"><a href="#cb4-181"></a></span>
+<span id="cb4-182"><a href="#cb4-182"></a><span class="fu">### Build a Prompt Library</span></span>
+<span id="cb4-183"><a href="#cb4-183"></a></span>
+<span id="cb4-184"><a href="#cb4-184"></a>When you find a prompt that works, don’t rely on memory — **save it**.</span>
+<span id="cb4-185"><a href="#cb4-185"></a>Treat prompts like reusable code snippets. Keep them in a text file, Git</span>
+<span id="cb4-186"><a href="#cb4-186"></a>repository, or even within EA as a script comment block.</span>
+<span id="cb4-187"><a href="#cb4-187"></a></span>
+<span id="cb4-188"><a href="#cb4-188"></a><span class="fu">#### Prompt snippet saved for reuse</span></span>
+<span id="cb4-189"><a href="#cb4-189"></a></span>
+<span id="cb4-190"><a href="#cb4-190"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb4-191"><a href="#cb4-191"></a>Prompt: Write a script for Sparx Enterprise Architect using JScript (ES3</span>
+<span id="cb4-192"><a href="#cb4-192"></a>only).</span>
+<span id="cb4-193"><a href="#cb4-193"></a></span>
+<span id="cb4-194"><a href="#cb4-194"></a>Constraints:</span>
+<span id="cb4-195"><a href="#cb4-195"></a></span>
+<span id="cb4-196"><a href="#cb4-196"></a><span class="sc">\-</span> Use var (no let/const)</span>
+<span id="cb4-197"><a href="#cb4-197"></a></span>
+<span id="cb4-198"><a href="#cb4-198"></a><span class="sc">\-</span> EA collections require .Count and .GetAt(i)</span>
+<span id="cb4-199"><a href="#cb4-199"></a></span>
+<span id="cb4-200"><a href="#cb4-200"></a><span class="sc">\-</span> Use Session.Output (not console.log)</span>
+<span id="cb4-201"><a href="#cb4-201"></a></span>
+<span id="cb4-202"><a href="#cb4-202"></a><span class="sc">\-</span> Always call Update() after changes</span>
+<span id="cb4-203"><a href="#cb4-203"></a></span>
+<span id="cb4-204"><a href="#cb4-204"></a><span class="sc">\-</span> Include DRY_RUN flag and verbose comments</span>
+<span id="cb4-205"><a href="#cb4-205"></a></span>
+<span id="cb4-206"><a href="#cb4-206"></a>Task: List all Requirement names in a selected package.</span>
+<span id="cb4-207"><a href="#cb4-207"></a>::: </span>
+<span id="cb4-208"><a href="#cb4-208"></a></span>
+<span id="cb4-209"><a href="#cb4-209"></a><span class="fu">### Use AI for Boilerplate</span></span>
+<span id="cb4-210"><a href="#cb4-210"></a></span>
+<span id="cb4-211"><a href="#cb4-211"></a>Instead of re-typing headers or dry-run scaffolding, ask AI to **insert</span>
+<span id="cb4-212"><a href="#cb4-212"></a>the standard structure** for you.</span>
+<span id="cb4-213"><a href="#cb4-213"></a><span class="in">```{.js filename="Example 16.1 - ListRequirements.js"}</span></span>
+<span id="cb4-214"><a href="#cb4-214"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-215"><a href="#cb4-215"></a><span class="co">// Example 16.1 - ListRequirements.js</span></span>
+<span id="cb4-216"><a href="#cb4-216"></a><span class="co">// Purpose: Output names of Requirement elements in a package</span></span>
+<span id="cb4-217"><a href="#cb4-217"></a><span class="co">// Usage: Select a package in Project Browser → run</span></span>
+<span id="cb4-218"><a href="#cb4-218"></a><span class="co">// Assumptions: JScript ES3 runtime</span></span>
+<span id="cb4-219"><a href="#cb4-219"></a><span class="co">// Safety: Read-only</span></span>
+<span id="cb4-220"><a href="#cb4-220"></a><span class="co">// Dependencies: none</span></span>
+<span id="cb4-221"><a href="#cb4-221"></a><span class="co">// Update history: 1.0 initial</span></span>
+<span id="cb4-222"><a href="#cb4-222"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-223"><a href="#cb4-223"></a><span class="in">```</span></span>
+<span id="cb4-224"><a href="#cb4-224"></a></span>
+<span id="cb4-225"><a href="#cb4-225"></a>This header can be generated by AI in seconds and keeps your scripts</span>
+<span id="cb4-226"><a href="#cb4-226"></a>consistent.</span>
+<span id="cb4-227"><a href="#cb4-227"></a></span>
+<span id="cb4-228"><a href="#cb4-228"></a><span class="fu">### Use AI for Daily Queries</span></span>
+<span id="cb4-229"><a href="#cb4-229"></a></span>
+<span id="cb4-230"><a href="#cb4-230"></a>You don’t need to remember every API call. Ask AI things like:</span>
+<span id="cb4-231"><a href="#cb4-231"></a></span>
+<span id="cb4-232"><a href="#cb4-232"></a><span class="ss">- </span>“How do I get all connectors from an element in EA JScript?”</span>
+<span id="cb4-233"><a href="#cb4-233"></a></span>
+<span id="cb4-234"><a href="#cb4-234"></a><span class="ss">- </span>“Show me how to create a new attribute on a class.”</span>
+<span id="cb4-235"><a href="#cb4-235"></a></span>
+<span id="cb4-236"><a href="#cb4-236"></a><span class="ss">- </span>“How do I output the selected diagram’s objects?”</span>
+<span id="cb4-237"><a href="#cb4-237"></a></span>
+<span id="cb4-238"><a href="#cb4-238"></a>AI can provide scaffolding, but you must **correct it for EA’s</span>
+<span id="cb4-239"><a href="#cb4-239"></a>environment**.</span>
+<span id="cb4-240"><a href="#cb4-240"></a></span>
+<span id="cb4-241"><a href="#cb4-241"></a><span class="fu">### Daily Script with AI Template</span></span>
+<span id="cb4-242"><a href="#cb4-242"></a></span>
+<span id="cb4-243"><a href="#cb4-243"></a>Suppose you often need to **list tagged values** of selected elements.</span>
+<span id="cb4-244"><a href="#cb4-244"></a>Save a reusable script pattern, which AI can adapt for other tasks.</span>
+<span id="cb4-245"><a href="#cb4-245"></a><span class="in">```{.js filename="Example 16.2 - ListTaggedValues.js – JScript (ES3)"}</span></span>
+<span id="cb4-246"><a href="#cb4-246"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-247"><a href="#cb4-247"></a><span class="co">// Example 16.2 - ListTaggedValues.js – JScript (ES3)</span></span>
+<span id="cb4-248"><a href="#cb4-248"></a><span class="co">// Purpose: Show all tagged values for the selected element</span></span>
+<span id="cb4-249"><a href="#cb4-249"></a><span class="co">// Usage: Select element in Project Browser → run script</span></span>
+<span id="cb4-250"><a href="#cb4-250"></a><span class="co">// Safety: Read-only</span></span>
+<span id="cb4-251"><a href="#cb4-251"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-252"><a href="#cb4-252"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb4-253"><a href="#cb4-253"></a></span>
+<span id="cb4-254"><a href="#cb4-254"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb4-255"><a href="#cb4-255"></a>    <span class="kw">var</span> el <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb4-256"><a href="#cb4-256"></a>    <span class="cf">if</span> (<span class="op">!</span>el <span class="op">||</span> el<span class="op">.</span><span class="at">ObjectType</span> <span class="op">!=</span> otElement) {</span>
+<span id="cb4-257"><a href="#cb4-257"></a>        Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select an element first."</span><span class="op">,</span> promptOK)<span class="op">;</span></span>
+<span id="cb4-258"><a href="#cb4-258"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-259"><a href="#cb4-259"></a>    }</span>
+<span id="cb4-260"><a href="#cb4-260"></a></span>
+<span id="cb4-261"><a href="#cb4-261"></a>    <span class="kw">var</span> tags <span class="op">=</span> el<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb4-262"><a href="#cb4-262"></a>    <span class="cf">if</span> (tags<span class="op">.</span><span class="at">Count</span> <span class="op">==</span> <span class="dv">0</span>) {</span>
+<span id="cb4-263"><a href="#cb4-263"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"No tagged values on "</span> <span class="op">+</span> el<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb4-264"><a href="#cb4-264"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-265"><a href="#cb4-265"></a>    }</span>
+<span id="cb4-266"><a href="#cb4-266"></a></span>
+<span id="cb4-267"><a href="#cb4-267"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb4-268"><a href="#cb4-268"></a>        <span class="kw">var</span> tv <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb4-269"><a href="#cb4-269"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Tag: "</span> <span class="op">+</span> tv<span class="op">.</span><span class="at">Name</span> <span class="op">+</span> <span class="st">" = "</span> <span class="op">+</span> tv<span class="op">.</span><span class="at">Value</span>)<span class="op">;</span></span>
+<span id="cb4-270"><a href="#cb4-270"></a>    }</span>
+<span id="cb4-271"><a href="#cb4-271"></a>}</span>
+<span id="cb4-272"><a href="#cb4-272"></a></span>
+<span id="cb4-273"><a href="#cb4-273"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb4-274"><a href="#cb4-274"></a><span class="in">```</span></span>
+<span id="cb4-275"><a href="#cb4-275"></a></span>
+<span id="cb4-276"><a href="#cb4-276"></a>When you need a **variation** (e.g. export tags to CSV, update missing</span>
+<span id="cb4-277"><a href="#cb4-277"></a>tags), prompt AI with *“adapt ListTaggedValues.js to write tags to a CSV</span>
+<span id="cb4-278"><a href="#cb4-278"></a>file, ES3 only”*.</span>
+<span id="cb4-279"><a href="#cb4-279"></a></span>
+<span id="cb4-280"><a href="#cb4-280"></a><span class="fu">## Git + AI Workflow</span></span>
+<span id="cb4-281"><a href="#cb4-281"></a></span>
+<span id="cb4-282"><a href="#cb4-282"></a>Version-control your scripts with Git (or even OneDrive). AI can:</span>
+<span id="cb4-283"><a href="#cb4-283"></a></span>
+<span id="cb4-284"><a href="#cb4-284"></a><span class="ss">- </span>Generate **commit messages** (“Add dry-run safety to SafeRename</span>
+<span id="cb4-285"><a href="#cb4-285"></a>  script”).</span>
+<span id="cb4-286"><a href="#cb4-286"></a></span>
+<span id="cb4-287"><a href="#cb4-287"></a><span class="ss">- </span>Suggest **code reviews** (“Highlight where Update() is missing”).</span>
+<span id="cb4-288"><a href="#cb4-288"></a></span>
+<span id="cb4-289"><a href="#cb4-289"></a><span class="ss">- </span>Propose **refactors** across multiple scripts.</span>
+<span id="cb4-290"><a href="#cb4-290"></a></span>
+<span id="cb4-291"><a href="#cb4-291"></a><span class="fu">### Commit message prompt</span></span>
+<span id="cb4-292"><a href="#cb4-292"></a></span>
+<span id="cb4-293"><a href="#cb4-293"></a>::: {.callout-note title="Prompt"}</span>
+<span id="cb4-294"><a href="#cb4-294"></a>Prompt: Write a Git commit message for adding DRY_RUN safety and CSV</span>
+<span id="cb4-295"><a href="#cb4-295"></a>logging to BulkPrefixRename.js</span>
+<span id="cb4-296"><a href="#cb4-296"></a>::: </span>
+<span id="cb4-297"><a href="#cb4-297"></a></span>
+<span id="cb4-298"><a href="#cb4-298"></a><span class="fu">## AI-Assisted Governance Check</span></span>
+<span id="cb4-299"><a href="#cb4-299"></a></span>
+<span id="cb4-300"><a href="#cb4-300"></a>Daily workflows often involve governance (naming rules, tags,</span>
+<span id="cb4-301"><a href="#cb4-301"></a>traceability). Here’s a pattern you can copy, extend, and ask AI to</span>
+<span id="cb4-302"><a href="#cb4-302"></a>adapt.</span>
+<span id="cb4-303"><a href="#cb4-303"></a><span class="in">```{.js filename="Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)"}</span></span>
+<span id="cb4-304"><a href="#cb4-304"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-305"><a href="#cb4-305"></a><span class="co">// Example 16.3 - DailyGovernanceCheck.js – JScript (ES3)</span></span>
+<span id="cb4-306"><a href="#cb4-306"></a><span class="co">// Purpose: Report Requirements missing 'Owner' tag</span></span>
+<span id="cb4-307"><a href="#cb4-307"></a><span class="co">// Safety: Read-only; logs only</span></span>
+<span id="cb4-308"><a href="#cb4-308"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb4-309"><a href="#cb4-309"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb4-310"><a href="#cb4-310"></a></span>
+<span id="cb4-311"><a href="#cb4-311"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb4-312"><a href="#cb4-312"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb4-313"><a href="#cb4-313"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) { Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb4-314"><a href="#cb4-314"></a></span>
+<span id="cb4-315"><a href="#cb4-315"></a>    <span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb4-316"><a href="#cb4-316"></a>    <span class="kw">var</span> missing<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-317"><a href="#cb4-317"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb4-318"><a href="#cb4-318"></a>        <span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb4-319"><a href="#cb4-319"></a>        <span class="cf">if</span> (e<span class="op">.</span><span class="at">Type</span> <span class="op">==</span> <span class="st">"Requirement"</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu">hasTag</span>(e<span class="op">,</span><span class="st">"Owner"</span>)) {</span>
+<span id="cb4-320"><a href="#cb4-320"></a>            missing<span class="op">++;</span></span>
+<span id="cb4-321"><a href="#cb4-321"></a>            Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Requirement missing Owner tag: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb4-322"><a href="#cb4-322"></a>        }</span>
+<span id="cb4-323"><a href="#cb4-323"></a>    }</span>
+<span id="cb4-324"><a href="#cb4-324"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Governance check: "</span> <span class="op">+</span> missing <span class="op">+</span> <span class="st">" missing tags."</span>)<span class="op">;</span></span>
+<span id="cb4-325"><a href="#cb4-325"></a>}</span>
+<span id="cb4-326"><a href="#cb4-326"></a></span>
+<span id="cb4-327"><a href="#cb4-327"></a><span class="kw">function</span> <span class="fu">hasTag</span>(e<span class="op">,</span> tagName) {</span>
+<span id="cb4-328"><a href="#cb4-328"></a>    <span class="kw">var</span> tags <span class="op">=</span> e<span class="op">.</span><span class="at">TaggedValues</span><span class="op">;</span></span>
+<span id="cb4-329"><a href="#cb4-329"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">&lt;</span>tags<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb4-330"><a href="#cb4-330"></a>        <span class="kw">var</span> t <span class="op">=</span> tags<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb4-331"><a href="#cb4-331"></a>        <span class="cf">if</span> (t<span class="op">.</span><span class="at">Name</span> <span class="op">==</span> tagName) <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb4-332"><a href="#cb4-332"></a>    }</span>
+<span id="cb4-333"><a href="#cb4-333"></a>    <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb4-334"><a href="#cb4-334"></a>}</span>
+<span id="cb4-335"><a href="#cb4-335"></a><span class="in">```</span></span>
+<span id="cb4-336"><a href="#cb4-336"></a></span>
+<span id="cb4-337"><a href="#cb4-337"></a>Tomorrow, you might ask AI:</span>
+<span id="cb4-338"><a href="#cb4-338"></a></span>
+<span id="cb4-339"><a href="#cb4-339"></a>*“Extend DailyGovernanceCheck.js to add the tag if missing, with default</span>
+<span id="cb4-340"><a href="#cb4-340"></a>value ‘ArchitectureTeam’. Keep DRY_RUN enabled.”*</span>
+<span id="cb4-341"><a href="#cb4-341"></a></span>
+<span id="cb4-342"><a href="#cb4-342"></a>AI can refactor this for you, but you must validate the code against</span>
+<span id="cb4-343"><a href="#cb4-343"></a>EA’s constraints.</span>
+<span id="cb4-344"><a href="#cb4-344"></a></span>
+<span id="cb4-345"><a href="#cb4-345"></a><span class="fu">## Summary</span></span>
+<span id="cb4-346"><a href="#cb4-346"></a></span>
+<span id="cb4-347"><a href="#cb4-347"></a>AI becomes part of your **daily workflow** when you:</span>
+<span id="cb4-348"><a href="#cb4-348"></a></span>
+<span id="cb4-349"><a href="#cb4-349"></a><span class="ss">- </span>Save **prompt libraries** for reuse.</span>
+<span id="cb4-350"><a href="#cb4-350"></a></span>
+<span id="cb4-351"><a href="#cb4-351"></a><span class="ss">- </span>Use AI to generate **boilerplate headers** and scaffolding.</span>
+<span id="cb4-352"><a href="#cb4-352"></a></span>
+<span id="cb4-353"><a href="#cb4-353"></a><span class="ss">- </span>Ask natural-language **API queries** instead of memorising details.</span>
+<span id="cb4-354"><a href="#cb4-354"></a></span>
+<span id="cb4-355"><a href="#cb4-355"></a><span class="ss">- </span>Maintain scripts in **Git**, with AI suggesting commit messages and</span>
+<span id="cb4-356"><a href="#cb4-356"></a>  refactors.</span>
+<span id="cb4-357"><a href="#cb4-357"></a></span>
+<span id="cb4-358"><a href="#cb4-358"></a><span class="ss">- </span>Start from a **daily pattern script** (like tagged value checks), and</span>
+<span id="cb4-359"><a href="#cb4-359"></a>  let AI adapt it to new use cases.</span>
+<span id="cb4-360"><a href="#cb4-360"></a></span>
+<span id="cb4-361"><a href="#cb4-361"></a>The key is consistency: you are the architect, AI is your assistant. By</span>
+<span id="cb4-362"><a href="#cb4-362"></a>building repeatable workflows around AI, you gain speed and safety</span>
+<span id="cb4-363"><a href="#cb4-363"></a>without losing control.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

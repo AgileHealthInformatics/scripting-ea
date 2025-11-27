@@ -1,0 +1,487 @@
+# Appendix E: External Automation Setup
+
+This appendix provides the reusable EAConnect helper class plus the
+configuration details required to build external automation tools
+against Enterprise Architect (EA). It is intended as the “plumbing”
+layer behind the example in **Chapter 6 – External Automation**.
+
+## E.1 Purpose
+
+The EAConnect helper abstracts the complexities of EA’s COM interface
+and standardises safety practices:
+
+- Attaching to or launching EA consistently
+
+- Waiting for the Repository to become available
+
+- Opening models automatically if needed
+
+- Handling bitness and Interop.EA.dll
+
+- Providing safe wrappers for common tasks (find package, add element,
+  add tagged value)
+
+- Enforcing **dry-run by default**
+
+- Writing CSV audit logs with auto-derived filenames
+
+- Refreshing EA’s UI at sensible points
+
+With this helper, your utilities focus on intent rather than
+boilerplate.
+
+## E.2 Usage
+
+A minimal program using the helper:
+
+using System;
+
+using EA;
+
+using EA.Automation; // the helper namespace
+
+class Program
+
+{
+
+\[STAThread\]
+
+static void Main(string\[\] args)
+
+{
+
+using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options { ShowUI =
+true });
+
+Package pkg = ea.GetSelectedPackageOrRoot();
+
+var result = EAConnect.AddElement(ea.Repo, pkg, "DemoClass", "Class",
+
+"Created by EAConnect.", dryRun: true);
+
+Console.WriteLine(result.Summary);
+
+}
+
+}
+
+This pattern keeps the Program.cs short and declarative. All detailed
+logic resides in the helper.
+
+## E.3 The EAConnect Helper Class
+
+//
+=======================================================================
+
+// File: EAConnect.cs
+
+// Project: EA Automation Helper
+
+// Author: \<Your Name\>
+
+// Created: 2025-08-31
+
+// Last Update: 2025-08-31
+
+//
+
+// PURPOSE
+
+// -------
+
+// Provides a safe, reusable abstraction over EA’s COM automation API.
+
+// Handles: attach/launch, repository polling, model open, package
+
+// resolution,
+
+// element creation, tagged value creation, CSV logging, and UI refresh.
+
+//
+
+// USAGE
+
+// -----
+
+// using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options {
+
+// ShowUI = true });
+
+// var pkg = ea.GetSelectedPackageOrRoot();
+
+// var result = EAConnect.AddElement(ea.Repo, pkg, "NewClass", "Class",
+
+// "Notes", true);
+
+// Console.WriteLine(result.Summary);
+
+//
+
+// ASSUMPTIONS
+
+// -----------
+
+// - EA is installed and COM-registered (ProgID = "EA.App").
+
+// - Interop.EA.dll referenced (from EA install folder).
+
+// - Bitness of project matches EA (x64 for EA 64-bit; x86 for 32-bit).
+
+// - .NET project marked \[STAThread\] on entry point.
+
+//
+
+// SAFETY
+
+// ------
+
+// - Dry-run enabled by default in sample programs.
+
+// - CSV audit logging for all writes.
+
+// - UI refresh at batch boundaries only.
+
+//
+
+// DEPENDENCIES
+
+// ------------
+
+// - System.Runtime.InteropServices (Marshal.GetActiveObject).
+
+// - Interop.EA.dll.
+
+//
+
+// UPDATE HISTORY
+
+// --------------
+
+// - 2025-08-31: Initial helper version.
+
+//
+=======================================================================
+
+using System;
+
+using System.IO;
+
+using System.Runtime.InteropServices;
+
+using EA;
+
+namespace EA.Automation
+
+{
+
+public static class EAConnect
+
+{
+
+// Encapsulates a connected EA session
+
+public sealed class Session : IDisposable
+
+{
+
+public EA.App App { get; }
+
+public EA.Repository Repo { get; }
+
+internal Session(EA.App app, EA.Repository repo)
+
+{
+
+App = app;
+
+Repo = repo;
+
+}
+
+public Package GetSelectedPackageOrRoot()
+
+{
+
+Package? pkg = Repo.GetTreeSelectedPackage();
+
+if (pkg != null) return pkg;
+
+if (Repo.Models.Count \> 0) return
+
+> (Package)Repo.Models.GetAt(0);
+
+throw new InvalidOperationException(
+
+> "No package available in repository.");
+
+}
+
+public void Dispose()
+
+{
+
+// Release COM references cleanly
+
+Marshal.ReleaseComObject(Repo);
+
+Marshal.ReleaseComObject(App);
+
+}
+
+}
+
+// Options for attaching or launching EA
+
+public sealed class Options
+
+{
+
+public bool PreferAttach { get; set; } = true;
+
+public bool LaunchIfNotRunning { get; set; } = true;
+
+public string? ModelPath { get; set; }
+
+public bool ShowUI { get; set; } = true;
+
+public int StartupWaitMs { get; set; } = 1500;
+
+public int RepoPollMs { get; set; } = 100;
+
+public int RepoPollMax { get; set; } = 50;
+
+}
+
+// Attach to EA or launch new instance
+
+public static Session AttachOrLaunch(Options? options = null)
+
+{
+
+options ??= new Options();
+
+EA.App? app = null;
+
+if (options.PreferAttach)
+
+{
+
+try { app = (EA.App)Marshal.GetActiveObject("EA.App"); }
+
+catch { /\* none running \*/ }
+
+}
+
+if (app == null && options.LaunchIfNotRunning)
+
+{
+
+> Type t = Type.GetTypeFromProgID("EA.App") ?? throw new
+>
+> InvalidOperationException("EA not installed.");
+
+app = (EA.App)Activator.CreateInstance(t)!;
+
+if (!options.ShowUI) app.Visible = false;
+
+System.Threading.Thread.Sleep(options.StartupWaitMs);
+
+}
+
+if (app == null) throw new InvalidOperationException(
+
+> "Unable to connect to EA.");
+
+EA.Repository repo = app.Repository;
+
+// Poll until repository becomes available
+
+int polls = 0;
+
+while (repo == null && polls \< options.RepoPollMax)
+
+{
+
+System.Threading.Thread.Sleep(options.RepoPollMs);
+
+repo = app.Repository;
+
+polls++;
+
+}
+
+if (repo == null) throw new InvalidOperationException("
+
+> EA.Repository did not initialise.");
+
+if (!string.IsNullOrWhiteSpace(options.ModelPath) &&
+
+> string.IsNullOrWhiteSpace(repo.ConnectionString))
+
+repo.OpenFile(options.ModelPath);
+
+return new Session(app, repo);
+
+}
+
+// Result container
+
+public sealed class Result
+
+{
+
+public int UpdatedCount { get; init; }
+
+public string Summary { get; init; } = "";
+
+public string? LogPath { get; init; }
+
+public string? ElementGuid { get; init; }
+
+}
+
+// Add a new element safely
+
+public static Result AddElement(Repository repo,
+
+> Package targetPackage,
+>
+> string name,
+>
+> string type,
+>
+> string? notes, bool dryRun = true, CsvLogger? logger = null)
+
+{
+
+var el = (Element)targetPackage.Elements.AddNew(name, type);
+
+if (!string.IsNullOrWhiteSpace(notes)) el.Notes = notes;
+
+if (dryRun)
+
+{
+
+logger?.WriteRow(DateTime.Now, "DRYRUN",
+
+> targetPackage.PackageID,
+>
+> "", name, type, notes ?? "");
+
+return new Result { UpdatedCount = 0,
+
+> Summary = \$"\[DRYRUN\] Would create: {name} ({type})" };
+
+}
+
+if (!el.Update())
+
+throw new InvalidOperationException(
+
+> "Element.Update() failed.");
+
+repo.RefreshModelView(targetPackage.PackageID);
+
+logger?.WriteRow(DateTime.Now, "CREATE",
+
+> targetPackage.PackageID,
+>
+> el.ElementGUID, name, type, notes ?? "");
+
+return new Result
+
+{
+
+UpdatedCount = 1,
+
+Summary = \$"Created element: {name} ({type})",
+
+ElementGuid = el.ElementGUID,
+
+LogPath = logger?.Path
+
+};
+
+}
+
+// CSV logger
+
+public sealed class CsvLogger : IDisposable
+
+{
+
+private readonly StreamWriter \_writer;
+
+public string Path { get; }
+
+private CsvLogger(string path)
+
+{
+
+Path = path;
+
+\_writer = new StreamWriter(path, append: false,
+
+> System.Text.Encoding.UTF8);
+
+}
+
+public static CsvLogger Open(string path) =\>
+
+> new CsvLogger(path);
+
+public void WriteHeader(string header) =\>
+
+\_writer.WriteLine(header);
+
+public void WriteRow(params object?\[\] cols)
+
+=\> \_writer.WriteLine(string.Join(",",
+
+> Array.ConvertAll(cols, c =\> c?.ToString() ?? "")));
+
+public void Close() =\> \_writer.Flush();
+
+public void Dispose() =\> \_writer.Dispose();
+
+}
+
+}
+
+}
+
+## E.4 Configuration & Setup
+
+### Bitness
+
+- EA 16+ is usually **64-bit**.
+
+- Match your project’s \<PlatformTarget\> to EA’s bitness (x64 or x86).
+
+### Interop.EA.dll
+
+- Found in EA install folder.
+
+- Add as a reference in your .NET project.
+
+### STAThread
+
+- COM automation requires \[STAThread\] on your entry point.
+
+### Model Files
+
+- Use .qea / .qeax / .eapx.
+
+- Options.ModelPath can auto-open a file if none is open.
+
+### Dry Run & Logging
+
+- Always start in dryRun = true.
+
+- Review the generated CSV log before committing real updates.
+
+### Distribution
+
+- Package as a console utility or integrate into CI/CD.
+
+- Keep EAConnect.cs in a shared library for consistency.

@@ -1,0 +1,266 @@
+# Chapter 6: External Automation
+
+Internal scripts in Enterprise Architect (EA) are perfect for quick
+utilities, governance checks, and tidy-ups that live with the
+repository. Sometimes you need more. Integrations with registries and
+backlog tools, JSON-heavy exports, analytics over thousands of elements,
+CI/CD checks, and richer UX all benefit from **external automation**.
+
+External automation means driving EA from a separate program (e.g.,
+C#/.NET, Python) via EA’s COM interface. Your program attaches to (or
+launches) EA, grabs the same Repository object you use inside scripts,
+and then performs work — with modern language ecosystems, logging,
+tests, packaging, and debugging.
+
+## Why external automation?
+
+- **Modern capabilities**: async, structured logging, JSON, LINQ/pandas.
+
+- **Ecosystem**: proper source control, CI, test frameworks, packaging.
+
+- **Integration**: REST/Graph APIs, registries, issue trackers, data
+  platforms.
+
+- **Maintainability**: clearer separation of concerns and deployable
+  tools.
+
+- **Scale**: process large repositories, batch operations, pipelines.
+
+## How it works (at a glance)
+
+EA registers a COM server (EA.App). Your tool attaches (or launches),
+obtains EA.App.Repository, and then uses the familiar API for packages,
+elements, connectors, diagrams, SQL reads, and so on — just from outside
+EA.
+
+### Example 6.1 — End-to-End External Automation with EAConnect
+
+The example below shows a practical, fully-commented **C#** console
+utility that:
+
+1.  Connects to EA (attach or launch)
+
+2.  Ensures a model is open (optionally open a specified file)
+
+3.  Finds a working package (selected in UI or falls back to first root)
+
+4.  Creates a new Element in that package
+
+5.  Persists and refreshes the UI so the change is immediately visible
+
+The EAConnect helper (namespace EA.Automation) centralises COM wiring,
+timing/polling, and small UX conveniences. The full helper
+implementation and setup guidance live in **Appendix A – EAConnect
+Helper & Setup**.
+
+```{.cs filename="Example 6.1 - EA Automation – Example Utility"}
+// =============================================================================================
+// Example 6.1
+// File:        Program.cs
+// Project:     EA Automation – Example Utility
+// Author:      <Your Name>
+//
+// Created:     2025-08-31
+// Last Update: 2025-08-31
+//
+// PURPOSE
+// -------
+// Demonstrates a practical end-to-end EA automation task using the EAConnect helper:
+//   1) Connect to Enterprise Architect (attach or launch)
+//   2) Ensure a model is open (optionally open a specified .qea/.qeax/.eapx)
+//   3) Identify a target package (selected in the UI or fallback to the first root)
+//   4) Create a new Element in that package
+//   5) Persist and refresh the UI so the user immediately sees the change
+//
+// USAGE
+// -----
+//   From a developer console (matching EA bitness):
+//   MyEaTool.exe "New Class Name" "Class" "Optional notes"
+//   "OptionalProfile::OptionalStereotype"
+//
+//   Arguments (all optional; sensible defaults provided):
+//     [0] name : Element name (default: "New Class")
+//     [1] type : Element type (default: "Class"; e.g., "Component", "Requirement", "UseCase")
+//     [2] notes: Notes/description (default: "Created by example utility.")
+//     [3] stereotypeEx : Fully qualified stereotype (default: none; e.g., "BPMN2.0::Task")
+//
+// PRE-REQUISITES
+// --------------
+// - Windows + .NET 8 (Windows)
+// - <TargetFramework>net8.0-windows</TargetFramework>
+// - <PlatformTarget>x64</PlatformTarget> (for EA 64-bit) or x86 for 32-bit EA
+// - Reference Interop.EA.dll from your EA installation
+// - Entry point marked [STAThread]
+//
+// NOTES
+// -----
+// If nothing is selected in EA’s Project Browser, we default to the first root package.
+// After creating the element, call element.Update() to persist and then refresh the model view.
+// We also advise EA’s UI that the element changed to update open diagrams.
+//
+// UPDATE HISTORY
+// --------------
+// - 2025-08-31: Initial illustrative example.
+// ==============================================================================================
+
+#nullable enable
+using System;
+using EA;
+using EA.Automation;  // EAConnect helper
+
+internal static class Program
+{
+    [STAThread] // EA COM automation expects an STA thread
+    private static void Main(string[] args)
+    {
+// --------------------------------------------
+// 0) Parse command-line args with safe defaults
+// --------------------------------------------
+        string name = args.Length > 0 ? args[0] : "New Class";
+        string type = args.Length > 1 ? args[1] : "Class";
+        string notes = args.Length > 2 ? args[2] : "Created by example utility.";
+        string? stereotype = args.Length > 3 ? args[3] : null;
+
+// Optional: set this if you want to force-opening a specific model file when none is open.
+// If you’re writing a general utility, you might leave it null and let the user open/select.
+        string? modelPath = null;
+// Example:
+// modelPath = @"C:\Users\Public\Documents\Sparx Systems\EA\EA Example.qea";
+
+        Console.WriteLine("EA Automation Example – Add Element to Package");
+        Console.WriteLine($"Requested element: Name='{name}', Type='{type}', StereotypeEx='{stereotype ?? "(none)"}'");
+
+        try
+        {
+            // ------------------------------------------------------------
+            // 1) Connect to EA, ensure a model is open, and show the UI
+            // ------------------------------------------------------------
+            using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options
+            {
+                PreferAttach = true,        // attach to a running EA if possible
+                LaunchIfNotRunning = true,        // otherwise launch a new EA instance
+                ModelPath = modelPath,   // open a known model if none is open
+                ShowUI = true,        // show EA UI so user sees what happens
+                StartupWaitMs = 1500,        // small settle time after opening/launching
+                RepoPollMs = 100,         // poll interval for App.Repository
+                RepoPollMax = 50           // up to 5 seconds for Repo to appear
+            });
+
+            // -----------------------------------------------------------------------
+            // 2) Find the working package: selected package or fallback to root[0]
+            // -----------------------------------------------------------------------
+            Package pkg = ea.GetSelectedPackageOrRoot();
+            Console.WriteLine($"Target package: {pkg.Name} (ID={pkg.PackageID})");
+
+            // --------------------------------------------------------
+            // 3) Create a new element inside that package (core steps)
+            //    - AddNew(name, type)
+            //    - Set optional properties (Notes, StereotypeEx)
+            //    - Update() to persist changes
+            // --------------------------------------------------------
+            Element el = (Element)pkg.Elements.AddNew(name, type);
+
+            if (!string.IsNullOrEmpty(stereotype))
+            {
+                // For MDG types, you can set fully qualified stereotype (e.g., "BPMN2.0::Task")
+                el.StereotypeEx = stereotype;
+            }
+
+            if (!string.IsNullOrWhiteSpace(notes))
+                el.Notes = notes;
+
+            // Persist the new element into the repository
+            if (!el.Update())
+            {
+                // If Update() returns false, EA has an error you can read via
+                // repo.GetLastError()
+                throw new InvalidOperationException("Element.Update() failed.");
+            }
+
+            // ------------------------------------------------------------------------
+            // 4) Refresh EA’s UI so the user immediately sees the new element appear
+            // ------------------------------------------------------------------------
+            // - AdviseElementChange: tells EA something changed – updates any open diagrams
+            // - RefreshModelView   : reloads the package in the Project Browser
+            ea.Repo.AdviseElementChange(el.ElementID);
+            ea.Repo.RefreshModelView(pkg.PackageID);
+
+            Console.WriteLine($"Created: {el.Name} [{el.Type}]");
+            Console.WriteLine($"GUID   : {el.ElementGUID}");
+
+            // -----------------------------------------
+            // 5) Bonus: enumerate elements in the pkg
+            // -----------------------------------------
+            Console.WriteLine();
+            Console.WriteLine("Elements now present in package:");
+            short count = pkg.Elements.Count;
+            for (short i = 0; i < count; i++)
+            {
+                var existing = (Element)pkg.Elements.GetAt(i);
+                Console.WriteLine($"  - {existing.Name} ({existing.Type})");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Done. Press any key to exit.");
+            Console.ReadKey();
+        }
+        catch (Exception ex)
+        {
+// In production tools you might log the stack. For a book example, keep output readable.
+            Console.WriteLine();
+            Console.WriteLine("ERROR:");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine("Tip: Ensure EA is installed (matching x64/x86), Interop.EA.dll is referenced,");
+            Console.WriteLine("     and that a model is open or ModelPath is set.");
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
+    }
+}
+```
+## Trade-offs
+
+**Pros**
+
+- Modern language, logging, testing, and packaging.
+
+- Clear separation from the model repository.
+
+- Works well for integrations, analytics, and pipelines.
+
+- Easier to scale and maintain over time.
+
+**Cons**
+
+- Requires setup (Interop reference, bitness alignment, COM
+  availability).
+
+- Windows/COM dependency.
+
+- Distribution/versioning outside the model.
+
+- Speed + power mean mistakes propagate quickly if you skip safety.
+
+**Safety still matters**
+
+- Prefer **dry-run** patterns and **audit logs** for batch updates.
+
+- Use **SQL-find + API-write** for scale (helper provides this).
+
+- Test on **sandbox repositories** first.
+
+- **Batch** writes and **refresh** the UI once per operation.
+
+## Where this goes next
+
+Most teams adopt a blended approach: internal scripts for quick hygiene;
+external utilities for integrations and heavy lifting; add-ins for
+stable, menu-driven capabilities. With EAConnect, you keep examples
+concise while centralising boilerplate and sharp edges in one place.
+
+See **Appendix A – EAConnect Helper & Setup** for the full helper class
+(verbose header, usage, assumptions, dependencies, and update history),
+plus environment notes (Interop.EA.dll, bitness, COM), optional
+“directory-only” output pickers, CSV logging utilities, a
+curate-then-apply pipeline, and the SQL-accelerated find / API-safe
+write pattern.

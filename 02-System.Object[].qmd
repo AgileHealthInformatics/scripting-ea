@@ -1,0 +1,215 @@
+# Chapter 1: Why Script EA?
+
+Enterprise Architect is a powerful modelling environment out of the box.
+You can draw diagrams, generate documentation, and configure Model
+Driven Generation (MDG) technologies without touching a single line of
+code. So why would anyone want to add scripting on top?
+
+The answer is the same in modelling as it is in software engineering:
+**automation saves time, reduces errors, and enforces consistency**.
+Every modeller has encountered repetitive or fiddly tasks that drag
+attention away from design thinking. With scripting, you can let the
+tool do the heavy lifting.
+
+## Benefits of Automation in Modelling
+
+Scripting opens up the underlying API of EA. That API gives you
+programmatic access to repositories, packages, elements, connectors,
+attributes, tagged values, and diagrams. With it you can:
+
+- **Eliminate repetition.** Instead of manually renaming hundreds of
+  elements, you can script a simple loop that applies a naming rule
+  across the entire model.
+
+- **Standardise quality.** Governance checks, linting rules, and model
+  “smell” detection can run in seconds rather than hours of manual
+  review.
+
+- **Accelerate integration.** Exports to CSV, JSON, or XML can be
+  automated. You can generate reports in custom formats, or sync model
+  content with Jira, Confluence, or Git.
+
+- **Boost productivity.** What once took hours of manual clicking can be
+  done in minutes — freeing modellers to focus on architecture, not
+  administration.
+
+Automation is not about doing something new, but about doing the same
+things faster, more reliably, and at greater scale.
+
+## Typical Use Cases
+
+Some of the most common applications of EA scripting include:
+
+- **Bulk editing.** Update tagged values, stereotypes, or connector
+  types across entire packages.
+
+- **Model hygiene.** Detect and fix duplicates, missing names, or
+  invalid references.
+
+- **Data imports.** Read CSV or Excel files and convert them into EA
+  elements automatically.
+
+- **Round-tripping.** Export a model to JSON or Excel, allow external
+  review, and then re-import changes.
+
+- **Governance and QA.** Apply rules such as “all classes must have
+  documentation” or “all business processes must trace to capabilities.”
+
+- **Integration.** Connect EA to external tools — e.g. push backlog
+  items into Jira, or register metadata in a catalogue.
+
+Each of these tasks is achievable through EA’s menus, but scripting
+transforms them from *manual chores* into *repeatable processes*.
+
+## When Not to Script
+
+Not everything benefits from automation. EA already has built-in
+features that solve common problems. Before reaching for the scripting
+console, ask:
+
+- **Is there a native feature?** Diagram filters, search definitions,
+  model validation, and MDG profiles often cover the same ground.
+
+- **Is the effort justified?** Writing, testing, and maintaining scripts
+  takes time. A one-off change to five elements is faster by hand.
+
+- **Could it cause damage?** Poorly written scripts can corrupt a model
+  — deleting content, overwriting GUIDs, or applying unintended changes
+  at scale.
+
+The golden rule: script only when the benefit outweighs the risk and
+effort.
+
+## Why Scripting Matters for Governance
+
+Beyond productivity, scripting is one of the strongest tools for
+governance. A script does not forget the rules. It applies the same
+checks the same way every time. That makes it a reliable companion in
+quality assurance, regulatory compliance, or enterprise standards
+adoption.
+
+For example, a governance script can enforce naming conventions or
+ensure that all system components are linked to business capabilities.
+This kind of automation embeds policy into practice — turning guidelines
+into enforceable, repeatable checks.
+
+## Your First “Hello EA” Script
+
+Before diving into the technicalities of scripting languages and APIs in
+Chapter 2, it is worth seeing what a minimal script looks like. The
+following example is deliberately simple: it retrieves the package
+currently selected in the Project Browser and lists all the elements it
+contains.
+
+```{.js filename="Example 1.1 - HelloEA"}
+//
+// -----------------------------------------------------------------
+// Example 1.1 – HelloEA
+// Purpose: Output the names of all elements in the selected package
+// -----------------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() 
+  {
+  var package = Repository.GetTreeSelectedPackage();
+  if (!package) 
+    {
+    Session.Prompt("Please select a package in the Project Browser.", promptOK);
+    return;
+    }
+
+  var elements = package.Elements;
+  for (var i = 0; i < elements.Count; i++) 
+    {
+    var element = elements.GetAt(i);
+    Session.Output("Element: " + element.Name);
+    }
+  }
+main();
+```
+
+
+Run this script from the *Scripts* window after selecting a package in
+the Project Browser. The output window will list the names of each
+element in that package. It may not look impressive, but this is the
+scripting equivalent of “Hello World.” It proves the loop works, the API
+responds, and you are in control.
+
+This tiny fragment also illustrates some key rules that will come up
+repeatedly in later chapters:
+
+- EA collections (like package.Elements) are not arrays, so you use
+  .Count and .GetAt(i).
+
+- Update() is required after any change to persist modifications.
+
+- Session.Output() is your friend when debugging.
+
+With this in place, you have taken the first step from *manual modeller*
+to *toolsmith* — someone who bends the tool to fit the workflow, rather
+than the other way round.
+
+## Safe Practice: The Dry Run Principle
+
+Throughout this handbook, you will notice a recurring pattern: every
+modifying script begins with a line like var DRY_RUN = true;. This is
+not cosmetic. It is the single most important safety feature in EA
+scripting. A dry run means the script logs what it *would do*, but does
+not commit changes. Only once the log looks correct do you flip DRY_RUN
+= false and let the script update the repository.
+
+This principle is vital because EA does not have a transaction rollback.
+Once you delete, it is gone. Once you rename, it sticks. Scripts without
+dry-run mode are dangerous. Scripts with dry-run mode are tools of
+governance.
+
+## A Different Way of Modelling
+
+Scripting changes the way you think about modelling. Instead of asking
+*“what diagram should I draw?”* you begin to ask *“what structure should
+I generate?”*. You start to see the repository as data, not just
+pictures. A model becomes a dataset: a structured set of packages,
+elements, and relationships. Scripting makes it possible to treat
+modelling as **data curation**: build, transform, export, integrate.
+
+This shift is liberating. It allows architects to keep models aligned
+with fast-moving environments, to connect architecture with delivery
+tools, and to maintain integrity at scale.
+
+## Preparing for the Examples
+
+The rest of this chapter (and indeed this book) is practical. We will
+show code snippets that run inside EA, fully commented so you understand
+every line. They start simple (“Hello World”), then build into patterns
+for traversal, creation, updating, deleting, and exporting.
+
+Before diving into the examples, remember the key lessons of this
+introduction:
+
+1.  Script when scale, consistency, integration, or governance require
+    it.
+
+2.  Don’t script when EA has a built-in feature that meets your need.
+
+3.  Always script safely: dry-run, backup, and log.
+
+4.  Treat the model as a dataset, not just diagrams.
+
+With these principles, you are ready to move from being a modeller who
+only draws diagrams to an architect who **shapes models
+programmatically**.
+
+## Looking Ahead
+
+This chapter has introduced the “why” of scripting, and given you a
+working starter example. The chapters that follow explain the “how.” We
+will explore the scripting engines available in EA, the core API, and
+the safe patterns you should follow to avoid breaking your model. Later
+parts of this book will offer a cookbook of practical examples, patterns
+for common tasks, and even ways of using AI assistants to accelerate
+script development.
+
+By the end, you should have the confidence to create scripts that save
+time, improve quality, and make Enterprise Architect work for you, not
+the other way around.

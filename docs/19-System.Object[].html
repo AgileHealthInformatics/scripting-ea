@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>19&nbsp; Chapter 18: Integrating with Workflows – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./20-System.Object[].html" rel="next">
+<link href="./18-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./19-System.Object[].html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-integration-matters" id="toc-why-integration-matters" class="nav-link active" data-scroll-target="#why-integration-matters"><span class="header-section-number">19.1</span> Why Integration Matters</a></li>
+  <li><a href="#the-role-of-automation-in-integration" id="toc-the-role-of-automation-in-integration" class="nav-link" data-scroll-target="#the-role-of-automation-in-integration"><span class="header-section-number">19.2</span> The Role of Automation in Integration</a></li>
+  <li><a href="#common-integration-targets" id="toc-common-integration-targets" class="nav-link" data-scroll-target="#common-integration-targets"><span class="header-section-number">19.3</span> Common Integration Targets</a></li>
+  <li><a href="#integration-approaches" id="toc-integration-approaches" class="nav-link" data-scroll-target="#integration-approaches"><span class="header-section-number">19.4</span> Integration Approaches</a>
+  <ul class="collapse">
+  <li><a href="#integration-via-exports" id="toc-integration-via-exports" class="nav-link" data-scroll-target="#integration-via-exports"><span class="header-section-number">19.4.1</span> Integration via Exports</a></li>
+  <li><a href="#integration-via-apis" id="toc-integration-via-apis" class="nav-link" data-scroll-target="#integration-via-apis"><span class="header-section-number">19.4.2</span> Integration via APIs</a></li>
+  <li><a href="#integration-with-git" id="toc-integration-with-git" class="nav-link" data-scroll-target="#integration-with-git"><span class="header-section-number">19.4.3</span> Integration with Git</a></li>
+  <li><a href="#integration-with-analytics" id="toc-integration-with-analytics" class="nav-link" data-scroll-target="#integration-with-analytics"><span class="header-section-number">19.4.4</span> Integration with Analytics</a></li>
+  </ul></li>
+  <li><a href="#the-cultural-dimension-of-integration" id="toc-the-cultural-dimension-of-integration" class="nav-link" data-scroll-target="#the-cultural-dimension-of-integration"><span class="header-section-number">19.5</span> The Cultural Dimension of Integration</a></li>
+  <li><a href="#risks-of-integration" id="toc-risks-of-integration" class="nav-link" data-scroll-target="#risks-of-integration"><span class="header-section-number">19.6</span> Risks of Integration</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">19.7</span> Examples</a>
+  <ul class="collapse">
+  <li><a href="#http-from-jscript-webhooks-simple-posts" id="toc-http-from-jscript-webhooks-simple-posts" class="nav-link" data-scroll-target="#http-from-jscript-webhooks-simple-posts"><span class="header-section-number">19.7.1</span> HTTP from JScript (webhooks &amp; simple POSTs)</a></li>
+  <li><a href="#jira-ea-keys-as-tagged-values" id="toc-jira-ea-keys-as-tagged-values" class="nav-link" data-scroll-target="#jira-ea-keys-as-tagged-values"><span class="header-section-number">19.7.2</span> Jira ⇄ EA (keys as tagged values)</a></li>
+  </ul></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes"><span class="header-section-number">19.8</span> Notes</a>
+  <ul class="collapse">
+  <li><a href="#publish-to-confluence-page-with-a-live-table" id="toc-publish-to-confluence-page-with-a-live-table" class="nav-link" data-scroll-target="#publish-to-confluence-page-with-a-live-table"><span class="header-section-number">19.8.1</span> Publish to Confluence (page with a live table)</a></li>
+  <li><a href="#git-version-control-your-exports-and-script-library" id="toc-git-version-control-your-exports-and-script-library" class="nav-link" data-scroll-target="#git-version-control-your-exports-and-script-library"><span class="header-section-number">19.8.2</span> Git: version control your exports (and script library)</a></li>
+  <li><a href="#registryanalytics-push-ea-metadata-downstream" id="toc-registryanalytics-push-ea-metadata-downstream" class="nav-link" data-scroll-target="#registryanalytics-push-ea-metadata-downstream"><span class="header-section-number">19.8.3</span> Registry/Analytics: push EA metadata downstream</a></li>
+  </ul></li>
+  <li><a href="#secrets-auth-bitness-read-this" id="toc-secrets-auth-bitness-read-this" class="nav-link" data-scroll-target="#secrets-auth-bitness-read-this"><span class="header-section-number">19.9</span> Secrets, auth &amp; bitness (read this!)</a></li>
+  <li><a href="#putting-it-together-one-realistic-flow" id="toc-putting-it-together-one-realistic-flow" class="nav-link" data-scroll-target="#putting-it-together-one-realistic-flow"><span class="header-section-number">19.10</span> Putting it together (one realistic flow)</a></li>
+  <li><a href="#troubleshooting-quick-wins" id="toc-troubleshooting-quick-wins" class="nav-link" data-scroll-target="#troubleshooting-quick-wins"><span class="header-section-number">19.11</span> Troubleshooting quick wins</a></li>
+  <li><a href="#checklist-cheat-sheet" id="toc-checklist-cheat-sheet" class="nav-link" data-scroll-target="#checklist-cheat-sheet"><span class="header-section-number">19.12</span> Checklist (cheat-sheet)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Enterprise Architect is a powerful modelling tool, but if kept in isolation it risks becoming a silo. Models are valuable only when they connect to the wider enterprise environment — to planning tools, collaboration platforms, version control systems, registries, and analytics pipelines. Architects may capture brilliant structures in EA, but if those structures cannot be accessed by colleagues in Jira, shared in Confluence, tracked in Git, or exported to analytics platforms, then their impact is limited.</p>
+<p>This chapter explores the role of scripting and automation in <strong>integrating EA with enterprise workflows</strong>. It explains why integration matters, what types of systems are typically involved, and how automation bridges the gap. It also discusses the cultural implications: how integration makes models more visible, improves collaboration, and embeds architecture more deeply into organisational processes.</p>
+<section id="why-integration-matters" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="why-integration-matters"><span class="header-section-number">19.1</span> Why Integration Matters</h2>
+<p>In most organisations, EA is not the system of record for requirements, issues, or tasks. Those live in Jira, Azure DevOps, or ServiceNow. Nor is EA the publishing platform for architecture views — that role is filled by Confluence, SharePoint, or custom portals. Nor is EA the analytics engine — data warehouses and BI tools play that part.</p>
+<p>If EA is to have influence, it must connect. Integration ensures that architecture does not sit in a closed repository but flows into the daily tools of developers, analysts, managers, and executives. It turns EA from a specialist tool into part of the wider enterprise nervous system.</p>
+</section>
+<section id="the-role-of-automation-in-integration" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="the-role-of-automation-in-integration"><span class="header-section-number">19.2</span> The Role of Automation in Integration</h2>
+<p>Manual integration is possible but unsustainable. You could export CSVs by hand, paste diagrams into Confluence, or retype requirements into Jira. But these manual steps are slow, error-prone, and quickly abandoned.</p>
+<p>Automation transforms integration into a <strong>repeatable, reliable process</strong>. Scripts can pull requirements from Jira nightly, export model summaries to Confluence weekly, or commit EA script libraries into Git with every change. Automation eliminates the friction that often prevents integration from sticking.</p>
+</section>
+<section id="common-integration-targets" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="common-integration-targets"><span class="header-section-number">19.3</span> Common Integration Targets</h2>
+<p>The most frequent systems EA needs to connect with are:</p>
+<ul>
+<li><p><strong>Jira / Azure DevOps</strong> — for requirements, user stories, and tasks.</p></li>
+<li><p><strong>Confluence / SharePoint</strong> — for publishing models, governance reports, and guidance.</p></li>
+<li><p><strong>Git / Version Control</strong> — for managing scripts, MDGs, and sometimes even model fragments.</p></li>
+<li><p><strong>Registries / Catalogs</strong> — for synchronising metadata (applications, datasets, services).</p></li>
+<li><p><strong>Analytics Platforms</strong> — for reporting, dashboards, and quality metrics.</p></li>
+</ul>
+<p>Each of these integrations has different requirements, but the principle is the same: use scripts to extract, transform, and push or pull data.</p>
+</section>
+<section id="integration-approaches" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="integration-approaches"><span class="header-section-number">19.4</span> Integration Approaches</h2>
+<section id="integration-via-exports" class="level3" data-number="19.4.1">
+<h3 data-number="19.4.1" class="anchored" data-anchor-id="integration-via-exports"><span class="header-section-number">19.4.1</span> Integration via Exports</h3>
+<p>The simplest form of integration is export. Scripts can export EA content to CSV, JSON, or XML, which is then consumed by another system. For example:</p>
+<ul>
+<li><p>Exporting all Applications and their Owners to CSV for import into a CMDB.</p></li>
+<li><p>Exporting requirements to JSON for loading into Jira.</p></li>
+<li><p>Exporting governance reports to HTML for Confluence publishing.</p></li>
+</ul>
+<p>Export-based integration is one-way but powerful. It is often the first step towards tighter two-way sync.</p>
+</section>
+<section id="integration-via-apis" class="level3" data-number="19.4.2">
+<h3 data-number="19.4.2" class="anchored" data-anchor-id="integration-via-apis"><span class="header-section-number">19.4.2</span> Integration via APIs</h3>
+<p>More advanced integration uses APIs. Many enterprise systems (Jira, Confluence, ServiceNow) expose REST APIs. External EA scripts in Python or C# can call these APIs to push or pull data in real time. For example:</p>
+<ul>
+<li><p>A Python script reads new Jira issues and creates EA Requirements.</p></li>
+<li><p>A C# utility pushes EA diagrams as images into Confluence pages.</p></li>
+<li><p>A script updates ServiceNow CMDB records based on EA application data.</p></li>
+</ul>
+<p>API integration requires authentication, error handling, and careful mapping between EA objects and external entities, but it enables true synchronisation.</p>
+</section>
+<section id="integration-with-git" class="level3" data-number="19.4.3">
+<h3 data-number="19.4.3" class="anchored" data-anchor-id="integration-with-git"><span class="header-section-number">19.4.3</span> Integration with Git</h3>
+<p>Although EA itself is not a code repository, scripts and MDG definitions benefit from version control. Git provides traceability, collaboration, and rollback. By storing scripts and MDG XML in Git, teams can manage them like any other software artefact.</p>
+<p>Automation helps here too:</p>
+<ul>
+<li><p>Scripts can export to a file system where Git commits are triggered.</p></li>
+<li><p>AI can generate commit messages explaining changes.</p></li>
+<li><p>Governance scripts can check that repositories are up to date.</p></li>
+</ul>
+<p>Git integration makes EA scripting part of the DevOps toolchain.</p>
+</section>
+<section id="integration-with-analytics" class="level3" data-number="19.4.4">
+<h3 data-number="19.4.4" class="anchored" data-anchor-id="integration-with-analytics"><span class="header-section-number">19.4.4</span> Integration with Analytics</h3>
+<p>Another important integration is with analytics platforms. EA contains rich metadata: numbers of requirements, traceability ratios, coverage metrics. But EA’s own reporting is limited. Exporting to CSV, JSON, or direct database queries allows BI tools like Power BI or Tableau to visualise architecture quality.</p>
+<p>Scripting plays a key role here:</p>
+<ul>
+<li><p>Automating exports to CSV nightly.</p></li>
+<li><p>Generating JSON snapshots for ingestion.</p></li>
+<li><p>Curating data (e.g., counting orphaned requirements).</p></li>
+</ul>
+<p>This turns architecture from a static document into a measurable process.</p>
+</section>
+</section>
+<section id="the-cultural-dimension-of-integration" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="the-cultural-dimension-of-integration"><span class="header-section-number">19.5</span> The Cultural Dimension of Integration</h2>
+<p>Integration is not only technical; it changes how people perceive architecture. When requirements flow from Jira into EA automatically, architects are seen as part of the delivery pipeline, not an afterthought. When governance reports appear in Confluence every week, stakeholders see architecture as transparent and accountable. When scripts push metadata into analytics dashboards, leaders see architecture as measurable.</p>
+<p>In this way, integration changes culture: it makes architecture visible, relevant, and trusted.</p>
+</section>
+<section id="risks-of-integration" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="risks-of-integration"><span class="header-section-number">19.6</span> Risks of Integration</h2>
+<p>Integration is powerful but risky. Poorly designed integrations can:</p>
+<ul>
+<li><p>Flood EA with duplicates.</p></li>
+<li><p>Overwrite authoritative data incorrectly.</p></li>
+<li><p>Expose sensitive data via exports.</p></li>
+<li><p>Create brittle dependencies on API versions.</p></li>
+</ul>
+<p>That is why governance principles still apply: dry-run modes, logging, backups, and version control. Integration scripts should be treated with the same rigour as any enterprise software.</p>
+</section>
+<section id="examples" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="examples"><span class="header-section-number">19.7</span> Examples</h2>
+<section id="http-from-jscript-webhooks-simple-posts" class="level3" data-number="19.7.1">
+<h3 data-number="19.7.1" class="anchored" data-anchor-id="http-from-jscript-webhooks-simple-posts"><span class="header-section-number">19.7.1</span> HTTP from JScript (webhooks &amp; simple POSTs)</h3>
+<p>EA’s JScript can call HTTP endpoints via <strong>WinHTTP</strong>. That’s enough to send messages to ChatOps (Teams/Slack) or any webhook.</p>
+<p>⚠️ JScript has <strong>no JSON parser</strong>. Prefer “write JSON out; parse/apply externally.” For push-only notifications, build a small JSON string by hand.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.1 - WebhookNotify.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Example 18.1 - WebhookNotify.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">// Example 18.1 - WebhookNotify.js – JScript (ES3)</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">// Purpose: Send a simple JSON message to a webhook (e.g. Teams/Slack/custom)</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">// Usage: Set WEBHOOK_URL; run to notify about the selected package</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">// Notes: No JSON.parse; we only build a tiny JSON string</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="kw">var</span> WEBHOOK_URL <span class="op">=</span> <span class="st">"https://example.webhook/your-token"</span><span class="op">;</span> <span class="co">// &lt;-- put your webhook here</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) { Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package to announce."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a>    <span class="co">// Build a tiny JSON body (escape quotes and backslashes)</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>    <span class="kw">var</span> body <span class="op">=</span> <span class="st">"{"</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>             <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">title</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">EA Notification</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>             <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">text</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">Package '"</span> <span class="op">+</span> <span class="fu">jsonEscape</span>(pkg<span class="op">.</span><span class="at">Name</span>) <span class="op">+</span> <span class="st">"' (ID "</span> <span class="op">+</span> pkg<span class="op">.</span><span class="at">PackageID</span> <span class="op">+</span> <span class="st">") was processed.</span><span class="sc">\"</span><span class="st">"</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a>             <span class="op">+</span> <span class="st">"}"</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a>    <span class="kw">var</span> ok <span class="op">=</span> <span class="fu">httpPostJson</span>(WEBHOOK_URL<span class="op">,</span> body<span class="op">,</span> <span class="dv">15000</span>)<span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>    Session<span class="op">.</span><span class="fu">Output</span>(ok <span class="op">?</span> <span class="st">"Webhook sent."</span> <span class="op">:</span> <span class="st">"Webhook failed."</span>)<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>}</span>
+<span id="cb1-23"><a href="#cb1-23"></a></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="kw">function</span> <span class="fu">httpPostJson</span>(url<span class="op">,</span> body<span class="op">,</span> timeoutMs) {</span>
+<span id="cb1-25"><a href="#cb1-25"></a>    <span class="cf">try</span> {</span>
+<span id="cb1-26"><a href="#cb1-26"></a>        <span class="kw">var</span> http <span class="op">=</span> <span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"WinHttp.WinHttpRequest.5.1"</span>)<span class="op">;</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>        http<span class="op">.</span><span class="fu">Open</span>(<span class="st">"POST"</span><span class="op">,</span> url<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>        http<span class="op">.</span><span class="fu">SetTimeouts</span>(<span class="dv">5000</span><span class="op">,</span> <span class="dv">5000</span><span class="op">,</span> timeoutMs<span class="op">||</span><span class="dv">15000</span><span class="op">,</span> timeoutMs<span class="op">||</span><span class="dv">15000</span>)<span class="op">;</span> <span class="co">// DNS/connect/send/receive</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>        http<span class="op">.</span><span class="fu">SetRequestHeader</span>(<span class="st">"Content-Type"</span><span class="op">,</span> <span class="st">"application/json"</span>)<span class="op">;</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>        http<span class="op">.</span><span class="fu">Send</span>(body)<span class="op">;</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>        <span class="kw">var</span> status <span class="op">=</span> http<span class="op">.</span><span class="at">Status</span><span class="op">;</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>        <span class="cf">return</span> status <span class="op">&gt;=</span> <span class="dv">200</span> <span class="op">&amp;&amp;</span> status <span class="op">&lt;</span> <span class="dv">300</span><span class="op">;</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>    } <span class="cf">catch</span>(e) {</span>
+<span id="cb1-34"><a href="#cb1-34"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"HTTP error: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>        <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>    }</span>
+<span id="cb1-37"><a href="#cb1-37"></a>}</span>
+<span id="cb1-38"><a href="#cb1-38"></a></span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="kw">function</span> <span class="fu">jsonEscape</span>(s){ s<span class="op">=</span><span class="bu">String</span>(s<span class="op">||</span><span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> s<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">\\</span><span class="ss">/g</span><span class="op">,</span><span class="st">"</span><span class="sc">\\\\</span><span class="st">"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/"/g</span><span class="op">,</span><span class="st">'</span><span class="sc">\\</span><span class="st">"'</span>)<span class="op">;</span> }</span>
+<span id="cb1-40"><a href="#cb1-40"></a></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>When to use:</strong> status pings (“curation ready,” “governance run finished”), small alerts, pipeline handoffs.</p>
+</section>
+<section id="jira-ea-keys-as-tagged-values" class="level3" data-number="19.7.2">
+<h3 data-number="19.7.2" class="anchored" data-anchor-id="jira-ea-keys-as-tagged-values"><span class="header-section-number">19.7.2</span> Jira ⇄ EA (keys as tagged values)</h3>
+<p>Best practice: <strong>store the Jira issue key on the EA element</strong> (e.g., JiraKey tag). Use <strong>external Python</strong> to pull from Jira (robust JSON), then create/update EA Requirements. This keeps identity stable and avoids duplicates.</p>
+<section id="import-jira-issues-ea-requirements-external-python" class="level4" data-number="19.7.2.1">
+<h4 data-number="19.7.2.1" class="anchored" data-anchor-id="import-jira-issues-ea-requirements-external-python"><span class="header-section-number">19.7.2.1</span> Import Jira issues → EA Requirements (external Python)</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)"><pre class="sourceCode numberSource py number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Purpose: Query Jira and sync to EA Requirements (store JiraKey as a tag)</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Safety: Idempotent by key; only updates when values differ</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># Usage: python jira_to_ea_import.py "https://your-jira" "JQL here" 1234</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#   where 1234 is the target PackageID in EA</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="im">import</span> sys, requests, win32com.client</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># --- Config &amp; secrets ---</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>JIRA_BASE   <span class="op">=</span> sys.argv[<span class="dv">1</span>]              <span class="co"># e.g., "https://yourcompany.atlassian.net"</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>JQL         <span class="op">=</span> sys.argv[<span class="dv">2</span>]              <span class="co"># e.g., 'project=ARCH AND issuetype=Requirement'</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>TARGET_PKG  <span class="op">=</span> <span class="bu">int</span>(sys.argv[<span class="dv">3</span>])</span>
+<span id="cb2-14"><a href="#cb2-14"></a>AUTH_USER   <span class="op">=</span> <span class="st">"&lt;jira_user_email&gt;"</span>      <span class="co"># store securely in env/secret store in real use</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>AUTH_TOKEN  <span class="op">=</span> <span class="st">"&lt;jira_api_token&gt;"</span>       <span class="co"># never hardcode in production</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="kw">def</span> ea_get_tag(el, name):</span>
+<span id="cb2-18"><a href="#cb2-18"></a>    tvs <span class="op">=</span> el.TaggedValues</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(tvs.Count):</span>
+<span id="cb2-20"><a href="#cb2-20"></a>        tv <span class="op">=</span> tvs.GetAt(i)</span>
+<span id="cb2-21"><a href="#cb2-21"></a>        <span class="cf">if</span> tv.Name <span class="op">==</span> name:</span>
+<span id="cb2-22"><a href="#cb2-22"></a>            <span class="cf">return</span> tv.Value <span class="kw">or</span> <span class="st">""</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>    <span class="cf">return</span> <span class="st">""</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="kw">def</span> ea_set_tag(el, name, value):</span>
+<span id="cb2-26"><a href="#cb2-26"></a>    tvs <span class="op">=</span> el.TaggedValues</span>
+<span id="cb2-27"><a href="#cb2-27"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(tvs.Count):</span>
+<span id="cb2-28"><a href="#cb2-28"></a>        tv <span class="op">=</span> tvs.GetAt(i)</span>
+<span id="cb2-29"><a href="#cb2-29"></a>        <span class="cf">if</span> tv.Name <span class="op">==</span> name:</span>
+<span id="cb2-30"><a href="#cb2-30"></a>            tv.Value <span class="op">=</span> value<span class="op">;</span> tv.Update()<span class="op">;</span> el.Update()<span class="op">;</span> <span class="cf">return</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a>    nt <span class="op">=</span> tvs.AddNew(name, value)</span>
+<span id="cb2-32"><a href="#cb2-32"></a>    nt.Update()<span class="op">;</span> el.Update()</span>
+<span id="cb2-33"><a href="#cb2-33"></a></span>
+<span id="cb2-34"><a href="#cb2-34"></a><span class="kw">def</span> find_by_name(pkg, name):</span>
+<span id="cb2-35"><a href="#cb2-35"></a>    els <span class="op">=</span> pkg.Elements</span>
+<span id="cb2-36"><a href="#cb2-36"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(els.Count):</span>
+<span id="cb2-37"><a href="#cb2-37"></a>        e <span class="op">=</span> els.GetAt(i)</span>
+<span id="cb2-38"><a href="#cb2-38"></a>        <span class="cf">if</span> e.Name <span class="op">==</span> name <span class="kw">and</span> e.Type <span class="op">==</span> <span class="st">"Requirement"</span>:</span>
+<span id="cb2-39"><a href="#cb2-39"></a>            <span class="cf">return</span> e</span>
+<span id="cb2-40"><a href="#cb2-40"></a>    <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a></span>
+<span id="cb2-42"><a href="#cb2-42"></a><span class="kw">def</span> main():</span>
+<span id="cb2-43"><a href="#cb2-43"></a>    <span class="co"># --- Jira query ---</span></span>
+<span id="cb2-44"><a href="#cb2-44"></a>    s <span class="op">=</span> requests.Session()</span>
+<span id="cb2-45"><a href="#cb2-45"></a>    s.auth <span class="op">=</span> (AUTH_USER, AUTH_TOKEN)</span>
+<span id="cb2-46"><a href="#cb2-46"></a>    s.headers.update({<span class="st">"Accept"</span>: <span class="st">"application/json"</span>})</span>
+<span id="cb2-47"><a href="#cb2-47"></a></span>
+<span id="cb2-48"><a href="#cb2-48"></a>    r <span class="op">=</span> s.get(<span class="ss">f"</span><span class="sc">{</span>JIRA_BASE<span class="sc">}</span><span class="ss">/rest/api/3/search"</span>, params<span class="op">=</span>{<span class="st">"jql"</span>: JQL, <span class="st">"maxResults"</span>: <span class="dv">100</span>})</span>
+<span id="cb2-49"><a href="#cb2-49"></a>    r.raise_for_status()</span>
+<span id="cb2-50"><a href="#cb2-50"></a>    issues <span class="op">=</span> r.json()[<span class="st">"issues"</span>]</span>
+<span id="cb2-51"><a href="#cb2-51"></a></span>
+<span id="cb2-52"><a href="#cb2-52"></a>    <span class="co"># --- EA attach ---</span></span>
+<span id="cb2-53"><a href="#cb2-53"></a>    ea  <span class="op">=</span> win32com.client.Dispatch(<span class="st">"EA.App"</span>)</span>
+<span id="cb2-54"><a href="#cb2-54"></a>    repo<span class="op">=</span> ea.Repository</span>
+<span id="cb2-55"><a href="#cb2-55"></a>    pkg <span class="op">=</span> repo.GetPackageByID(TARGET_PKG)</span>
+<span id="cb2-56"><a href="#cb2-56"></a></span>
+<span id="cb2-57"><a href="#cb2-57"></a>    created, updated <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a>    <span class="cf">for</span> it <span class="kw">in</span> issues:</span>
+<span id="cb2-59"><a href="#cb2-59"></a>        key   <span class="op">=</span> it[<span class="st">"key"</span>]</span>
+<span id="cb2-60"><a href="#cb2-60"></a>        fields<span class="op">=</span> it[<span class="st">"fields"</span>]</span>
+<span id="cb2-61"><a href="#cb2-61"></a>        name  <span class="op">=</span> fields.get(<span class="st">"summary"</span>, key)</span>
+<span id="cb2-62"><a href="#cb2-62"></a>        notes <span class="op">=</span> fields.get(<span class="st">"description"</span>) <span class="kw">or</span> <span class="st">""</span></span>
+<span id="cb2-63"><a href="#cb2-63"></a></span>
+<span id="cb2-64"><a href="#cb2-64"></a>        <span class="co"># Try match by JiraKey tag first</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a>        match <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-66"><a href="#cb2-66"></a>        els <span class="op">=</span> pkg.Elements</span>
+<span id="cb2-67"><a href="#cb2-67"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(els.Count):</span>
+<span id="cb2-68"><a href="#cb2-68"></a>            e <span class="op">=</span> els.GetAt(i)</span>
+<span id="cb2-69"><a href="#cb2-69"></a>            <span class="cf">if</span> ea_get_tag(e, <span class="st">"JiraKey"</span>) <span class="op">==</span> key:</span>
+<span id="cb2-70"><a href="#cb2-70"></a>                match <span class="op">=</span> e<span class="op">;</span> <span class="cf">break</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a></span>
+<span id="cb2-72"><a href="#cb2-72"></a>        <span class="cf">if</span> <span class="kw">not</span> match:</span>
+<span id="cb2-73"><a href="#cb2-73"></a>            <span class="co"># fallback: by name</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a>            match <span class="op">=</span> find_by_name(pkg, name)</span>
+<span id="cb2-75"><a href="#cb2-75"></a></span>
+<span id="cb2-76"><a href="#cb2-76"></a>        <span class="cf">if</span> <span class="kw">not</span> match:</span>
+<span id="cb2-77"><a href="#cb2-77"></a>            <span class="co"># create new</span></span>
+<span id="cb2-78"><a href="#cb2-78"></a>            e <span class="op">=</span> pkg.Elements.AddNew(name, <span class="st">"Requirement"</span>)</span>
+<span id="cb2-79"><a href="#cb2-79"></a>            e.Notes <span class="op">=</span> notes</span>
+<span id="cb2-80"><a href="#cb2-80"></a>            e.Update()</span>
+<span id="cb2-81"><a href="#cb2-81"></a>            ea_set_tag(e, <span class="st">"JiraKey"</span>, key)</span>
+<span id="cb2-82"><a href="#cb2-82"></a>            created <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-83"><a href="#cb2-83"></a>        <span class="cf">else</span>:</span>
+<span id="cb2-84"><a href="#cb2-84"></a>            <span class="co"># update if changed</span></span>
+<span id="cb2-85"><a href="#cb2-85"></a>            dirty <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb2-86"><a href="#cb2-86"></a>            <span class="cf">if</span> (match.Notes <span class="kw">or</span> <span class="st">""</span>) <span class="op">!=</span> (notes <span class="kw">or</span> <span class="st">""</span>):</span>
+<span id="cb2-87"><a href="#cb2-87"></a>                match.Notes <span class="op">=</span> notes<span class="op">;</span> dirty <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-88"><a href="#cb2-88"></a>            <span class="cf">if</span> ea_get_tag(match, <span class="st">"JiraKey"</span>) <span class="op">!=</span> key:</span>
+<span id="cb2-89"><a href="#cb2-89"></a>                ea_set_tag(match, <span class="st">"JiraKey"</span>, key)<span class="op">;</span> dirty <span class="op">=</span> <span class="va">False</span>  <span class="co"># tag helper already updated</span></span>
+<span id="cb2-90"><a href="#cb2-90"></a>            <span class="cf">if</span> dirty:</span>
+<span id="cb2-91"><a href="#cb2-91"></a>                match.Update()<span class="op">;</span> updated <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-92"><a href="#cb2-92"></a></span>
+<span id="cb2-93"><a href="#cb2-93"></a>    <span class="cf">if</span> created <span class="kw">or</span> updated:</span>
+<span id="cb2-94"><a href="#cb2-94"></a>        repo.RefreshModelView(pkg.PackageID)</span>
+<span id="cb2-95"><a href="#cb2-95"></a></span>
+<span id="cb2-96"><a href="#cb2-96"></a>    <span class="bu">print</span>(<span class="ss">f"Done. Created=</span><span class="sc">{</span>created<span class="sc">}</span><span class="ss">, Updated=</span><span class="sc">{</span>updated<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-97"><a href="#cb2-97"></a></span>
+<span id="cb2-98"><a href="#cb2-98"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb2-99"><a href="#cb2-99"></a>    <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&lt;</span> <span class="dv">4</span>:</span>
+<span id="cb2-100"><a href="#cb2-100"></a>        <span class="bu">print</span>(<span class="st">"Usage: python jira_to_ea_import.py &lt;base&gt; &lt;jql&gt; &lt;package_id&gt;"</span>)</span>
+<span id="cb2-101"><a href="#cb2-101"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-102"><a href="#cb2-102"></a>        main()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+</section>
+<section id="notes" class="level2" data-number="19.8">
+<h2 data-number="19.8" class="anchored" data-anchor-id="notes"><span class="header-section-number">19.8</span> Notes</h2>
+<ul>
+<li><p>Use <strong>API tokens</strong> (don’t embed secrets in scripts; prefer env vars/secret stores).</p></li>
+<li><p>Maintain a <strong>JiraKey</strong> tag on each synced element.</p></li>
+<li><p>Extend mapping easily (priority → Status, components → tagged values, etc.).</p></li>
+</ul>
+<section id="publish-to-confluence-page-with-a-live-table" class="level3" data-number="19.8.1">
+<h3 data-number="19.8.1" class="anchored" data-anchor-id="publish-to-confluence-page-with-a-live-table"><span class="header-section-number">19.8.1</span> Publish to Confluence (page with a live table)</h3>
+<p>Typical flow: generate HTML/CSV <strong>inside EA</strong>, then <strong>external Python</strong> updates a Confluence page with the content. Confluence Cloud expects REST + JSON.</p>
+<section id="export-an-html-table-from-ea-in-ea" class="level4" data-number="19.8.1.1">
+<h4 data-number="19.8.1.1" class="anchored" data-anchor-id="export-an-html-table-from-ea-in-ea"><span class="header-section-number">19.8.1.1</span> Export an HTML table from EA (in-EA)</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.3 - ExportHTML_Table.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Example 18.3 - ExportHTML_Table.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">// Example 18.3 - ExportHTML_Table.js – JScript (ES3)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">// Purpose: Export selected package elements as a simple HTML table (for Confluence)</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">// Output: Writes .html to chosen folder</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">function</span> <span class="fu">pickFolder</span>(msg){ <span class="kw">var</span> sh<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Shell.Application"</span>)<span class="op">;</span> <span class="kw">var</span> f<span class="op">=</span>sh<span class="op">.</span><span class="fu">BrowseForFolder</span>(<span class="dv">0</span><span class="op">,</span>msg<span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span>)<span class="op">;</span> <span class="cf">return</span> f<span class="op">?</span>f<span class="op">.</span><span class="at">Self</span><span class="op">.</span><span class="at">Path</span><span class="op">:</span><span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="kw">function</span> <span class="fu">main</span>(){</span>
+<span id="cb3-11"><a href="#cb3-11"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>    <span class="cf">if</span>(<span class="op">!</span>pkg){ Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb3-13"><a href="#cb3-13"></a></span>
+<span id="cb3-14"><a href="#cb3-14"></a>    <span class="kw">var</span> dir <span class="op">=</span> <span class="fu">pickFolder</span>(<span class="st">"Select output folder for HTML"</span>)<span class="op">;</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="cf">if</span>(<span class="op">!</span>dir) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a></span>
+<span id="cb3-17"><a href="#cb3-17"></a>    <span class="kw">var</span> fso<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Scripting.FileSystemObject"</span>)<span class="op">;</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>    <span class="kw">var</span> stamp<span class="op">=</span>(<span class="kw">new</span> <span class="bu">Date</span>())<span class="op">.</span><span class="fu">getTime</span>()<span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a>    <span class="kw">var</span> path <span class="op">=</span> dir<span class="op">+</span><span class="st">"</span><span class="sc">\\</span><span class="st">ea_table_"</span><span class="op">+</span>stamp<span class="op">+</span><span class="st">".html"</span><span class="op">;</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a>    <span class="kw">var</span> file <span class="op">=</span> fso<span class="op">.</span><span class="fu">CreateTextFile</span>(path<span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a></span>
+<span id="cb3-22"><a href="#cb3-22"></a>    file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;table&gt;"</span>)<span class="op">;</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>    file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;"</span>)<span class="op">;</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a></span>
+<span id="cb3-25"><a href="#cb3-25"></a>    <span class="kw">var</span> els<span class="op">=</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span>i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span>i<span class="op">++</span>){</span>
+<span id="cb3-27"><a href="#cb3-27"></a>        <span class="kw">var</span> e<span class="op">=</span>els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a>        file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;tr&gt;&lt;td&gt;"</span><span class="op">+</span>e<span class="op">.</span><span class="at">ElementID</span><span class="op">+</span><span class="st">"&lt;/td&gt;&lt;td&gt;"</span><span class="op">+</span><span class="fu">html</span>(e<span class="op">.</span><span class="at">Name</span>)<span class="op">+</span><span class="st">"&lt;/td&gt;&lt;td&gt;"</span><span class="op">+</span>e<span class="op">.</span><span class="at">Type</span><span class="op">+</span><span class="st">"&lt;/td&gt;&lt;td&gt;"</span><span class="op">+</span>(e<span class="op">.</span><span class="at">Status</span><span class="op">||</span><span class="st">""</span>)<span class="op">+</span><span class="st">"&lt;/td&gt;&lt;/tr&gt;"</span>)<span class="op">;</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a>    }</span>
+<span id="cb3-30"><a href="#cb3-30"></a>    file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;/table&gt;"</span>)<span class="op">;</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a>    file<span class="op">.</span><span class="fu">Close</span>()<span class="op">;</span></span>
+<span id="cb3-32"><a href="#cb3-32"></a></span>
+<span id="cb3-33"><a href="#cb3-33"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"HTML written → "</span><span class="op">+</span>path)<span class="op">;</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a>}</span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="kw">function</span> <span class="fu">html</span>(s){ s<span class="op">=</span><span class="bu">String</span>(s<span class="op">||</span><span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> s<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/&amp;/g</span><span class="op">,</span><span class="st">"&amp;amp;"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/&lt;/g</span><span class="op">,</span><span class="st">"&amp;lt;"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="op">/&gt;/</span>g<span class="op">,</span><span class="st">"&amp;gt;"</span>)<span class="op">;</span> }</span>
+<span id="cb3-36"><a href="#cb3-36"></a></span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="update-or-create-a-confluence-page-external-python" class="level4" data-number="19.8.1.2">
+<h4 data-number="19.8.1.2" class="anchored" data-anchor-id="update-or-create-a-confluence-page-external-python"><span class="header-section-number">19.8.1.2</span> Update or create a Confluence page (external Python)</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.4 - confluence_publish.py – Python 3 (requests)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Example 18.4 - confluence_publish.py – Python 3 (requests)"><pre class="sourceCode numberSource py number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># Example 18.4 - confluence_publish.py – Python 3 (requests)</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># Purpose: Create/update a Confluence page with HTML body</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># Usage: python confluence_publish.py SPACE PAGE_TITLE path\to\ea_table.html</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co"># Notes: Uses "storage" format; increments version when updating</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="im">import</span> sys, requests, json</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a>BASE   <span class="op">=</span> <span class="st">"https://your-domain.atlassian.net/wiki"</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>USER   <span class="op">=</span> <span class="st">"&lt;confluence_user_email&gt;"</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>TOKEN  <span class="op">=</span> <span class="st">"&lt;confluence_api_token&gt;"</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="kw">def</span> find_page(space, title, sess):</span>
+<span id="cb4-14"><a href="#cb4-14"></a>    r <span class="op">=</span> sess.get(<span class="ss">f"</span><span class="sc">{</span>BASE<span class="sc">}</span><span class="ss">/rest/api/content"</span>, params<span class="op">=</span>{<span class="st">"spaceKey"</span>: space, <span class="st">"title"</span>: title})</span>
+<span id="cb4-15"><a href="#cb4-15"></a>    r.raise_for_status()</span>
+<span id="cb4-16"><a href="#cb4-16"></a>    results <span class="op">=</span> r.json().get(<span class="st">"results"</span>, [])</span>
+<span id="cb4-17"><a href="#cb4-17"></a>    <span class="cf">return</span> results[<span class="dv">0</span>] <span class="cf">if</span> results <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="kw">def</span> main():</span>
+<span id="cb4-20"><a href="#cb4-20"></a>    <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&lt;</span> <span class="dv">4</span>:</span>
+<span id="cb4-21"><a href="#cb4-21"></a>        <span class="bu">print</span>(<span class="st">"Usage: confluence_publish.py &lt;SPACE&gt; &lt;TITLE&gt; &lt;HTML_PATH&gt;"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22"></a>        <span class="cf">return</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a></span>
+<span id="cb4-24"><a href="#cb4-24"></a>    space, title, html_path <span class="op">=</span> sys.argv[<span class="dv">1</span>], sys.argv[<span class="dv">2</span>], sys.argv[<span class="dv">3</span>]</span>
+<span id="cb4-25"><a href="#cb4-25"></a>    html <span class="op">=</span> <span class="bu">open</span>(html_path, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>).read()</span>
+<span id="cb4-26"><a href="#cb4-26"></a></span>
+<span id="cb4-27"><a href="#cb4-27"></a>    s <span class="op">=</span> requests.Session()</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    s.auth <span class="op">=</span> (USER, TOKEN)</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    s.headers.update({<span class="st">"Content-Type"</span>: <span class="st">"application/json"</span>})</span>
+<span id="cb4-30"><a href="#cb4-30"></a></span>
+<span id="cb4-31"><a href="#cb4-31"></a>    existing <span class="op">=</span> find_page(space, title, s)</span>
+<span id="cb4-32"><a href="#cb4-32"></a>    <span class="cf">if</span> existing:</span>
+<span id="cb4-33"><a href="#cb4-33"></a>        page_id <span class="op">=</span> existing[<span class="st">"id"</span>]</span>
+<span id="cb4-34"><a href="#cb4-34"></a>        ver <span class="op">=</span> existing[<span class="st">"version"</span>][<span class="st">"number"</span>] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a>        payload <span class="op">=</span> {</span>
+<span id="cb4-36"><a href="#cb4-36"></a>            <span class="st">"id"</span>: page_id,</span>
+<span id="cb4-37"><a href="#cb4-37"></a>            <span class="st">"type"</span>: <span class="st">"page"</span>,</span>
+<span id="cb4-38"><a href="#cb4-38"></a>            <span class="st">"title"</span>: title,</span>
+<span id="cb4-39"><a href="#cb4-39"></a>            <span class="st">"version"</span>: {<span class="st">"number"</span>: ver},</span>
+<span id="cb4-40"><a href="#cb4-40"></a>            <span class="st">"body"</span>: {<span class="st">"storage"</span>: {<span class="st">"value"</span>: html, <span class="st">"representation"</span>: <span class="st">"storage"</span>}}</span>
+<span id="cb4-41"><a href="#cb4-41"></a>        }</span>
+<span id="cb4-42"><a href="#cb4-42"></a>        r <span class="op">=</span> s.put(<span class="ss">f"</span><span class="sc">{</span>BASE<span class="sc">}</span><span class="ss">/rest/api/content/</span><span class="sc">{</span>page_id<span class="sc">}</span><span class="ss">"</span>, data<span class="op">=</span>json.dumps(payload))</span>
+<span id="cb4-43"><a href="#cb4-43"></a>        r.raise_for_status()</span>
+<span id="cb4-44"><a href="#cb4-44"></a>        <span class="bu">print</span>(<span class="ss">f"Updated page </span><span class="sc">{</span>title<span class="sc">}</span><span class="ss"> (id=</span><span class="sc">{</span>page_id<span class="sc">}</span><span class="ss">) to version </span><span class="sc">{</span>ver<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-45"><a href="#cb4-45"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-46"><a href="#cb4-46"></a>        payload <span class="op">=</span> {</span>
+<span id="cb4-47"><a href="#cb4-47"></a>            <span class="st">"type"</span>:<span class="st">"page"</span>,<span class="st">"title"</span>:title,<span class="st">"space"</span>:{<span class="st">"key"</span>:space},</span>
+<span id="cb4-48"><a href="#cb4-48"></a>            <span class="st">"body"</span>:{<span class="st">"storage"</span>:{<span class="st">"value"</span>:html,<span class="st">"representation"</span>:<span class="st">"storage"</span>}}</span>
+<span id="cb4-49"><a href="#cb4-49"></a>        }</span>
+<span id="cb4-50"><a href="#cb4-50"></a>        r <span class="op">=</span> s.post(<span class="ss">f"</span><span class="sc">{</span>BASE<span class="sc">}</span><span class="ss">/rest/api/content"</span>, data<span class="op">=</span>json.dumps(payload))</span>
+<span id="cb4-51"><a href="#cb4-51"></a>        r.raise_for_status()</span>
+<span id="cb4-52"><a href="#cb4-52"></a>        <span class="bu">print</span>(<span class="ss">f"Created page </span><span class="sc">{</span>title<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-53"><a href="#cb4-53"></a></span>
+<span id="cb4-54"><a href="#cb4-54"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb4-55"><a href="#cb4-55"></a>    main()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="git-version-control-your-exports-and-script-library" class="level3" data-number="19.8.2">
+<h3 data-number="19.8.2" class="anchored" data-anchor-id="git-version-control-your-exports-and-script-library"><span class="header-section-number">19.8.2</span> Git: version control your exports (and script library)</h3>
+<p>A simple pattern: export CSV/JSON from EA, then <strong>commit with Git</strong> using the system’s git CLI.</p>
+<section id="run-git-addcommit-from-ea-jscript" class="level4" data-number="19.8.2.1">
+<h4 data-number="19.8.2.1" class="anchored" data-anchor-id="run-git-addcommit-from-ea-jscript"><span class="header-section-number">19.8.2.1</span> Run git add/commit from EA (JScript)</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">// Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">// Purpose: Run 'git add' and 'git commit' for a chosen folder</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">// Usage: Prepare your folder as a git repo; run after exports</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">// Notes: Captures stdout/stderr; commit message is timestamped</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb5-8"><a href="#cb5-8"></a></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="kw">function</span> <span class="fu">pickFolder</span>(m){ <span class="kw">var</span> sh<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Shell.Application"</span>)<span class="op">;</span> <span class="kw">var</span> f<span class="op">=</span>sh<span class="op">.</span><span class="fu">BrowseForFolder</span>(<span class="dv">0</span><span class="op">,</span>m<span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span>)<span class="op">;</span> <span class="cf">return</span> f<span class="op">?</span>f<span class="op">.</span><span class="at">Self</span><span class="op">.</span><span class="at">Path</span><span class="op">:</span><span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb5-10"><a href="#cb5-10"></a></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="kw">function</span> <span class="fu">main</span>(){</span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="kw">var</span> dir <span class="op">=</span> <span class="fu">pickFolder</span>(<span class="st">"Select folder to commit (must be a git repo)"</span>)<span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>    <span class="cf">if</span>(<span class="op">!</span>dir) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a></span>
+<span id="cb5-15"><a href="#cb5-15"></a>    <span class="kw">var</span> shell <span class="op">=</span> <span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"WScript.Shell"</span>)<span class="op">;</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a>    <span class="kw">var</span> cmdAdd <span class="op">=</span> <span class="st">'cmd /c cd /d "'</span> <span class="op">+</span> dir <span class="op">+</span> <span class="st">'" &amp;&amp; git add -A'</span><span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a>    <span class="kw">var</span> cmdCommit <span class="op">=</span> <span class="st">'cmd /c cd /d "'</span> <span class="op">+</span> dir <span class="op">+</span> <span class="st">'" &amp;&amp; git commit -m "EA export '</span><span class="op">+</span>(<span class="kw">new</span> <span class="bu">Date</span>())<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">+</span><span class="st">'"'</span><span class="op">;</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a></span>
+<span id="cb5-19"><a href="#cb5-19"></a>    <span class="fu">execAndLog</span>(shell<span class="op">,</span> cmdAdd)<span class="op">;</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a>    <span class="fu">execAndLog</span>(shell<span class="op">,</span> cmdCommit)<span class="op">;</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a></span>
+<span id="cb5-22"><a href="#cb5-22"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Git commit attempted. Review output above for success/errors."</span>)<span class="op">;</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a>}</span>
+<span id="cb5-24"><a href="#cb5-24"></a></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="kw">function</span> <span class="fu">execAndLog</span>(shell<span class="op">,</span> cmd){</span>
+<span id="cb5-26"><a href="#cb5-26"></a>    <span class="cf">try</span>{</span>
+<span id="cb5-27"><a href="#cb5-27"></a>        <span class="kw">var</span> exec <span class="op">=</span> shell<span class="op">.</span><span class="fu">Exec</span>(cmd)<span class="op">;</span></span>
+<span id="cb5-28"><a href="#cb5-28"></a>        <span class="cf">while</span>(<span class="op">!</span>exec<span class="op">.</span><span class="at">StdOut</span><span class="op">.</span><span class="at">AtEndOfStream</span>){ Session<span class="op">.</span><span class="fu">Output</span>(exec<span class="op">.</span><span class="at">StdOut</span><span class="op">.</span><span class="fu">ReadLine</span>())<span class="op">;</span> }</span>
+<span id="cb5-29"><a href="#cb5-29"></a>        <span class="cf">while</span>(<span class="op">!</span>exec<span class="op">.</span><span class="at">StdErr</span><span class="op">.</span><span class="at">AtEndOfStream</span>){ Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"[ERR] "</span><span class="op">+</span>exec<span class="op">.</span><span class="at">StdErr</span><span class="op">.</span><span class="fu">ReadLine</span>())<span class="op">;</span> }</span>
+<span id="cb5-30"><a href="#cb5-30"></a>    }<span class="cf">catch</span>(e){</span>
+<span id="cb5-31"><a href="#cb5-31"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Exec error: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb5-32"><a href="#cb5-32"></a>    }</span>
+<span id="cb5-33"><a href="#cb5-33"></a>}</span>
+<span id="cb5-34"><a href="#cb5-34"></a></span>
+<span id="cb5-35"><a href="#cb5-35"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Tip: Pair this with the <strong>export scripts</strong> from Chapter 8 to automate a nightly “export → commit” job.</p>
+</section>
+</section>
+<section id="registryanalytics-push-ea-metadata-downstream" class="level3" data-number="19.8.3">
+<h3 data-number="19.8.3" class="anchored" data-anchor-id="registryanalytics-push-ea-metadata-downstream"><span class="header-section-number">19.8.3</span> Registry/Analytics: push EA metadata downstream</h3>
+<p>A common requirement is to feed a <strong>registry</strong> (e.g., a catalog or data platform). Pattern:</p>
+<ol type="1">
+<li><p><strong>Export</strong> tidy JSON/CSV from EA (in-EA).</p></li>
+<li><p><strong>Push</strong> to your API or storage (external Python with requests).</p></li>
+</ol>
+<section id="export-ndjson-one-json-per-line-inside-ea" class="level4" data-number="19.8.3.1">
+<h4 data-number="19.8.3.1" class="anchored" data-anchor-id="export-ndjson-one-json-per-line-inside-ea"><span class="header-section-number">19.8.3.1</span> Export NDJSON (one JSON per line) inside EA</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.6 - Export_NDJSON.js – JScript (ES3)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Example 18.6 - Export_NDJSON.js – JScript (ES3)"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">// Example 18.6 - Export_NDJSON.js – JScript (ES3)</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">// Purpose: Write NDJSON (line-delimited JSON) for easy ingestion</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">function</span> <span class="fu">pickFolder</span>(m){ <span class="kw">var</span> sh<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Shell.Application"</span>)<span class="op">;</span> <span class="kw">var</span> f<span class="op">=</span>sh<span class="op">.</span><span class="fu">BrowseForFolder</span>(<span class="dv">0</span><span class="op">,</span>m<span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span>)<span class="op">;</span> <span class="cf">return</span> f<span class="op">?</span>f<span class="op">.</span><span class="at">Self</span><span class="op">.</span><span class="at">Path</span><span class="op">:</span><span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="kw">function</span> <span class="fu">main</span>(){</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>    <span class="cf">if</span>(<span class="op">!</span>pkg){ Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb6-12"><a href="#cb6-12"></a>    <span class="kw">var</span> dir <span class="op">=</span> <span class="fu">pickFolder</span>(<span class="st">"Select output folder for NDJSON"</span>)<span class="op">;</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a>    <span class="cf">if</span>(<span class="op">!</span>dir) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a></span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="kw">var</span> fso<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Scripting.FileSystemObject"</span>)<span class="op">;</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>    <span class="kw">var</span> path<span class="op">=</span>dir<span class="op">+</span><span class="st">"</span><span class="sc">\\</span><span class="st">ea_export_"</span><span class="op">+</span>(<span class="kw">new</span> <span class="bu">Date</span>())<span class="op">.</span><span class="fu">getTime</span>()<span class="op">+</span><span class="st">".ndjson"</span><span class="op">;</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>    <span class="kw">var</span> file<span class="op">=</span>fso<span class="op">.</span><span class="fu">CreateTextFile</span>(path<span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a></span>
+<span id="cb6-19"><a href="#cb6-19"></a>    <span class="kw">var</span> els<span class="op">=</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span>i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span>i<span class="op">++</span>){</span>
+<span id="cb6-21"><a href="#cb6-21"></a>        <span class="kw">var</span> e<span class="op">=</span>els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a>        <span class="kw">var</span> json <span class="op">=</span> <span class="st">"{"</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">id</span><span class="sc">\"</span><span class="st">:"</span> <span class="op">+</span> e<span class="op">.</span><span class="at">ElementID</span> <span class="op">+</span> <span class="st">","</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">guid</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(e<span class="op">.</span><span class="at">ElementGUID</span>) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">name</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(e<span class="op">.</span><span class="at">Name</span>) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">type</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(e<span class="op">.</span><span class="at">Type</span>) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">status</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(<span class="bu">String</span>(e<span class="op">.</span><span class="at">Status</span><span class="op">||</span><span class="st">""</span>)) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">"</span></span>
+<span id="cb6-28"><a href="#cb6-28"></a>                 <span class="op">+</span> <span class="st">"}"</span><span class="op">;</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a>        file<span class="op">.</span><span class="fu">WriteLine</span>(json)<span class="op">;</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>    }</span>
+<span id="cb6-31"><a href="#cb6-31"></a>    file<span class="op">.</span><span class="fu">Close</span>()<span class="op">;</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"NDJSON written → "</span> <span class="op">+</span> path)<span class="op">;</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a>}</span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="kw">function</span> <span class="fu">esc</span>(s){ s<span class="op">=</span><span class="bu">String</span>(s<span class="op">||</span><span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> s<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">\\</span><span class="ss">/g</span><span class="op">,</span><span class="st">"</span><span class="sc">\\\\</span><span class="st">"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/"/g</span><span class="op">,</span><span class="st">'</span><span class="sc">\\</span><span class="st">"'</span>)<span class="op">;</span> }</span>
+<span id="cb6-35"><a href="#cb6-35"></a></span>
+<span id="cb6-36"><a href="#cb6-36"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="push-ndjson-to-your-registry-external-python" class="level4" data-number="19.8.3.2">
+<h4 data-number="19.8.3.2" class="anchored" data-anchor-id="push-ndjson-to-your-registry-external-python"><span class="header-section-number">19.8.3.2</span> Push NDJSON to your registry (external Python)</h4>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Example 18.7 - push_ndjson.py – Python 3 (requests)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Example 18.7 - push_ndjson.py – Python 3 (requests)"><pre class="sourceCode numberSource py number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co"># Example 18.7 - push_ndjson.py – Python 3 (requests)</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co"># Purpose: Stream NDJSON lines to a registry endpoint</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># Usage: python push_ndjson.py https://registry.example/api/bulk path\to\file.ndjson</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="im">import</span> sys, requests</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="kw">def</span> main():</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&lt;</span> <span class="dv">3</span>:</span>
+<span id="cb7-10"><a href="#cb7-10"></a>        <span class="bu">print</span>(<span class="st">"Usage: push_ndjson.py &lt;endpoint&gt; &lt;ndjson_path&gt;"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11"></a>        <span class="cf">return</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    endpoint, path <span class="op">=</span> sys.argv[<span class="dv">1</span>], sys.argv[<span class="dv">2</span>]</span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb7-15"><a href="#cb7-15"></a>        r <span class="op">=</span> requests.post(endpoint, data<span class="op">=</span>f, headers<span class="op">=</span>{<span class="st">"Content-Type"</span>:<span class="st">"application/x-ndjson"</span>}, timeout<span class="op">=</span><span class="dv">60</span>)</span>
+<span id="cb7-16"><a href="#cb7-16"></a>    r.raise_for_status()</span>
+<span id="cb7-17"><a href="#cb7-17"></a>    <span class="bu">print</span>(<span class="st">"Pushed NDJSON. Server:"</span>, r.status_code)</span>
+<span id="cb7-18"><a href="#cb7-18"></a></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb7-20"><a href="#cb7-20"></a>    main()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+</section>
+<section id="secrets-auth-bitness-read-this" class="level2" data-number="19.9">
+<h2 data-number="19.9" class="anchored" data-anchor-id="secrets-auth-bitness-read-this"><span class="header-section-number">19.9</span> Secrets, auth &amp; bitness (read this!)</h2>
+<ul>
+<li><p><strong>Never hardcode secrets</strong> in EA scripts. Use environment variables (via WScript.Shell.Environment(“PROCESS”)) or external secret stores.</p></li>
+<li><p><strong>Use API tokens</strong> (Jira/Confluence) rather than passwords.</p></li>
+<li><p><strong>Bitness must match</strong>: EA is typically <strong>32-bit</strong>; external Python should be <strong>32-bit</strong> to attach via COM.</p></li>
+<li><p><strong>Network constraints</strong>: Corporate proxies/firewalls may require proxy settings; WinHTTP and requests both support proxies (configure in environment or code).</p></li>
+</ul>
+</section>
+<section id="putting-it-together-one-realistic-flow" class="level2" data-number="19.10">
+<h2 data-number="19.10" class="anchored" data-anchor-id="putting-it-together-one-realistic-flow"><span class="header-section-number">19.10</span> Putting it together (one realistic flow)</h2>
+<ol type="1">
+<li>Nightly job (Task Scheduler/CI) runs <strong>Python</strong>:</li>
+</ol>
+<ul>
+<li><p>Query <strong>Jira</strong> (JQL) → update EA Requirements (store JiraKey).</p></li>
+<li><p>Export <strong>HTML</strong> table from EA.</p></li>
+<li><p>Update <strong>Confluence</strong> page with the new table.</p></li>
+<li><p>Export <strong>NDJSON</strong> and push to registry.</p></li>
+<li><p>git add/commit the export folder for traceability.</p></li>
+</ul>
+<ol start="2" type="1">
+<li>EA users see fresh data in Confluence; governance can trace elements back to Jira; downstream teams ingest NDJSON.</li>
+</ol>
+</section>
+<section id="troubleshooting-quick-wins" class="level2" data-number="19.11">
+<h2 data-number="19.11" class="anchored" data-anchor-id="troubleshooting-quick-wins"><span class="header-section-number">19.11</span> Troubleshooting quick wins</h2>
+<ul>
+<li><p><strong>401/403</strong>: bad token or wrong endpoint path/version (/api/2 vs /api/3).</p></li>
+<li><p><strong>SSL errors</strong>: corporate MITM certs—install trust chain or use verify= with org CA (Python).</p></li>
+<li><p><strong>Timeouts</strong>: increase receive timeout; batch large payloads.</p></li>
+<li><p><strong>Unicode</strong>: prefer UTF-8 in Python; JScript file I/O defaults to ANSI—keep payloads simple or generate externally.</p></li>
+</ul>
+</section>
+<section id="checklist-cheat-sheet" class="level2" data-number="19.12">
+<h2 data-number="19.12" class="anchored" data-anchor-id="checklist-cheat-sheet"><span class="header-section-number">19.12</span> Checklist (cheat-sheet)</h2>
+<ul>
+<li><p>Keep identities in EA via <strong>tagged values</strong> (JiraKey, ExternalID).</p></li>
+<li><p><strong>Write in EA; parse outside</strong> (JSON).</p></li>
+<li><p>Dry-run first; log to CSV/HTML for review.</p></li>
+<li><p>Use <strong>git</strong> for exported artifacts (history, diffs).</p></li>
+<li><p>Make small, composable scripts; orchestrate with Python/CI.</p></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./18-System.Object[].html" class="pagination-link" aria-label="Chapter 17: Performance &amp; Scaling">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./20-System.Object[].html" class="pagination-link" aria-label="Chapter 19: Add-ins vs Scripts">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu"># Chapter 18: Integrating with Workflows</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a>Enterprise Architect is a powerful modelling tool, but if kept in</span>
+<span id="cb8-4"><a href="#cb8-4"></a>isolation it risks becoming a silo. Models are valuable only when they</span>
+<span id="cb8-5"><a href="#cb8-5"></a>connect to the wider enterprise environment — to planning tools,</span>
+<span id="cb8-6"><a href="#cb8-6"></a>collaboration platforms, version control systems, registries, and</span>
+<span id="cb8-7"><a href="#cb8-7"></a>analytics pipelines. Architects may capture brilliant structures in EA,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>but if those structures cannot be accessed by colleagues in Jira, shared</span>
+<span id="cb8-9"><a href="#cb8-9"></a>in Confluence, tracked in Git, or exported to analytics platforms, then</span>
+<span id="cb8-10"><a href="#cb8-10"></a>their impact is limited.</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a>This chapter explores the role of scripting and automation in</span>
+<span id="cb8-13"><a href="#cb8-13"></a>**integrating EA with enterprise workflows**. It explains why</span>
+<span id="cb8-14"><a href="#cb8-14"></a>integration matters, what types of systems are typically involved, and</span>
+<span id="cb8-15"><a href="#cb8-15"></a>how automation bridges the gap. It also discusses the cultural</span>
+<span id="cb8-16"><a href="#cb8-16"></a>implications: how integration makes models more visible, improves</span>
+<span id="cb8-17"><a href="#cb8-17"></a>collaboration, and embeds architecture more deeply into organisational</span>
+<span id="cb8-18"><a href="#cb8-18"></a>processes.</span>
+<span id="cb8-19"><a href="#cb8-19"></a></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="fu">## Why Integration Matters</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a></span>
+<span id="cb8-22"><a href="#cb8-22"></a>In most organisations, EA is not the system of record for requirements,</span>
+<span id="cb8-23"><a href="#cb8-23"></a>issues, or tasks. Those live in Jira, Azure DevOps, or ServiceNow. Nor</span>
+<span id="cb8-24"><a href="#cb8-24"></a>is EA the publishing platform for architecture views — that role is</span>
+<span id="cb8-25"><a href="#cb8-25"></a>filled by Confluence, SharePoint, or custom portals. Nor is EA the</span>
+<span id="cb8-26"><a href="#cb8-26"></a>analytics engine — data warehouses and BI tools play that part.</span>
+<span id="cb8-27"><a href="#cb8-27"></a></span>
+<span id="cb8-28"><a href="#cb8-28"></a>If EA is to have influence, it must connect. Integration ensures that</span>
+<span id="cb8-29"><a href="#cb8-29"></a>architecture does not sit in a closed repository but flows into the</span>
+<span id="cb8-30"><a href="#cb8-30"></a>daily tools of developers, analysts, managers, and executives. It turns</span>
+<span id="cb8-31"><a href="#cb8-31"></a>EA from a specialist tool into part of the wider enterprise nervous</span>
+<span id="cb8-32"><a href="#cb8-32"></a>system.</span>
+<span id="cb8-33"><a href="#cb8-33"></a></span>
+<span id="cb8-34"><a href="#cb8-34"></a><span class="fu">## The Role of Automation in Integration</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a></span>
+<span id="cb8-36"><a href="#cb8-36"></a>Manual integration is possible but unsustainable. You could export CSVs</span>
+<span id="cb8-37"><a href="#cb8-37"></a>by hand, paste diagrams into Confluence, or retype requirements into</span>
+<span id="cb8-38"><a href="#cb8-38"></a>Jira. But these manual steps are slow, error-prone, and quickly</span>
+<span id="cb8-39"><a href="#cb8-39"></a>abandoned.</span>
+<span id="cb8-40"><a href="#cb8-40"></a></span>
+<span id="cb8-41"><a href="#cb8-41"></a>Automation transforms integration into a **repeatable, reliable</span>
+<span id="cb8-42"><a href="#cb8-42"></a>process**. Scripts can pull requirements from Jira nightly, export model</span>
+<span id="cb8-43"><a href="#cb8-43"></a>summaries to Confluence weekly, or commit EA script libraries into Git</span>
+<span id="cb8-44"><a href="#cb8-44"></a>with every change. Automation eliminates the friction that often</span>
+<span id="cb8-45"><a href="#cb8-45"></a>prevents integration from sticking.</span>
+<span id="cb8-46"><a href="#cb8-46"></a></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="fu">## Common Integration Targets</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a></span>
+<span id="cb8-49"><a href="#cb8-49"></a>The most frequent systems EA needs to connect with are:</span>
+<span id="cb8-50"><a href="#cb8-50"></a></span>
+<span id="cb8-51"><a href="#cb8-51"></a><span class="ss">- </span>**Jira / Azure DevOps** — for requirements, user stories, and tasks.</span>
+<span id="cb8-52"><a href="#cb8-52"></a></span>
+<span id="cb8-53"><a href="#cb8-53"></a><span class="ss">- </span>**Confluence / SharePoint** — for publishing models, governance</span>
+<span id="cb8-54"><a href="#cb8-54"></a>  reports, and guidance.</span>
+<span id="cb8-55"><a href="#cb8-55"></a></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="ss">- </span>**Git / Version Control** — for managing scripts, MDGs, and sometimes</span>
+<span id="cb8-57"><a href="#cb8-57"></a>  even model fragments.</span>
+<span id="cb8-58"><a href="#cb8-58"></a></span>
+<span id="cb8-59"><a href="#cb8-59"></a><span class="ss">- </span>**Registries / Catalogs** — for synchronising metadata (applications,</span>
+<span id="cb8-60"><a href="#cb8-60"></a>  datasets, services).</span>
+<span id="cb8-61"><a href="#cb8-61"></a></span>
+<span id="cb8-62"><a href="#cb8-62"></a><span class="ss">- </span>**Analytics Platforms** — for reporting, dashboards, and quality</span>
+<span id="cb8-63"><a href="#cb8-63"></a>  metrics.</span>
+<span id="cb8-64"><a href="#cb8-64"></a></span>
+<span id="cb8-65"><a href="#cb8-65"></a>Each of these integrations has different requirements, but the principle</span>
+<span id="cb8-66"><a href="#cb8-66"></a>is the same: use scripts to extract, transform, and push or pull data.</span>
+<span id="cb8-67"><a href="#cb8-67"></a></span>
+<span id="cb8-68"><a href="#cb8-68"></a><span class="fu">## Integration Approaches</span></span>
+<span id="cb8-69"><a href="#cb8-69"></a></span>
+<span id="cb8-70"><a href="#cb8-70"></a><span class="fu">### Integration via Exports</span></span>
+<span id="cb8-71"><a href="#cb8-71"></a></span>
+<span id="cb8-72"><a href="#cb8-72"></a>The simplest form of integration is export. Scripts can export EA</span>
+<span id="cb8-73"><a href="#cb8-73"></a>content to CSV, JSON, or XML, which is then consumed by another system.</span>
+<span id="cb8-74"><a href="#cb8-74"></a>For example:</span>
+<span id="cb8-75"><a href="#cb8-75"></a></span>
+<span id="cb8-76"><a href="#cb8-76"></a><span class="ss">- </span>Exporting all Applications and their Owners to CSV for import into a</span>
+<span id="cb8-77"><a href="#cb8-77"></a>  CMDB.</span>
+<span id="cb8-78"><a href="#cb8-78"></a></span>
+<span id="cb8-79"><a href="#cb8-79"></a><span class="ss">- </span>Exporting requirements to JSON for loading into Jira.</span>
+<span id="cb8-80"><a href="#cb8-80"></a></span>
+<span id="cb8-81"><a href="#cb8-81"></a><span class="ss">- </span>Exporting governance reports to HTML for Confluence publishing.</span>
+<span id="cb8-82"><a href="#cb8-82"></a></span>
+<span id="cb8-83"><a href="#cb8-83"></a>Export-based integration is one-way but powerful. It is often the first</span>
+<span id="cb8-84"><a href="#cb8-84"></a>step towards tighter two-way sync.</span>
+<span id="cb8-85"><a href="#cb8-85"></a></span>
+<span id="cb8-86"><a href="#cb8-86"></a><span class="fu">### Integration via APIs</span></span>
+<span id="cb8-87"><a href="#cb8-87"></a></span>
+<span id="cb8-88"><a href="#cb8-88"></a>More advanced integration uses APIs. Many enterprise systems (Jira,</span>
+<span id="cb8-89"><a href="#cb8-89"></a>Confluence, ServiceNow) expose REST APIs. External EA scripts in Python</span>
+<span id="cb8-90"><a href="#cb8-90"></a>or C# can call these APIs to push or pull data in real time. For</span>
+<span id="cb8-91"><a href="#cb8-91"></a>example:</span>
+<span id="cb8-92"><a href="#cb8-92"></a></span>
+<span id="cb8-93"><a href="#cb8-93"></a><span class="ss">- </span>A Python script reads new Jira issues and creates EA Requirements.</span>
+<span id="cb8-94"><a href="#cb8-94"></a></span>
+<span id="cb8-95"><a href="#cb8-95"></a><span class="ss">- </span>A C# utility pushes EA diagrams as images into Confluence pages.</span>
+<span id="cb8-96"><a href="#cb8-96"></a></span>
+<span id="cb8-97"><a href="#cb8-97"></a><span class="ss">- </span>A script updates ServiceNow CMDB records based on EA application data.</span>
+<span id="cb8-98"><a href="#cb8-98"></a></span>
+<span id="cb8-99"><a href="#cb8-99"></a>API integration requires authentication, error handling, and careful</span>
+<span id="cb8-100"><a href="#cb8-100"></a>mapping between EA objects and external entities, but it enables true</span>
+<span id="cb8-101"><a href="#cb8-101"></a>synchronisation.</span>
+<span id="cb8-102"><a href="#cb8-102"></a></span>
+<span id="cb8-103"><a href="#cb8-103"></a><span class="fu">### Integration with Git</span></span>
+<span id="cb8-104"><a href="#cb8-104"></a></span>
+<span id="cb8-105"><a href="#cb8-105"></a>Although EA itself is not a code repository, scripts and MDG definitions</span>
+<span id="cb8-106"><a href="#cb8-106"></a>benefit from version control. Git provides traceability, collaboration,</span>
+<span id="cb8-107"><a href="#cb8-107"></a>and rollback. By storing scripts and MDG XML in Git, teams can manage</span>
+<span id="cb8-108"><a href="#cb8-108"></a>them like any other software artefact.</span>
+<span id="cb8-109"><a href="#cb8-109"></a></span>
+<span id="cb8-110"><a href="#cb8-110"></a>Automation helps here too:</span>
+<span id="cb8-111"><a href="#cb8-111"></a></span>
+<span id="cb8-112"><a href="#cb8-112"></a><span class="ss">- </span>Scripts can export to a file system where Git commits are triggered.</span>
+<span id="cb8-113"><a href="#cb8-113"></a></span>
+<span id="cb8-114"><a href="#cb8-114"></a><span class="ss">- </span>AI can generate commit messages explaining changes.</span>
+<span id="cb8-115"><a href="#cb8-115"></a></span>
+<span id="cb8-116"><a href="#cb8-116"></a><span class="ss">- </span>Governance scripts can check that repositories are up to date.</span>
+<span id="cb8-117"><a href="#cb8-117"></a></span>
+<span id="cb8-118"><a href="#cb8-118"></a>Git integration makes EA scripting part of the DevOps toolchain.</span>
+<span id="cb8-119"><a href="#cb8-119"></a></span>
+<span id="cb8-120"><a href="#cb8-120"></a><span class="fu">### Integration with Analytics</span></span>
+<span id="cb8-121"><a href="#cb8-121"></a></span>
+<span id="cb8-122"><a href="#cb8-122"></a>Another important integration is with analytics platforms. EA contains</span>
+<span id="cb8-123"><a href="#cb8-123"></a>rich metadata: numbers of requirements, traceability ratios, coverage</span>
+<span id="cb8-124"><a href="#cb8-124"></a>metrics. But EA’s own reporting is limited. Exporting to CSV, JSON, or</span>
+<span id="cb8-125"><a href="#cb8-125"></a>direct database queries allows BI tools like Power BI or Tableau to</span>
+<span id="cb8-126"><a href="#cb8-126"></a>visualise architecture quality.</span>
+<span id="cb8-127"><a href="#cb8-127"></a></span>
+<span id="cb8-128"><a href="#cb8-128"></a>Scripting plays a key role here:</span>
+<span id="cb8-129"><a href="#cb8-129"></a></span>
+<span id="cb8-130"><a href="#cb8-130"></a><span class="ss">- </span>Automating exports to CSV nightly.</span>
+<span id="cb8-131"><a href="#cb8-131"></a></span>
+<span id="cb8-132"><a href="#cb8-132"></a><span class="ss">- </span>Generating JSON snapshots for ingestion.</span>
+<span id="cb8-133"><a href="#cb8-133"></a></span>
+<span id="cb8-134"><a href="#cb8-134"></a><span class="ss">- </span>Curating data (e.g., counting orphaned requirements).</span>
+<span id="cb8-135"><a href="#cb8-135"></a></span>
+<span id="cb8-136"><a href="#cb8-136"></a>This turns architecture from a static document into a measurable</span>
+<span id="cb8-137"><a href="#cb8-137"></a>process.</span>
+<span id="cb8-138"><a href="#cb8-138"></a></span>
+<span id="cb8-139"><a href="#cb8-139"></a><span class="fu">## The Cultural Dimension of Integration</span></span>
+<span id="cb8-140"><a href="#cb8-140"></a></span>
+<span id="cb8-141"><a href="#cb8-141"></a>Integration is not only technical; it changes how people perceive</span>
+<span id="cb8-142"><a href="#cb8-142"></a>architecture. When requirements flow from Jira into EA automatically,</span>
+<span id="cb8-143"><a href="#cb8-143"></a>architects are seen as part of the delivery pipeline, not an</span>
+<span id="cb8-144"><a href="#cb8-144"></a>afterthought. When governance reports appear in Confluence every week,</span>
+<span id="cb8-145"><a href="#cb8-145"></a>stakeholders see architecture as transparent and accountable. When</span>
+<span id="cb8-146"><a href="#cb8-146"></a>scripts push metadata into analytics dashboards, leaders see</span>
+<span id="cb8-147"><a href="#cb8-147"></a>architecture as measurable.</span>
+<span id="cb8-148"><a href="#cb8-148"></a></span>
+<span id="cb8-149"><a href="#cb8-149"></a>In this way, integration changes culture: it makes architecture visible,</span>
+<span id="cb8-150"><a href="#cb8-150"></a>relevant, and trusted.</span>
+<span id="cb8-151"><a href="#cb8-151"></a></span>
+<span id="cb8-152"><a href="#cb8-152"></a><span class="fu">## Risks of Integration</span></span>
+<span id="cb8-153"><a href="#cb8-153"></a></span>
+<span id="cb8-154"><a href="#cb8-154"></a>Integration is powerful but risky. Poorly designed integrations can:</span>
+<span id="cb8-155"><a href="#cb8-155"></a></span>
+<span id="cb8-156"><a href="#cb8-156"></a><span class="ss">- </span>Flood EA with duplicates.</span>
+<span id="cb8-157"><a href="#cb8-157"></a></span>
+<span id="cb8-158"><a href="#cb8-158"></a><span class="ss">- </span>Overwrite authoritative data incorrectly.</span>
+<span id="cb8-159"><a href="#cb8-159"></a></span>
+<span id="cb8-160"><a href="#cb8-160"></a><span class="ss">- </span>Expose sensitive data via exports.</span>
+<span id="cb8-161"><a href="#cb8-161"></a></span>
+<span id="cb8-162"><a href="#cb8-162"></a><span class="ss">- </span>Create brittle dependencies on API versions.</span>
+<span id="cb8-163"><a href="#cb8-163"></a></span>
+<span id="cb8-164"><a href="#cb8-164"></a>That is why governance principles still apply: dry-run modes, logging,</span>
+<span id="cb8-165"><a href="#cb8-165"></a>backups, and version control. Integration scripts should be treated with</span>
+<span id="cb8-166"><a href="#cb8-166"></a>the same rigour as any enterprise software.</span>
+<span id="cb8-167"><a href="#cb8-167"></a></span>
+<span id="cb8-168"><a href="#cb8-168"></a><span class="fu">## Examples</span></span>
+<span id="cb8-169"><a href="#cb8-169"></a></span>
+<span id="cb8-170"><a href="#cb8-170"></a><span class="fu">### HTTP from JScript (webhooks &amp; simple POSTs)</span></span>
+<span id="cb8-171"><a href="#cb8-171"></a></span>
+<span id="cb8-172"><a href="#cb8-172"></a>EA’s JScript can call HTTP endpoints via **WinHTTP**. That’s enough to</span>
+<span id="cb8-173"><a href="#cb8-173"></a>send messages to ChatOps (Teams/Slack) or any webhook.</span>
+<span id="cb8-174"><a href="#cb8-174"></a></span>
+<span id="cb8-175"><a href="#cb8-175"></a>⚠️ JScript has **no JSON parser**. Prefer “write JSON out; parse/apply</span>
+<span id="cb8-176"><a href="#cb8-176"></a>externally.” For push-only notifications, build a small JSON string by</span>
+<span id="cb8-177"><a href="#cb8-177"></a>hand.</span>
+<span id="cb8-178"><a href="#cb8-178"></a><span class="in">```{.js filename="Example 18.1 - WebhookNotify.js – JScript (ES3)"}</span></span>
+<span id="cb8-179"><a href="#cb8-179"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-180"><a href="#cb8-180"></a><span class="co">// Example 18.1 - WebhookNotify.js – JScript (ES3)</span></span>
+<span id="cb8-181"><a href="#cb8-181"></a><span class="co">// Purpose: Send a simple JSON message to a webhook (e.g. Teams/Slack/custom)</span></span>
+<span id="cb8-182"><a href="#cb8-182"></a><span class="co">// Usage: Set WEBHOOK_URL; run to notify about the selected package</span></span>
+<span id="cb8-183"><a href="#cb8-183"></a><span class="co">// Notes: No JSON.parse; we only build a tiny JSON string</span></span>
+<span id="cb8-184"><a href="#cb8-184"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-185"><a href="#cb8-185"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-186"><a href="#cb8-186"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-187"><a href="#cb8-187"></a>    <span class="kw">var</span> WEBHOOK_URL <span class="op">=</span> <span class="st">"https://example.webhook/your-token"</span><span class="op">;</span> <span class="co">// &lt;-- put your webhook here</span></span>
+<span id="cb8-188"><a href="#cb8-188"></a></span>
+<span id="cb8-189"><a href="#cb8-189"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb8-190"><a href="#cb8-190"></a>    <span class="cf">if</span> (<span class="op">!</span>pkg) { Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package to announce."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb8-191"><a href="#cb8-191"></a></span>
+<span id="cb8-192"><a href="#cb8-192"></a>    <span class="co">// Build a tiny JSON body (escape quotes and backslashes)</span></span>
+<span id="cb8-193"><a href="#cb8-193"></a>    <span class="kw">var</span> body <span class="op">=</span> <span class="st">"{"</span></span>
+<span id="cb8-194"><a href="#cb8-194"></a>             <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">title</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">EA Notification</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb8-195"><a href="#cb8-195"></a>             <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">text</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">Package '"</span> <span class="op">+</span> <span class="fu">jsonEscape</span>(pkg<span class="op">.</span><span class="at">Name</span>) <span class="op">+</span> <span class="st">"' (ID "</span> <span class="op">+</span> pkg<span class="op">.</span><span class="at">PackageID</span> <span class="op">+</span> <span class="st">") was processed.</span><span class="sc">\"</span><span class="st">"</span></span>
+<span id="cb8-196"><a href="#cb8-196"></a>             <span class="op">+</span> <span class="st">"}"</span><span class="op">;</span></span>
+<span id="cb8-197"><a href="#cb8-197"></a></span>
+<span id="cb8-198"><a href="#cb8-198"></a>    <span class="kw">var</span> ok <span class="op">=</span> <span class="fu">httpPostJson</span>(WEBHOOK_URL<span class="op">,</span> body<span class="op">,</span> <span class="dv">15000</span>)<span class="op">;</span></span>
+<span id="cb8-199"><a href="#cb8-199"></a>    Session<span class="op">.</span><span class="fu">Output</span>(ok <span class="op">?</span> <span class="st">"Webhook sent."</span> <span class="op">:</span> <span class="st">"Webhook failed."</span>)<span class="op">;</span></span>
+<span id="cb8-200"><a href="#cb8-200"></a>}</span>
+<span id="cb8-201"><a href="#cb8-201"></a></span>
+<span id="cb8-202"><a href="#cb8-202"></a><span class="kw">function</span> <span class="fu">httpPostJson</span>(url<span class="op">,</span> body<span class="op">,</span> timeoutMs) {</span>
+<span id="cb8-203"><a href="#cb8-203"></a>    <span class="cf">try</span> {</span>
+<span id="cb8-204"><a href="#cb8-204"></a>        <span class="kw">var</span> http <span class="op">=</span> <span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"WinHttp.WinHttpRequest.5.1"</span>)<span class="op">;</span></span>
+<span id="cb8-205"><a href="#cb8-205"></a>        http<span class="op">.</span><span class="fu">Open</span>(<span class="st">"POST"</span><span class="op">,</span> url<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb8-206"><a href="#cb8-206"></a>        http<span class="op">.</span><span class="fu">SetTimeouts</span>(<span class="dv">5000</span><span class="op">,</span> <span class="dv">5000</span><span class="op">,</span> timeoutMs<span class="op">||</span><span class="dv">15000</span><span class="op">,</span> timeoutMs<span class="op">||</span><span class="dv">15000</span>)<span class="op">;</span> <span class="co">// DNS/connect/send/receive</span></span>
+<span id="cb8-207"><a href="#cb8-207"></a>        http<span class="op">.</span><span class="fu">SetRequestHeader</span>(<span class="st">"Content-Type"</span><span class="op">,</span> <span class="st">"application/json"</span>)<span class="op">;</span></span>
+<span id="cb8-208"><a href="#cb8-208"></a>        http<span class="op">.</span><span class="fu">Send</span>(body)<span class="op">;</span></span>
+<span id="cb8-209"><a href="#cb8-209"></a>        <span class="kw">var</span> status <span class="op">=</span> http<span class="op">.</span><span class="at">Status</span><span class="op">;</span></span>
+<span id="cb8-210"><a href="#cb8-210"></a>        <span class="cf">return</span> status <span class="op">&gt;=</span> <span class="dv">200</span> <span class="op">&amp;&amp;</span> status <span class="op">&lt;</span> <span class="dv">300</span><span class="op">;</span></span>
+<span id="cb8-211"><a href="#cb8-211"></a>    } <span class="cf">catch</span>(e) {</span>
+<span id="cb8-212"><a href="#cb8-212"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"HTTP error: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb8-213"><a href="#cb8-213"></a>        <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb8-214"><a href="#cb8-214"></a>    }</span>
+<span id="cb8-215"><a href="#cb8-215"></a>}</span>
+<span id="cb8-216"><a href="#cb8-216"></a></span>
+<span id="cb8-217"><a href="#cb8-217"></a><span class="kw">function</span> <span class="fu">jsonEscape</span>(s){ s<span class="op">=</span><span class="bu">String</span>(s<span class="op">||</span><span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> s<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">\\</span><span class="ss">/g</span><span class="op">,</span><span class="st">"</span><span class="sc">\\\\</span><span class="st">"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/"/g</span><span class="op">,</span><span class="st">'</span><span class="sc">\\</span><span class="st">"'</span>)<span class="op">;</span> }</span>
+<span id="cb8-218"><a href="#cb8-218"></a></span>
+<span id="cb8-219"><a href="#cb8-219"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-220"><a href="#cb8-220"></a><span class="in">```</span></span>
+<span id="cb8-221"><a href="#cb8-221"></a></span>
+<span id="cb8-222"><a href="#cb8-222"></a>**When to use:** status pings (“curation ready,” “governance run</span>
+<span id="cb8-223"><a href="#cb8-223"></a>finished”), small alerts, pipeline handoffs.</span>
+<span id="cb8-224"><a href="#cb8-224"></a></span>
+<span id="cb8-225"><a href="#cb8-225"></a><span class="fu">### Jira ⇄ EA (keys as tagged values)</span></span>
+<span id="cb8-226"><a href="#cb8-226"></a></span>
+<span id="cb8-227"><a href="#cb8-227"></a>Best practice: **store the Jira issue key on the EA element** (e.g.,</span>
+<span id="cb8-228"><a href="#cb8-228"></a>JiraKey tag). Use **external Python** to pull from Jira (robust JSON),</span>
+<span id="cb8-229"><a href="#cb8-229"></a>then create/update EA Requirements. This keeps identity stable and</span>
+<span id="cb8-230"><a href="#cb8-230"></a>avoids duplicates.</span>
+<span id="cb8-231"><a href="#cb8-231"></a></span>
+<span id="cb8-232"><a href="#cb8-232"></a><span class="fu">#### Import Jira issues → EA Requirements (external Python)</span></span>
+<span id="cb8-233"><a href="#cb8-233"></a><span class="in">```{.py filename="Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)"}</span></span>
+<span id="cb8-234"><a href="#cb8-234"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb8-235"><a href="#cb8-235"></a><span class="co"># Example 18.2 - jira_to_ea_import.py – Python 3 (pywin32, requests)</span></span>
+<span id="cb8-236"><a href="#cb8-236"></a><span class="co"># Purpose: Query Jira and sync to EA Requirements (store JiraKey as a tag)</span></span>
+<span id="cb8-237"><a href="#cb8-237"></a><span class="co"># Safety: Idempotent by key; only updates when values differ</span></span>
+<span id="cb8-238"><a href="#cb8-238"></a><span class="co"># Usage: python jira_to_ea_import.py "https://your-jira" "JQL here" 1234</span></span>
+<span id="cb8-239"><a href="#cb8-239"></a><span class="co">#   where 1234 is the target PackageID in EA</span></span>
+<span id="cb8-240"><a href="#cb8-240"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb8-241"><a href="#cb8-241"></a><span class="im">import</span> sys, requests, win32com.client</span>
+<span id="cb8-242"><a href="#cb8-242"></a></span>
+<span id="cb8-243"><a href="#cb8-243"></a><span class="co"># --- Config &amp; secrets ---</span></span>
+<span id="cb8-244"><a href="#cb8-244"></a>JIRA_BASE   <span class="op">=</span> sys.argv[<span class="dv">1</span>]              <span class="co"># e.g., "https://yourcompany.atlassian.net"</span></span>
+<span id="cb8-245"><a href="#cb8-245"></a>JQL         <span class="op">=</span> sys.argv[<span class="dv">2</span>]              <span class="co"># e.g., 'project=ARCH AND issuetype=Requirement'</span></span>
+<span id="cb8-246"><a href="#cb8-246"></a>TARGET_PKG  <span class="op">=</span> <span class="bu">int</span>(sys.argv[<span class="dv">3</span>])</span>
+<span id="cb8-247"><a href="#cb8-247"></a>AUTH_USER   <span class="op">=</span> <span class="st">"&lt;jira_user_email&gt;"</span>      <span class="co"># store securely in env/secret store in real use</span></span>
+<span id="cb8-248"><a href="#cb8-248"></a>AUTH_TOKEN  <span class="op">=</span> <span class="st">"&lt;jira_api_token&gt;"</span>       <span class="co"># never hardcode in production</span></span>
+<span id="cb8-249"><a href="#cb8-249"></a></span>
+<span id="cb8-250"><a href="#cb8-250"></a><span class="kw">def</span> ea_get_tag(el, name):</span>
+<span id="cb8-251"><a href="#cb8-251"></a>    tvs <span class="op">=</span> el.TaggedValues</span>
+<span id="cb8-252"><a href="#cb8-252"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(tvs.Count):</span>
+<span id="cb8-253"><a href="#cb8-253"></a>        tv <span class="op">=</span> tvs.GetAt(i)</span>
+<span id="cb8-254"><a href="#cb8-254"></a>        <span class="cf">if</span> tv.Name <span class="op">==</span> name:</span>
+<span id="cb8-255"><a href="#cb8-255"></a>            <span class="cf">return</span> tv.Value <span class="kw">or</span> <span class="st">""</span></span>
+<span id="cb8-256"><a href="#cb8-256"></a>    <span class="cf">return</span> <span class="st">""</span></span>
+<span id="cb8-257"><a href="#cb8-257"></a></span>
+<span id="cb8-258"><a href="#cb8-258"></a><span class="kw">def</span> ea_set_tag(el, name, value):</span>
+<span id="cb8-259"><a href="#cb8-259"></a>    tvs <span class="op">=</span> el.TaggedValues</span>
+<span id="cb8-260"><a href="#cb8-260"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(tvs.Count):</span>
+<span id="cb8-261"><a href="#cb8-261"></a>        tv <span class="op">=</span> tvs.GetAt(i)</span>
+<span id="cb8-262"><a href="#cb8-262"></a>        <span class="cf">if</span> tv.Name <span class="op">==</span> name:</span>
+<span id="cb8-263"><a href="#cb8-263"></a>            tv.Value <span class="op">=</span> value<span class="op">;</span> tv.Update()<span class="op">;</span> el.Update()<span class="op">;</span> <span class="cf">return</span></span>
+<span id="cb8-264"><a href="#cb8-264"></a>    nt <span class="op">=</span> tvs.AddNew(name, value)</span>
+<span id="cb8-265"><a href="#cb8-265"></a>    nt.Update()<span class="op">;</span> el.Update()</span>
+<span id="cb8-266"><a href="#cb8-266"></a></span>
+<span id="cb8-267"><a href="#cb8-267"></a><span class="kw">def</span> find_by_name(pkg, name):</span>
+<span id="cb8-268"><a href="#cb8-268"></a>    els <span class="op">=</span> pkg.Elements</span>
+<span id="cb8-269"><a href="#cb8-269"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(els.Count):</span>
+<span id="cb8-270"><a href="#cb8-270"></a>        e <span class="op">=</span> els.GetAt(i)</span>
+<span id="cb8-271"><a href="#cb8-271"></a>        <span class="cf">if</span> e.Name <span class="op">==</span> name <span class="kw">and</span> e.Type <span class="op">==</span> <span class="st">"Requirement"</span>:</span>
+<span id="cb8-272"><a href="#cb8-272"></a>            <span class="cf">return</span> e</span>
+<span id="cb8-273"><a href="#cb8-273"></a>    <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb8-274"><a href="#cb8-274"></a></span>
+<span id="cb8-275"><a href="#cb8-275"></a><span class="kw">def</span> main():</span>
+<span id="cb8-276"><a href="#cb8-276"></a>    <span class="co"># --- Jira query ---</span></span>
+<span id="cb8-277"><a href="#cb8-277"></a>    s <span class="op">=</span> requests.Session()</span>
+<span id="cb8-278"><a href="#cb8-278"></a>    s.auth <span class="op">=</span> (AUTH_USER, AUTH_TOKEN)</span>
+<span id="cb8-279"><a href="#cb8-279"></a>    s.headers.update({<span class="st">"Accept"</span>: <span class="st">"application/json"</span>})</span>
+<span id="cb8-280"><a href="#cb8-280"></a></span>
+<span id="cb8-281"><a href="#cb8-281"></a>    r <span class="op">=</span> s.get(<span class="ss">f"</span><span class="sc">{</span>JIRA_BASE<span class="sc">}</span><span class="ss">/rest/api/3/search"</span>, params<span class="op">=</span>{<span class="st">"jql"</span>: JQL, <span class="st">"maxResults"</span>: <span class="dv">100</span>})</span>
+<span id="cb8-282"><a href="#cb8-282"></a>    r.raise_for_status()</span>
+<span id="cb8-283"><a href="#cb8-283"></a>    issues <span class="op">=</span> r.json()[<span class="st">"issues"</span>]</span>
+<span id="cb8-284"><a href="#cb8-284"></a></span>
+<span id="cb8-285"><a href="#cb8-285"></a>    <span class="co"># --- EA attach ---</span></span>
+<span id="cb8-286"><a href="#cb8-286"></a>    ea  <span class="op">=</span> win32com.client.Dispatch(<span class="st">"EA.App"</span>)</span>
+<span id="cb8-287"><a href="#cb8-287"></a>    repo<span class="op">=</span> ea.Repository</span>
+<span id="cb8-288"><a href="#cb8-288"></a>    pkg <span class="op">=</span> repo.GetPackageByID(TARGET_PKG)</span>
+<span id="cb8-289"><a href="#cb8-289"></a></span>
+<span id="cb8-290"><a href="#cb8-290"></a>    created, updated <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb8-291"><a href="#cb8-291"></a>    <span class="cf">for</span> it <span class="kw">in</span> issues:</span>
+<span id="cb8-292"><a href="#cb8-292"></a>        key   <span class="op">=</span> it[<span class="st">"key"</span>]</span>
+<span id="cb8-293"><a href="#cb8-293"></a>        fields<span class="op">=</span> it[<span class="st">"fields"</span>]</span>
+<span id="cb8-294"><a href="#cb8-294"></a>        name  <span class="op">=</span> fields.get(<span class="st">"summary"</span>, key)</span>
+<span id="cb8-295"><a href="#cb8-295"></a>        notes <span class="op">=</span> fields.get(<span class="st">"description"</span>) <span class="kw">or</span> <span class="st">""</span></span>
+<span id="cb8-296"><a href="#cb8-296"></a></span>
+<span id="cb8-297"><a href="#cb8-297"></a>        <span class="co"># Try match by JiraKey tag first</span></span>
+<span id="cb8-298"><a href="#cb8-298"></a>        match <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb8-299"><a href="#cb8-299"></a>        els <span class="op">=</span> pkg.Elements</span>
+<span id="cb8-300"><a href="#cb8-300"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(els.Count):</span>
+<span id="cb8-301"><a href="#cb8-301"></a>            e <span class="op">=</span> els.GetAt(i)</span>
+<span id="cb8-302"><a href="#cb8-302"></a>            <span class="cf">if</span> ea_get_tag(e, <span class="st">"JiraKey"</span>) <span class="op">==</span> key:</span>
+<span id="cb8-303"><a href="#cb8-303"></a>                match <span class="op">=</span> e<span class="op">;</span> <span class="cf">break</span></span>
+<span id="cb8-304"><a href="#cb8-304"></a></span>
+<span id="cb8-305"><a href="#cb8-305"></a>        <span class="cf">if</span> <span class="kw">not</span> match:</span>
+<span id="cb8-306"><a href="#cb8-306"></a>            <span class="co"># fallback: by name</span></span>
+<span id="cb8-307"><a href="#cb8-307"></a>            match <span class="op">=</span> find_by_name(pkg, name)</span>
+<span id="cb8-308"><a href="#cb8-308"></a></span>
+<span id="cb8-309"><a href="#cb8-309"></a>        <span class="cf">if</span> <span class="kw">not</span> match:</span>
+<span id="cb8-310"><a href="#cb8-310"></a>            <span class="co"># create new</span></span>
+<span id="cb8-311"><a href="#cb8-311"></a>            e <span class="op">=</span> pkg.Elements.AddNew(name, <span class="st">"Requirement"</span>)</span>
+<span id="cb8-312"><a href="#cb8-312"></a>            e.Notes <span class="op">=</span> notes</span>
+<span id="cb8-313"><a href="#cb8-313"></a>            e.Update()</span>
+<span id="cb8-314"><a href="#cb8-314"></a>            ea_set_tag(e, <span class="st">"JiraKey"</span>, key)</span>
+<span id="cb8-315"><a href="#cb8-315"></a>            created <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb8-316"><a href="#cb8-316"></a>        <span class="cf">else</span>:</span>
+<span id="cb8-317"><a href="#cb8-317"></a>            <span class="co"># update if changed</span></span>
+<span id="cb8-318"><a href="#cb8-318"></a>            dirty <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb8-319"><a href="#cb8-319"></a>            <span class="cf">if</span> (match.Notes <span class="kw">or</span> <span class="st">""</span>) <span class="op">!=</span> (notes <span class="kw">or</span> <span class="st">""</span>):</span>
+<span id="cb8-320"><a href="#cb8-320"></a>                match.Notes <span class="op">=</span> notes<span class="op">;</span> dirty <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb8-321"><a href="#cb8-321"></a>            <span class="cf">if</span> ea_get_tag(match, <span class="st">"JiraKey"</span>) <span class="op">!=</span> key:</span>
+<span id="cb8-322"><a href="#cb8-322"></a>                ea_set_tag(match, <span class="st">"JiraKey"</span>, key)<span class="op">;</span> dirty <span class="op">=</span> <span class="va">False</span>  <span class="co"># tag helper already updated</span></span>
+<span id="cb8-323"><a href="#cb8-323"></a>            <span class="cf">if</span> dirty:</span>
+<span id="cb8-324"><a href="#cb8-324"></a>                match.Update()<span class="op">;</span> updated <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb8-325"><a href="#cb8-325"></a></span>
+<span id="cb8-326"><a href="#cb8-326"></a>    <span class="cf">if</span> created <span class="kw">or</span> updated:</span>
+<span id="cb8-327"><a href="#cb8-327"></a>        repo.RefreshModelView(pkg.PackageID)</span>
+<span id="cb8-328"><a href="#cb8-328"></a></span>
+<span id="cb8-329"><a href="#cb8-329"></a>    <span class="bu">print</span>(<span class="ss">f"Done. Created=</span><span class="sc">{</span>created<span class="sc">}</span><span class="ss">, Updated=</span><span class="sc">{</span>updated<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-330"><a href="#cb8-330"></a></span>
+<span id="cb8-331"><a href="#cb8-331"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb8-332"><a href="#cb8-332"></a>    <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&lt;</span> <span class="dv">4</span>:</span>
+<span id="cb8-333"><a href="#cb8-333"></a>        <span class="bu">print</span>(<span class="st">"Usage: python jira_to_ea_import.py &lt;base&gt; &lt;jql&gt; &lt;package_id&gt;"</span>)</span>
+<span id="cb8-334"><a href="#cb8-334"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-335"><a href="#cb8-335"></a>        main()</span>
+<span id="cb8-336"><a href="#cb8-336"></a><span class="in">```</span></span>
+<span id="cb8-337"><a href="#cb8-337"></a></span>
+<span id="cb8-338"><a href="#cb8-338"></a><span class="fu">## Notes</span></span>
+<span id="cb8-339"><a href="#cb8-339"></a></span>
+<span id="cb8-340"><a href="#cb8-340"></a><span class="ss">- </span>Use **API tokens** (don’t embed secrets in scripts; prefer env</span>
+<span id="cb8-341"><a href="#cb8-341"></a>  vars/secret stores).</span>
+<span id="cb8-342"><a href="#cb8-342"></a></span>
+<span id="cb8-343"><a href="#cb8-343"></a><span class="ss">- </span>Maintain a **JiraKey** tag on each synced element.</span>
+<span id="cb8-344"><a href="#cb8-344"></a></span>
+<span id="cb8-345"><a href="#cb8-345"></a><span class="ss">- </span>Extend mapping easily (priority → Status, components → tagged values,</span>
+<span id="cb8-346"><a href="#cb8-346"></a>  etc.).</span>
+<span id="cb8-347"><a href="#cb8-347"></a></span>
+<span id="cb8-348"><a href="#cb8-348"></a><span class="fu">### Publish to Confluence (page with a live table)</span></span>
+<span id="cb8-349"><a href="#cb8-349"></a></span>
+<span id="cb8-350"><a href="#cb8-350"></a>Typical flow: generate HTML/CSV **inside EA**, then **external Python**</span>
+<span id="cb8-351"><a href="#cb8-351"></a>updates a Confluence page with the content. Confluence Cloud expects</span>
+<span id="cb8-352"><a href="#cb8-352"></a>REST + JSON.</span>
+<span id="cb8-353"><a href="#cb8-353"></a></span>
+<span id="cb8-354"><a href="#cb8-354"></a><span class="fu">#### Export an HTML table from EA (in-EA)</span></span>
+<span id="cb8-355"><a href="#cb8-355"></a><span class="in">```{.js filename="Example 18.3 - ExportHTML_Table.js – JScript (ES3)"}</span></span>
+<span id="cb8-356"><a href="#cb8-356"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-357"><a href="#cb8-357"></a><span class="co">// Example 18.3 - ExportHTML_Table.js – JScript (ES3)</span></span>
+<span id="cb8-358"><a href="#cb8-358"></a><span class="co">// Purpose: Export selected package elements as a simple HTML table (for Confluence)</span></span>
+<span id="cb8-359"><a href="#cb8-359"></a><span class="co">// Output: Writes .html to chosen folder</span></span>
+<span id="cb8-360"><a href="#cb8-360"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-361"><a href="#cb8-361"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-362"><a href="#cb8-362"></a></span>
+<span id="cb8-363"><a href="#cb8-363"></a><span class="kw">function</span> <span class="fu">pickFolder</span>(msg){ <span class="kw">var</span> sh<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Shell.Application"</span>)<span class="op">;</span> <span class="kw">var</span> f<span class="op">=</span>sh<span class="op">.</span><span class="fu">BrowseForFolder</span>(<span class="dv">0</span><span class="op">,</span>msg<span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span>)<span class="op">;</span> <span class="cf">return</span> f<span class="op">?</span>f<span class="op">.</span><span class="at">Self</span><span class="op">.</span><span class="at">Path</span><span class="op">:</span><span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb8-364"><a href="#cb8-364"></a></span>
+<span id="cb8-365"><a href="#cb8-365"></a><span class="kw">function</span> <span class="fu">main</span>(){</span>
+<span id="cb8-366"><a href="#cb8-366"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb8-367"><a href="#cb8-367"></a>    <span class="cf">if</span>(<span class="op">!</span>pkg){ Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb8-368"><a href="#cb8-368"></a></span>
+<span id="cb8-369"><a href="#cb8-369"></a>    <span class="kw">var</span> dir <span class="op">=</span> <span class="fu">pickFolder</span>(<span class="st">"Select output folder for HTML"</span>)<span class="op">;</span></span>
+<span id="cb8-370"><a href="#cb8-370"></a>    <span class="cf">if</span>(<span class="op">!</span>dir) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-371"><a href="#cb8-371"></a></span>
+<span id="cb8-372"><a href="#cb8-372"></a>    <span class="kw">var</span> fso<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Scripting.FileSystemObject"</span>)<span class="op">;</span></span>
+<span id="cb8-373"><a href="#cb8-373"></a>    <span class="kw">var</span> stamp<span class="op">=</span>(<span class="kw">new</span> <span class="bu">Date</span>())<span class="op">.</span><span class="fu">getTime</span>()<span class="op">;</span></span>
+<span id="cb8-374"><a href="#cb8-374"></a>    <span class="kw">var</span> path <span class="op">=</span> dir<span class="op">+</span><span class="st">"</span><span class="sc">\\</span><span class="st">ea_table_"</span><span class="op">+</span>stamp<span class="op">+</span><span class="st">".html"</span><span class="op">;</span></span>
+<span id="cb8-375"><a href="#cb8-375"></a>    <span class="kw">var</span> file <span class="op">=</span> fso<span class="op">.</span><span class="fu">CreateTextFile</span>(path<span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb8-376"><a href="#cb8-376"></a></span>
+<span id="cb8-377"><a href="#cb8-377"></a>    file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;table&gt;"</span>)<span class="op">;</span></span>
+<span id="cb8-378"><a href="#cb8-378"></a>    file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;"</span>)<span class="op">;</span></span>
+<span id="cb8-379"><a href="#cb8-379"></a></span>
+<span id="cb8-380"><a href="#cb8-380"></a>    <span class="kw">var</span> els<span class="op">=</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb8-381"><a href="#cb8-381"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span>i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span>i<span class="op">++</span>){</span>
+<span id="cb8-382"><a href="#cb8-382"></a>        <span class="kw">var</span> e<span class="op">=</span>els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb8-383"><a href="#cb8-383"></a>        file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;tr&gt;&lt;td&gt;"</span><span class="op">+</span>e<span class="op">.</span><span class="at">ElementID</span><span class="op">+</span><span class="st">"&lt;/td&gt;&lt;td&gt;"</span><span class="op">+</span><span class="fu">html</span>(e<span class="op">.</span><span class="at">Name</span>)<span class="op">+</span><span class="st">"&lt;/td&gt;&lt;td&gt;"</span><span class="op">+</span>e<span class="op">.</span><span class="at">Type</span><span class="op">+</span><span class="st">"&lt;/td&gt;&lt;td&gt;"</span><span class="op">+</span>(e<span class="op">.</span><span class="at">Status</span><span class="op">||</span><span class="st">""</span>)<span class="op">+</span><span class="st">"&lt;/td&gt;&lt;/tr&gt;"</span>)<span class="op">;</span></span>
+<span id="cb8-384"><a href="#cb8-384"></a>    }</span>
+<span id="cb8-385"><a href="#cb8-385"></a>    file<span class="op">.</span><span class="fu">WriteLine</span>(<span class="st">"&lt;/table&gt;"</span>)<span class="op">;</span></span>
+<span id="cb8-386"><a href="#cb8-386"></a>    file<span class="op">.</span><span class="fu">Close</span>()<span class="op">;</span></span>
+<span id="cb8-387"><a href="#cb8-387"></a></span>
+<span id="cb8-388"><a href="#cb8-388"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"HTML written → "</span><span class="op">+</span>path)<span class="op">;</span></span>
+<span id="cb8-389"><a href="#cb8-389"></a>}</span>
+<span id="cb8-390"><a href="#cb8-390"></a><span class="kw">function</span> <span class="fu">html</span>(s){ s<span class="op">=</span><span class="bu">String</span>(s<span class="op">||</span><span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> s<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/&amp;/g</span><span class="op">,</span><span class="st">"&amp;amp;"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/&lt;/g</span><span class="op">,</span><span class="st">"&amp;lt;"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="op">/&gt;/</span>g<span class="op">,</span><span class="st">"&amp;gt;"</span>)<span class="op">;</span> }</span>
+<span id="cb8-391"><a href="#cb8-391"></a></span>
+<span id="cb8-392"><a href="#cb8-392"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-393"><a href="#cb8-393"></a><span class="in">```</span></span>
+<span id="cb8-394"><a href="#cb8-394"></a><span class="fu">#### Update or create a Confluence page (external Python)</span></span>
+<span id="cb8-395"><a href="#cb8-395"></a></span>
+<span id="cb8-396"><a href="#cb8-396"></a><span class="in">```{.py filename="Example 18.4 - confluence_publish.py – Python 3 (requests)"}</span></span>
+<span id="cb8-397"><a href="#cb8-397"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb8-398"><a href="#cb8-398"></a><span class="co"># Example 18.4 - confluence_publish.py – Python 3 (requests)</span></span>
+<span id="cb8-399"><a href="#cb8-399"></a><span class="co"># Purpose: Create/update a Confluence page with HTML body</span></span>
+<span id="cb8-400"><a href="#cb8-400"></a><span class="co"># Usage: python confluence_publish.py SPACE PAGE_TITLE path\to\ea_table.html</span></span>
+<span id="cb8-401"><a href="#cb8-401"></a><span class="co"># Notes: Uses "storage" format; increments version when updating</span></span>
+<span id="cb8-402"><a href="#cb8-402"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb8-403"><a href="#cb8-403"></a><span class="im">import</span> sys, requests, json</span>
+<span id="cb8-404"><a href="#cb8-404"></a></span>
+<span id="cb8-405"><a href="#cb8-405"></a>BASE   <span class="op">=</span> <span class="st">"https://your-domain.atlassian.net/wiki"</span></span>
+<span id="cb8-406"><a href="#cb8-406"></a>USER   <span class="op">=</span> <span class="st">"&lt;confluence_user_email&gt;"</span></span>
+<span id="cb8-407"><a href="#cb8-407"></a>TOKEN  <span class="op">=</span> <span class="st">"&lt;confluence_api_token&gt;"</span></span>
+<span id="cb8-408"><a href="#cb8-408"></a></span>
+<span id="cb8-409"><a href="#cb8-409"></a><span class="kw">def</span> find_page(space, title, sess):</span>
+<span id="cb8-410"><a href="#cb8-410"></a>    r <span class="op">=</span> sess.get(<span class="ss">f"</span><span class="sc">{</span>BASE<span class="sc">}</span><span class="ss">/rest/api/content"</span>, params<span class="op">=</span>{<span class="st">"spaceKey"</span>: space, <span class="st">"title"</span>: title})</span>
+<span id="cb8-411"><a href="#cb8-411"></a>    r.raise_for_status()</span>
+<span id="cb8-412"><a href="#cb8-412"></a>    results <span class="op">=</span> r.json().get(<span class="st">"results"</span>, [])</span>
+<span id="cb8-413"><a href="#cb8-413"></a>    <span class="cf">return</span> results[<span class="dv">0</span>] <span class="cf">if</span> results <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb8-414"><a href="#cb8-414"></a></span>
+<span id="cb8-415"><a href="#cb8-415"></a><span class="kw">def</span> main():</span>
+<span id="cb8-416"><a href="#cb8-416"></a>    <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&lt;</span> <span class="dv">4</span>:</span>
+<span id="cb8-417"><a href="#cb8-417"></a>        <span class="bu">print</span>(<span class="st">"Usage: confluence_publish.py &lt;SPACE&gt; &lt;TITLE&gt; &lt;HTML_PATH&gt;"</span>)</span>
+<span id="cb8-418"><a href="#cb8-418"></a>        <span class="cf">return</span></span>
+<span id="cb8-419"><a href="#cb8-419"></a></span>
+<span id="cb8-420"><a href="#cb8-420"></a>    space, title, html_path <span class="op">=</span> sys.argv[<span class="dv">1</span>], sys.argv[<span class="dv">2</span>], sys.argv[<span class="dv">3</span>]</span>
+<span id="cb8-421"><a href="#cb8-421"></a>    html <span class="op">=</span> <span class="bu">open</span>(html_path, <span class="st">"r"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>).read()</span>
+<span id="cb8-422"><a href="#cb8-422"></a></span>
+<span id="cb8-423"><a href="#cb8-423"></a>    s <span class="op">=</span> requests.Session()</span>
+<span id="cb8-424"><a href="#cb8-424"></a>    s.auth <span class="op">=</span> (USER, TOKEN)</span>
+<span id="cb8-425"><a href="#cb8-425"></a>    s.headers.update({<span class="st">"Content-Type"</span>: <span class="st">"application/json"</span>})</span>
+<span id="cb8-426"><a href="#cb8-426"></a></span>
+<span id="cb8-427"><a href="#cb8-427"></a>    existing <span class="op">=</span> find_page(space, title, s)</span>
+<span id="cb8-428"><a href="#cb8-428"></a>    <span class="cf">if</span> existing:</span>
+<span id="cb8-429"><a href="#cb8-429"></a>        page_id <span class="op">=</span> existing[<span class="st">"id"</span>]</span>
+<span id="cb8-430"><a href="#cb8-430"></a>        ver <span class="op">=</span> existing[<span class="st">"version"</span>][<span class="st">"number"</span>] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb8-431"><a href="#cb8-431"></a>        payload <span class="op">=</span> {</span>
+<span id="cb8-432"><a href="#cb8-432"></a>            <span class="st">"id"</span>: page_id,</span>
+<span id="cb8-433"><a href="#cb8-433"></a>            <span class="st">"type"</span>: <span class="st">"page"</span>,</span>
+<span id="cb8-434"><a href="#cb8-434"></a>            <span class="st">"title"</span>: title,</span>
+<span id="cb8-435"><a href="#cb8-435"></a>            <span class="st">"version"</span>: {<span class="st">"number"</span>: ver},</span>
+<span id="cb8-436"><a href="#cb8-436"></a>            <span class="st">"body"</span>: {<span class="st">"storage"</span>: {<span class="st">"value"</span>: html, <span class="st">"representation"</span>: <span class="st">"storage"</span>}}</span>
+<span id="cb8-437"><a href="#cb8-437"></a>        }</span>
+<span id="cb8-438"><a href="#cb8-438"></a>        r <span class="op">=</span> s.put(<span class="ss">f"</span><span class="sc">{</span>BASE<span class="sc">}</span><span class="ss">/rest/api/content/</span><span class="sc">{</span>page_id<span class="sc">}</span><span class="ss">"</span>, data<span class="op">=</span>json.dumps(payload))</span>
+<span id="cb8-439"><a href="#cb8-439"></a>        r.raise_for_status()</span>
+<span id="cb8-440"><a href="#cb8-440"></a>        <span class="bu">print</span>(<span class="ss">f"Updated page </span><span class="sc">{</span>title<span class="sc">}</span><span class="ss"> (id=</span><span class="sc">{</span>page_id<span class="sc">}</span><span class="ss">) to version </span><span class="sc">{</span>ver<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-441"><a href="#cb8-441"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-442"><a href="#cb8-442"></a>        payload <span class="op">=</span> {</span>
+<span id="cb8-443"><a href="#cb8-443"></a>            <span class="st">"type"</span>:<span class="st">"page"</span>,<span class="st">"title"</span>:title,<span class="st">"space"</span>:{<span class="st">"key"</span>:space},</span>
+<span id="cb8-444"><a href="#cb8-444"></a>            <span class="st">"body"</span>:{<span class="st">"storage"</span>:{<span class="st">"value"</span>:html,<span class="st">"representation"</span>:<span class="st">"storage"</span>}}</span>
+<span id="cb8-445"><a href="#cb8-445"></a>        }</span>
+<span id="cb8-446"><a href="#cb8-446"></a>        r <span class="op">=</span> s.post(<span class="ss">f"</span><span class="sc">{</span>BASE<span class="sc">}</span><span class="ss">/rest/api/content"</span>, data<span class="op">=</span>json.dumps(payload))</span>
+<span id="cb8-447"><a href="#cb8-447"></a>        r.raise_for_status()</span>
+<span id="cb8-448"><a href="#cb8-448"></a>        <span class="bu">print</span>(<span class="ss">f"Created page </span><span class="sc">{</span>title<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-449"><a href="#cb8-449"></a></span>
+<span id="cb8-450"><a href="#cb8-450"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb8-451"><a href="#cb8-451"></a>    main()</span>
+<span id="cb8-452"><a href="#cb8-452"></a><span class="in">```</span></span>
+<span id="cb8-453"><a href="#cb8-453"></a></span>
+<span id="cb8-454"><a href="#cb8-454"></a><span class="fu">### Git: version control your exports (and script library)</span></span>
+<span id="cb8-455"><a href="#cb8-455"></a></span>
+<span id="cb8-456"><a href="#cb8-456"></a>A simple pattern: export CSV/JSON from EA, then **commit with Git**</span>
+<span id="cb8-457"><a href="#cb8-457"></a>using the system’s git CLI.</span>
+<span id="cb8-458"><a href="#cb8-458"></a></span>
+<span id="cb8-459"><a href="#cb8-459"></a><span class="fu">#### Run git add/commit from EA (JScript)</span></span>
+<span id="cb8-460"><a href="#cb8-460"></a><span class="in">```{.js filename="Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)"}</span></span>
+<span id="cb8-461"><a href="#cb8-461"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-462"><a href="#cb8-462"></a><span class="co">// Example 18.5 - GitCommit_ExportFolder.js – JScript (ES3)</span></span>
+<span id="cb8-463"><a href="#cb8-463"></a><span class="co">// Purpose: Run 'git add' and 'git commit' for a chosen folder</span></span>
+<span id="cb8-464"><a href="#cb8-464"></a><span class="co">// Usage: Prepare your folder as a git repo; run after exports</span></span>
+<span id="cb8-465"><a href="#cb8-465"></a><span class="co">// Notes: Captures stdout/stderr; commit message is timestamped</span></span>
+<span id="cb8-466"><a href="#cb8-466"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-467"><a href="#cb8-467"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-468"><a href="#cb8-468"></a></span>
+<span id="cb8-469"><a href="#cb8-469"></a><span class="kw">function</span> <span class="fu">pickFolder</span>(m){ <span class="kw">var</span> sh<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Shell.Application"</span>)<span class="op">;</span> <span class="kw">var</span> f<span class="op">=</span>sh<span class="op">.</span><span class="fu">BrowseForFolder</span>(<span class="dv">0</span><span class="op">,</span>m<span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span>)<span class="op">;</span> <span class="cf">return</span> f<span class="op">?</span>f<span class="op">.</span><span class="at">Self</span><span class="op">.</span><span class="at">Path</span><span class="op">:</span><span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb8-470"><a href="#cb8-470"></a></span>
+<span id="cb8-471"><a href="#cb8-471"></a><span class="kw">function</span> <span class="fu">main</span>(){</span>
+<span id="cb8-472"><a href="#cb8-472"></a>    <span class="kw">var</span> dir <span class="op">=</span> <span class="fu">pickFolder</span>(<span class="st">"Select folder to commit (must be a git repo)"</span>)<span class="op">;</span></span>
+<span id="cb8-473"><a href="#cb8-473"></a>    <span class="cf">if</span>(<span class="op">!</span>dir) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-474"><a href="#cb8-474"></a></span>
+<span id="cb8-475"><a href="#cb8-475"></a>    <span class="kw">var</span> shell <span class="op">=</span> <span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"WScript.Shell"</span>)<span class="op">;</span></span>
+<span id="cb8-476"><a href="#cb8-476"></a>    <span class="kw">var</span> cmdAdd <span class="op">=</span> <span class="st">'cmd /c cd /d "'</span> <span class="op">+</span> dir <span class="op">+</span> <span class="st">'" &amp;&amp; git add -A'</span><span class="op">;</span></span>
+<span id="cb8-477"><a href="#cb8-477"></a>    <span class="kw">var</span> cmdCommit <span class="op">=</span> <span class="st">'cmd /c cd /d "'</span> <span class="op">+</span> dir <span class="op">+</span> <span class="st">'" &amp;&amp; git commit -m "EA export '</span><span class="op">+</span>(<span class="kw">new</span> <span class="bu">Date</span>())<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">+</span><span class="st">'"'</span><span class="op">;</span></span>
+<span id="cb8-478"><a href="#cb8-478"></a></span>
+<span id="cb8-479"><a href="#cb8-479"></a>    <span class="fu">execAndLog</span>(shell<span class="op">,</span> cmdAdd)<span class="op">;</span></span>
+<span id="cb8-480"><a href="#cb8-480"></a>    <span class="fu">execAndLog</span>(shell<span class="op">,</span> cmdCommit)<span class="op">;</span></span>
+<span id="cb8-481"><a href="#cb8-481"></a></span>
+<span id="cb8-482"><a href="#cb8-482"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Git commit attempted. Review output above for success/errors."</span>)<span class="op">;</span></span>
+<span id="cb8-483"><a href="#cb8-483"></a>}</span>
+<span id="cb8-484"><a href="#cb8-484"></a></span>
+<span id="cb8-485"><a href="#cb8-485"></a><span class="kw">function</span> <span class="fu">execAndLog</span>(shell<span class="op">,</span> cmd){</span>
+<span id="cb8-486"><a href="#cb8-486"></a>    <span class="cf">try</span>{</span>
+<span id="cb8-487"><a href="#cb8-487"></a>        <span class="kw">var</span> exec <span class="op">=</span> shell<span class="op">.</span><span class="fu">Exec</span>(cmd)<span class="op">;</span></span>
+<span id="cb8-488"><a href="#cb8-488"></a>        <span class="cf">while</span>(<span class="op">!</span>exec<span class="op">.</span><span class="at">StdOut</span><span class="op">.</span><span class="at">AtEndOfStream</span>){ Session<span class="op">.</span><span class="fu">Output</span>(exec<span class="op">.</span><span class="at">StdOut</span><span class="op">.</span><span class="fu">ReadLine</span>())<span class="op">;</span> }</span>
+<span id="cb8-489"><a href="#cb8-489"></a>        <span class="cf">while</span>(<span class="op">!</span>exec<span class="op">.</span><span class="at">StdErr</span><span class="op">.</span><span class="at">AtEndOfStream</span>){ Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"[ERR] "</span><span class="op">+</span>exec<span class="op">.</span><span class="at">StdErr</span><span class="op">.</span><span class="fu">ReadLine</span>())<span class="op">;</span> }</span>
+<span id="cb8-490"><a href="#cb8-490"></a>    }<span class="cf">catch</span>(e){</span>
+<span id="cb8-491"><a href="#cb8-491"></a>        Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Exec error: "</span> <span class="op">+</span> e<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb8-492"><a href="#cb8-492"></a>    }</span>
+<span id="cb8-493"><a href="#cb8-493"></a>}</span>
+<span id="cb8-494"><a href="#cb8-494"></a></span>
+<span id="cb8-495"><a href="#cb8-495"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-496"><a href="#cb8-496"></a><span class="in">```</span></span>
+<span id="cb8-497"><a href="#cb8-497"></a></span>
+<span id="cb8-498"><a href="#cb8-498"></a>Tip: Pair this with the **export scripts** from Chapter 8 to automate a</span>
+<span id="cb8-499"><a href="#cb8-499"></a>nightly “export → commit” job.</span>
+<span id="cb8-500"><a href="#cb8-500"></a></span>
+<span id="cb8-501"><a href="#cb8-501"></a><span class="fu">### Registry/Analytics: push EA metadata downstream</span></span>
+<span id="cb8-502"><a href="#cb8-502"></a></span>
+<span id="cb8-503"><a href="#cb8-503"></a>A common requirement is to feed a **registry** (e.g., a catalog or data</span>
+<span id="cb8-504"><a href="#cb8-504"></a>platform). Pattern:</span>
+<span id="cb8-505"><a href="#cb8-505"></a></span>
+<span id="cb8-506"><a href="#cb8-506"></a><span class="ss">1.  </span>**Export** tidy JSON/CSV from EA (in-EA).</span>
+<span id="cb8-507"><a href="#cb8-507"></a></span>
+<span id="cb8-508"><a href="#cb8-508"></a><span class="ss">2.  </span>**Push** to your API or storage (external Python with requests).</span>
+<span id="cb8-509"><a href="#cb8-509"></a></span>
+<span id="cb8-510"><a href="#cb8-510"></a><span class="fu">#### Export NDJSON (one JSON per line) inside EA</span></span>
+<span id="cb8-511"><a href="#cb8-511"></a><span class="in">```{.js filename="Example 18.6 - Export_NDJSON.js – JScript (ES3)"}</span></span>
+<span id="cb8-512"><a href="#cb8-512"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-513"><a href="#cb8-513"></a><span class="co">// Example 18.6 - Export_NDJSON.js – JScript (ES3)</span></span>
+<span id="cb8-514"><a href="#cb8-514"></a><span class="co">// Purpose: Write NDJSON (line-delimited JSON) for easy ingestion</span></span>
+<span id="cb8-515"><a href="#cb8-515"></a><span class="co">// -------------------------------------------------------</span></span>
+<span id="cb8-516"><a href="#cb8-516"></a><span class="op">!</span>INC Local Scripts<span class="op">.</span><span class="at">EAConstants</span><span class="op">-</span>JScript</span>
+<span id="cb8-517"><a href="#cb8-517"></a></span>
+<span id="cb8-518"><a href="#cb8-518"></a><span class="kw">function</span> <span class="fu">pickFolder</span>(m){ <span class="kw">var</span> sh<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Shell.Application"</span>)<span class="op">;</span> <span class="kw">var</span> f<span class="op">=</span>sh<span class="op">.</span><span class="fu">BrowseForFolder</span>(<span class="dv">0</span><span class="op">,</span>m<span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span>)<span class="op">;</span> <span class="cf">return</span> f<span class="op">?</span>f<span class="op">.</span><span class="at">Self</span><span class="op">.</span><span class="at">Path</span><span class="op">:</span><span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb8-519"><a href="#cb8-519"></a></span>
+<span id="cb8-520"><a href="#cb8-520"></a><span class="kw">function</span> <span class="fu">main</span>(){</span>
+<span id="cb8-521"><a href="#cb8-521"></a>    <span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb8-522"><a href="#cb8-522"></a>    <span class="cf">if</span>(<span class="op">!</span>pkg){ Session<span class="op">.</span><span class="fu">Prompt</span>(<span class="st">"Select a package."</span><span class="op">,</span> promptOK)<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb8-523"><a href="#cb8-523"></a>    <span class="kw">var</span> dir <span class="op">=</span> <span class="fu">pickFolder</span>(<span class="st">"Select output folder for NDJSON"</span>)<span class="op">;</span></span>
+<span id="cb8-524"><a href="#cb8-524"></a>    <span class="cf">if</span>(<span class="op">!</span>dir) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb8-525"><a href="#cb8-525"></a></span>
+<span id="cb8-526"><a href="#cb8-526"></a>    <span class="kw">var</span> fso<span class="op">=</span><span class="kw">new</span> <span class="fu">ActiveXObject</span>(<span class="st">"Scripting.FileSystemObject"</span>)<span class="op">;</span></span>
+<span id="cb8-527"><a href="#cb8-527"></a>    <span class="kw">var</span> path<span class="op">=</span>dir<span class="op">+</span><span class="st">"</span><span class="sc">\\</span><span class="st">ea_export_"</span><span class="op">+</span>(<span class="kw">new</span> <span class="bu">Date</span>())<span class="op">.</span><span class="fu">getTime</span>()<span class="op">+</span><span class="st">".ndjson"</span><span class="op">;</span></span>
+<span id="cb8-528"><a href="#cb8-528"></a>    <span class="kw">var</span> file<span class="op">=</span>fso<span class="op">.</span><span class="fu">CreateTextFile</span>(path<span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb8-529"><a href="#cb8-529"></a></span>
+<span id="cb8-530"><a href="#cb8-530"></a>    <span class="kw">var</span> els<span class="op">=</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb8-531"><a href="#cb8-531"></a>    <span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span>i<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span>i<span class="op">++</span>){</span>
+<span id="cb8-532"><a href="#cb8-532"></a>        <span class="kw">var</span> e<span class="op">=</span>els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb8-533"><a href="#cb8-533"></a>        <span class="kw">var</span> json <span class="op">=</span> <span class="st">"{"</span></span>
+<span id="cb8-534"><a href="#cb8-534"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">id</span><span class="sc">\"</span><span class="st">:"</span> <span class="op">+</span> e<span class="op">.</span><span class="at">ElementID</span> <span class="op">+</span> <span class="st">","</span></span>
+<span id="cb8-535"><a href="#cb8-535"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">guid</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(e<span class="op">.</span><span class="at">ElementGUID</span>) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb8-536"><a href="#cb8-536"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">name</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(e<span class="op">.</span><span class="at">Name</span>) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb8-537"><a href="#cb8-537"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">type</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(e<span class="op">.</span><span class="at">Type</span>) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">,"</span></span>
+<span id="cb8-538"><a href="#cb8-538"></a>                 <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">status</span><span class="sc">\"</span><span class="st">:</span><span class="sc">\"</span><span class="st">"</span> <span class="op">+</span> <span class="fu">esc</span>(<span class="bu">String</span>(e<span class="op">.</span><span class="at">Status</span><span class="op">||</span><span class="st">""</span>)) <span class="op">+</span> <span class="st">"</span><span class="sc">\"</span><span class="st">"</span></span>
+<span id="cb8-539"><a href="#cb8-539"></a>                 <span class="op">+</span> <span class="st">"}"</span><span class="op">;</span></span>
+<span id="cb8-540"><a href="#cb8-540"></a>        file<span class="op">.</span><span class="fu">WriteLine</span>(json)<span class="op">;</span></span>
+<span id="cb8-541"><a href="#cb8-541"></a>    }</span>
+<span id="cb8-542"><a href="#cb8-542"></a>    file<span class="op">.</span><span class="fu">Close</span>()<span class="op">;</span></span>
+<span id="cb8-543"><a href="#cb8-543"></a>    Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"NDJSON written → "</span> <span class="op">+</span> path)<span class="op">;</span></span>
+<span id="cb8-544"><a href="#cb8-544"></a>}</span>
+<span id="cb8-545"><a href="#cb8-545"></a><span class="kw">function</span> <span class="fu">esc</span>(s){ s<span class="op">=</span><span class="bu">String</span>(s<span class="op">||</span><span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> s<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">\\</span><span class="ss">/g</span><span class="op">,</span><span class="st">"</span><span class="sc">\\\\</span><span class="st">"</span>)<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/"/g</span><span class="op">,</span><span class="st">'</span><span class="sc">\\</span><span class="st">"'</span>)<span class="op">;</span> }</span>
+<span id="cb8-546"><a href="#cb8-546"></a></span>
+<span id="cb8-547"><a href="#cb8-547"></a><span class="fu">main</span>()<span class="op">;</span></span>
+<span id="cb8-548"><a href="#cb8-548"></a><span class="in">```</span></span>
+<span id="cb8-549"><a href="#cb8-549"></a></span>
+<span id="cb8-550"><a href="#cb8-550"></a><span class="fu">#### Push NDJSON to your registry (external Python)</span></span>
+<span id="cb8-551"><a href="#cb8-551"></a><span class="in">```{.py filename="Example 18.7 - push_ndjson.py – Python 3 (requests)"}</span></span>
+<span id="cb8-552"><a href="#cb8-552"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb8-553"><a href="#cb8-553"></a><span class="co"># Example 18.7 - push_ndjson.py – Python 3 (requests)</span></span>
+<span id="cb8-554"><a href="#cb8-554"></a><span class="co"># Purpose: Stream NDJSON lines to a registry endpoint</span></span>
+<span id="cb8-555"><a href="#cb8-555"></a><span class="co"># Usage: python push_ndjson.py https://registry.example/api/bulk path\to\file.ndjson</span></span>
+<span id="cb8-556"><a href="#cb8-556"></a><span class="co"># -------------------------------------------------------</span></span>
+<span id="cb8-557"><a href="#cb8-557"></a><span class="im">import</span> sys, requests</span>
+<span id="cb8-558"><a href="#cb8-558"></a></span>
+<span id="cb8-559"><a href="#cb8-559"></a><span class="kw">def</span> main():</span>
+<span id="cb8-560"><a href="#cb8-560"></a>    <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&lt;</span> <span class="dv">3</span>:</span>
+<span id="cb8-561"><a href="#cb8-561"></a>        <span class="bu">print</span>(<span class="st">"Usage: push_ndjson.py &lt;endpoint&gt; &lt;ndjson_path&gt;"</span>)</span>
+<span id="cb8-562"><a href="#cb8-562"></a>        <span class="cf">return</span></span>
+<span id="cb8-563"><a href="#cb8-563"></a></span>
+<span id="cb8-564"><a href="#cb8-564"></a>    endpoint, path <span class="op">=</span> sys.argv[<span class="dv">1</span>], sys.argv[<span class="dv">2</span>]</span>
+<span id="cb8-565"><a href="#cb8-565"></a>    <span class="cf">with</span> <span class="bu">open</span>(path, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb8-566"><a href="#cb8-566"></a>        r <span class="op">=</span> requests.post(endpoint, data<span class="op">=</span>f, headers<span class="op">=</span>{<span class="st">"Content-Type"</span>:<span class="st">"application/x-ndjson"</span>}, timeout<span class="op">=</span><span class="dv">60</span>)</span>
+<span id="cb8-567"><a href="#cb8-567"></a>    r.raise_for_status()</span>
+<span id="cb8-568"><a href="#cb8-568"></a>    <span class="bu">print</span>(<span class="st">"Pushed NDJSON. Server:"</span>, r.status_code)</span>
+<span id="cb8-569"><a href="#cb8-569"></a></span>
+<span id="cb8-570"><a href="#cb8-570"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb8-571"><a href="#cb8-571"></a>    main()</span>
+<span id="cb8-572"><a href="#cb8-572"></a><span class="in">```</span></span>
+<span id="cb8-573"><a href="#cb8-573"></a></span>
+<span id="cb8-574"><a href="#cb8-574"></a><span class="fu">## Secrets, auth &amp; bitness (read this!)</span></span>
+<span id="cb8-575"><a href="#cb8-575"></a></span>
+<span id="cb8-576"><a href="#cb8-576"></a><span class="ss">- </span>**Never hardcode secrets** in EA scripts. Use environment variables</span>
+<span id="cb8-577"><a href="#cb8-577"></a>  (via WScript.Shell.Environment("PROCESS")) or external secret stores.</span>
+<span id="cb8-578"><a href="#cb8-578"></a></span>
+<span id="cb8-579"><a href="#cb8-579"></a><span class="ss">- </span>**Use API tokens** (Jira/Confluence) rather than passwords.</span>
+<span id="cb8-580"><a href="#cb8-580"></a></span>
+<span id="cb8-581"><a href="#cb8-581"></a><span class="ss">- </span>**Bitness must match**: EA is typically **32-bit**; external Python</span>
+<span id="cb8-582"><a href="#cb8-582"></a>  should be **32-bit** to attach via COM.</span>
+<span id="cb8-583"><a href="#cb8-583"></a></span>
+<span id="cb8-584"><a href="#cb8-584"></a><span class="ss">- </span>**Network constraints**: Corporate proxies/firewalls may require proxy</span>
+<span id="cb8-585"><a href="#cb8-585"></a>  settings; WinHTTP and requests both support proxies (configure in</span>
+<span id="cb8-586"><a href="#cb8-586"></a>  environment or code).</span>
+<span id="cb8-587"><a href="#cb8-587"></a></span>
+<span id="cb8-588"><a href="#cb8-588"></a><span class="fu">## Putting it together (one realistic flow)</span></span>
+<span id="cb8-589"><a href="#cb8-589"></a></span>
+<span id="cb8-590"><a href="#cb8-590"></a><span class="ss">1.  </span>Nightly job (Task Scheduler/CI) runs **Python**:</span>
+<span id="cb8-591"><a href="#cb8-591"></a></span>
+<span id="cb8-592"><a href="#cb8-592"></a><span class="ss">- </span>Query **Jira** (JQL) → update EA Requirements (store JiraKey).</span>
+<span id="cb8-593"><a href="#cb8-593"></a></span>
+<span id="cb8-594"><a href="#cb8-594"></a><span class="ss">- </span>Export **HTML** table from EA.</span>
+<span id="cb8-595"><a href="#cb8-595"></a></span>
+<span id="cb8-596"><a href="#cb8-596"></a><span class="ss">- </span>Update **Confluence** page with the new table.</span>
+<span id="cb8-597"><a href="#cb8-597"></a></span>
+<span id="cb8-598"><a href="#cb8-598"></a><span class="ss">- </span>Export **NDJSON** and push to registry.</span>
+<span id="cb8-599"><a href="#cb8-599"></a></span>
+<span id="cb8-600"><a href="#cb8-600"></a><span class="ss">- </span>git add/commit the export folder for traceability.</span>
+<span id="cb8-601"><a href="#cb8-601"></a></span>
+<span id="cb8-602"><a href="#cb8-602"></a><span class="ss">2.  </span>EA users see fresh data in Confluence; governance can trace elements</span>
+<span id="cb8-603"><a href="#cb8-603"></a>    back to Jira; downstream teams ingest NDJSON.</span>
+<span id="cb8-604"><a href="#cb8-604"></a></span>
+<span id="cb8-605"><a href="#cb8-605"></a><span class="fu">## Troubleshooting quick wins</span></span>
+<span id="cb8-606"><a href="#cb8-606"></a></span>
+<span id="cb8-607"><a href="#cb8-607"></a><span class="ss">- </span>**401/403**: bad token or wrong endpoint path/version (/api/2 vs</span>
+<span id="cb8-608"><a href="#cb8-608"></a>  /api/3).</span>
+<span id="cb8-609"><a href="#cb8-609"></a></span>
+<span id="cb8-610"><a href="#cb8-610"></a><span class="ss">- </span>**SSL errors**: corporate MITM certs—install trust chain or use</span>
+<span id="cb8-611"><a href="#cb8-611"></a>  verify= with org CA (Python).</span>
+<span id="cb8-612"><a href="#cb8-612"></a></span>
+<span id="cb8-613"><a href="#cb8-613"></a><span class="ss">- </span>**Timeouts**: increase receive timeout; batch large payloads.</span>
+<span id="cb8-614"><a href="#cb8-614"></a></span>
+<span id="cb8-615"><a href="#cb8-615"></a><span class="ss">- </span>**Unicode**: prefer UTF-8 in Python; JScript file I/O defaults to</span>
+<span id="cb8-616"><a href="#cb8-616"></a>  ANSI—keep payloads simple or generate externally.</span>
+<span id="cb8-617"><a href="#cb8-617"></a></span>
+<span id="cb8-618"><a href="#cb8-618"></a><span class="fu">## Checklist (cheat-sheet)</span></span>
+<span id="cb8-619"><a href="#cb8-619"></a></span>
+<span id="cb8-620"><a href="#cb8-620"></a><span class="ss">- </span>Keep identities in EA via **tagged values** (JiraKey, ExternalID).</span>
+<span id="cb8-621"><a href="#cb8-621"></a></span>
+<span id="cb8-622"><a href="#cb8-622"></a><span class="ss">- </span>**Write in EA; parse outside** (JSON).</span>
+<span id="cb8-623"><a href="#cb8-623"></a></span>
+<span id="cb8-624"><a href="#cb8-624"></a><span class="ss">- </span>Dry-run first; log to CSV/HTML for review.</span>
+<span id="cb8-625"><a href="#cb8-625"></a></span>
+<span id="cb8-626"><a href="#cb8-626"></a><span class="ss">- </span>Use **git** for exported artifacts (history, diffs).</span>
+<span id="cb8-627"><a href="#cb8-627"></a></span>
+<span id="cb8-628"><a href="#cb8-628"></a><span class="ss">- </span>Make small, composable scripts; orchestrate with Python/CI.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

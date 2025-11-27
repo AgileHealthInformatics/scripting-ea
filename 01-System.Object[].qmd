@@ -1,0 +1,579 @@
+# **Contents**
+
+[Chapter 1: Why Script EA?
+[1](#chapter-1-why-script-ea)](#chapter-1-why-script-ea)
+
+[Benefits of Automation in Modelling
+[1](#benefits-of-automation-in-modelling)](#benefits-of-automation-in-modelling)
+
+[Typical Use Cases [1](#typical-use-cases)](#typical-use-cases)
+
+[When Not to Script [2](#when-not-to-script)](#when-not-to-script)
+
+[Why Scripting Matters for Governance
+[2](#why-scripting-matters-for-governance)](#why-scripting-matters-for-governance)
+
+[Your First “Hello EA” Script
+[3](#your-first-hello-ea-script)](#your-first-hello-ea-script)
+
+[Safe Practice: The Dry Run Principle
+[4](#safe-practice-the-dry-run-principle)](#safe-practice-the-dry-run-principle)
+
+[A Different Way of Modelling
+[4](#a-different-way-of-modelling)](#a-different-way-of-modelling)
+
+[Preparing for the Examples
+[4](#preparing-for-the-examples)](#preparing-for-the-examples)
+
+[Looking Ahead [5](#looking-ahead)](#looking-ahead)
+
+[Chapter 2: Automation Landscape
+[6](#chapter-2-automation-landscape)](#chapter-2-automation-landscape)
+
+[Built-In Script Engine
+[6](#built-in-script-engine)](#built-in-script-engine)
+
+[Scripting options [6](#scripting-options)](#scripting-options)
+
+[External Automation [7](#external-automation)](#external-automation)
+
+[“Hello EA” Examples [7](#hello-ea-examples)](#hello-ea-examples)
+
+[Comparing the Three [9](#comparing-the-three)](#comparing-the-three)
+
+[The Role of COM [9](#the-role-of-com)](#the-role-of-com)
+
+[Choosing the Right Tool
+[10](#choosing-the-right-tool)](#choosing-the-right-tool)
+
+[Safety in Each Layer
+[10](#safety-in-each-layer)](#safety-in-each-layer)
+
+[Shaping Automation Practice
+[10](#shaping-automation-practice)](#shaping-automation-practice)
+
+[Looking Ahead [11](#looking-ahead-1)](#looking-ahead-1)
+
+[Chapter 3: Getting Started
+[12](#chapter-3-getting-started)](#chapter-3-getting-started)
+
+[The Importance of Backups
+[12](#the-importance-of-backups)](#the-importance-of-backups)
+
+[The Dry-Run Principle
+[13](#the-dry-run-principle)](#the-dry-run-principle)
+
+[Logging and Transparency
+[13](#logging-and-transparency)](#logging-and-transparency)
+
+[Understanding the Repository Structure
+[13](#understanding-the-repository-structure)](#understanding-the-repository-structure)
+
+[Update and Refresh [14](#update-and-refresh)](#update-and-refresh)
+
+[Avoiding Dangerous Patterns
+[15](#avoiding-dangerous-patterns)](#avoiding-dangerous-patterns)
+
+[Testing on Small Sets
+[15](#testing-on-small-sets)](#testing-on-small-sets)
+
+[Cultural Safety [15](#cultural-safety)](#cultural-safety)
+
+[Building the Right Habits
+[16](#building-the-right-habits)](#building-the-right-habits)
+
+[Chapter 4: API Essentials
+[17](#chapter-4-api-essentials)](#chapter-4-api-essentials)
+
+[Why Understand the API?
+[17](#why-understand-the-api)](#why-understand-the-api)
+
+[The Object Model [18](#the-object-model)](#the-object-model)
+
+[Repository [19](#repository)](#repository)
+
+[Packages [20](#packages)](#packages)
+
+[Elements [21](#elements)](#elements)
+
+[Connectors [22](#connectors)](#connectors)
+
+[Attribute and Method: Details of Elements
+[22](#attribute-and-method-details-of-elements)](#attribute-and-method-details-of-elements)
+
+[Tagged Values [24](#tagged-values)](#tagged-values)
+
+[SQL vs API [24](#sql-vs-api)](#sql-vs-api)
+
+[Update and RefreshModelView
+[26](#update-and-refreshmodelview)](#update-and-refreshmodelview)
+
+[The 80/20 Principle in Practice
+[26](#the-8020-principle-in-practice)](#the-8020-principle-in-practice)
+
+[Learning Through Patterns
+[26](#learning-through-patterns)](#learning-through-patterns)
+
+[Common Pitfalls [26](#common-pitfalls)](#common-pitfalls)
+
+[Looking Ahead [27](#looking-ahead-2)](#looking-ahead-2)
+
+[Chapter 5: Inside EA with JScript
+[28](#chapter-5-inside-ea-with-jscript)](#chapter-5-inside-ea-with-jscript)
+
+[The Language Landscape
+[28](#the-language-landscape)](#the-language-landscape)
+
+[JavaScript or JScript?
+[29](#javascript-or-jscript)](#javascript-or-jscript)
+
+[The Constraints of JScript ES3
+[29](#the-constraints-of-jscript-es3)](#the-constraints-of-jscript-es3)
+
+[Scripting Tips [30](#scripting-tips)](#scripting-tips)
+
+[A Progressive Learning Curve
+[31](#a-progressive-learning-curve)](#a-progressive-learning-curve)
+
+[Preparing for the Examples
+[32](#preparing-for-the-examples-1)](#preparing-for-the-examples-1)
+
+[Looking Ahead [38](#looking-ahead-3)](#looking-ahead-3)
+
+[Chapter 6: External Automation
+[39](#chapter-6-external-automation)](#chapter-6-external-automation)
+
+[Why external automation?
+[39](#why-external-automation)](#why-external-automation)
+
+[How it works (at a glance)
+[39](#how-it-works-at-a-glance)](#how-it-works-at-a-glance)
+
+[Trade-offs [42](#trade-offs)](#trade-offs)
+
+[Where this goes next
+[43](#where-this-goes-next)](#where-this-goes-next)
+
+[Chapter 7: Script Design Patterns
+[44](#chapter-7-script-design-patterns)](#chapter-7-script-design-patterns)
+
+[Why Patterns Matter [44](#why-patterns-matter)](#why-patterns-matter)
+
+[Examples [46](#examples)](#examples)
+
+[Pattern Handling [57](#pattern-handling)](#pattern-handling)
+
+[Performance & Safety Notes
+[59](#performance-safety-notes)](#performance-safety-notes)
+
+[Bonus: Python “Curate → Apply” Pipeline
+[60](#bonus-python-curate-apply-pipeline)](#bonus-python-curate-apply-pipeline)
+
+[What to Use When (cheat-sheet)
+[60](#what-to-use-when-cheat-sheet)](#what-to-use-when-cheat-sheet)
+
+[Chapter 8: Object Details
+[61](#chapter-8-object-details)](#chapter-8-object-details)
+
+[Sparx EA Objects [61](#sparx-ea-objects)](#sparx-ea-objects)
+
+[Summary [67](#summary)](#summary)
+
+[Chapter 9: Imports & Exports
+[68](#chapter-9-imports-exports)](#chapter-9-imports-exports)
+
+[Why Imports Matter [68](#why-imports-matter)](#why-imports-matter)
+
+[Why Exports Matter [69](#why-exports-matter)](#why-exports-matter)
+
+[The Round-Trip Challenge
+[69](#the-round-trip-challenge)](#the-round-trip-challenge)
+
+[Common Pitfalls [69](#common-pitfalls-1)](#common-pitfalls-1)
+
+[Choosing a Format [70](#choosing-a-format)](#choosing-a-format)
+
+[GUIDs, Keys, and Identity
+[70](#guids-keys-and-identity)](#guids-keys-and-identity)
+
+[Curated Imports [71](#curated-imports)](#curated-imports)
+
+[Safety in Exports [71](#safety-in-exports)](#safety-in-exports)
+
+[Integrating Imports/Exports into Workflows
+[71](#integrating-importsexports-into-workflows)](#integrating-importsexports-into-workflows)
+
+[What you’ll use [72](#what-youll-use)](#what-youll-use)
+
+[Managing GUIDs & Avoiding Duplicates
+[80](#managing-guids-avoiding-duplicates)](#managing-guids-avoiding-duplicates)
+
+[Scaling Up (Performance)
+[80](#scaling-up-performance)](#scaling-up-performance)
+
+[Safety Checklist [81](#safety-checklist)](#safety-checklist)
+
+[What to use when [81](#what-to-use-when)](#what-to-use-when)
+
+[Chapter 10: MDG-Aware Scripting
+[82](#chapter-10-mdg-aware-scripting)](#chapter-10-mdg-aware-scripting)
+
+[What Are MDGs? [82](#what-are-mdgs)](#what-are-mdgs)
+
+[Why MDGs Matter for Scripting
+[83](#why-mdgs-matter-for-scripting)](#why-mdgs-matter-for-scripting)
+
+[Important Tips [83](#important-tips)](#important-tips)
+
+[MDGs in External Automation
+[85](#mdgs-in-external-automation)](#mdgs-in-external-automation)
+
+[Safety and Governance
+[85](#safety-and-governance)](#safety-and-governance)
+
+[Examples [86](#examples-1)](#examples-1)
+
+[Safety & governance notes
+[94](#safety-governance-notes)](#safety-governance-notes)
+
+[What to use when (cheat-sheet)
+[94](#what-to-use-when-cheat-sheet-1)](#what-to-use-when-cheat-sheet-1)
+
+[Chapter 11: Governance Scripts
+[95](#chapter-11-governance-scripts)](#chapter-11-governance-scripts)
+
+[Why Governance Matters
+[95](#why-governance-matters)](#why-governance-matters)
+
+[The Pain of Manual Governance
+[96](#the-pain-of-manual-governance)](#the-pain-of-manual-governance)
+
+[Governance and MDGs [98](#governance-and-mdgs)](#governance-and-mdgs)
+
+[Examples [99](#examples-2)](#examples-2)
+
+[Summary [104](#summary-1)](#summary-1)
+
+[Chapter 12: Cookbook of Examples
+[105](#chapter-12-cookbook-of-examples)](#chapter-12-cookbook-of-examples)
+
+[The Value of Worked Examples
+[105](#the-value-of-worked-examples)](#the-value-of-worked-examples)
+
+[The Scope of the Cookbook
+[105](#the-scope-of-the-cookbook)](#the-scope-of-the-cookbook)
+
+[Why Not Just Copy from the Internet?
+[106](#why-not-just-copy-from-the-internet)](#why-not-just-copy-from-the-internet)
+
+[Safety First in a Cookbook
+[106](#safety-first-in-a-cookbook)](#safety-first-in-a-cookbook)
+
+[Adapting Recipes to Your Context
+[107](#adapting-recipes-to-your-context)](#adapting-recipes-to-your-context)
+
+[The Teaching Role of Recipes
+[107](#the-teaching-role-of-recipes)](#the-teaching-role-of-recipes)
+
+[Building a Shared Library
+[107](#building-a-shared-library)](#building-a-shared-library)
+
+[Cookbook Limitations
+[107](#cookbook-limitations)](#cookbook-limitations)
+
+[AI and Cookbook Expansion
+[108](#ai-and-cookbook-expansion)](#ai-and-cookbook-expansion)
+
+[Summary [116](#summary-2)](#summary-2)
+
+[Chapter 13: Why AI Helps
+[117](#chapter-13-why-ai-helps)](#chapter-13-why-ai-helps)
+
+[Benefits [117](#benefits)](#benefits)
+
+[Using AI Safely [119](#using-ai-safely)](#using-ai-safely)
+
+[AI and Learning [120](#ai-and-learning)](#ai-and-learning)
+
+[AI in Daily Workflow
+[120](#ai-in-daily-workflow)](#ai-in-daily-workflow)
+
+[Examples [121](#examples-3)](#examples-3)
+
+[Using AI for Documentation
+[122](#using-ai-for-documentation)](#using-ai-for-documentation)
+
+[Best Practices for AI-Assisted Scripting
+[123](#best-practices-for-ai-assisted-scripting)](#best-practices-for-ai-assisted-scripting)
+
+[Summary [123](#summary-3)](#summary-3)
+
+[Chapter 14: Prompt Engineering
+[124](#chapter-14-prompt-engineering)](#chapter-14-prompt-engineering)
+
+[Why Prompt Engineering Matters
+[124](#why-prompt-engineering-matters)](#why-prompt-engineering-matters)
+
+[Prompt Engineering as Team Practice
+[127](#prompt-engineering-as-team-practice)](#prompt-engineering-as-team-practice)
+
+[AI Literacy for Modellers
+[127](#ai-literacy-for-modellers)](#ai-literacy-for-modellers)
+
+[Prompt Template [127](#prompt-template)](#prompt-template)
+
+[Examples [129](#examples-4)](#examples-4)
+
+[Best Practices for Prompts
+[133](#best-practices-for-prompts)](#best-practices-for-prompts)
+
+[Summary [133](#summary-4)](#summary-4)
+
+[Chapter 15: AI Refactoring Partner
+[134](#chapter-15-ai-refactoring-partner)](#chapter-15-ai-refactoring-partner)
+
+[Why Refactoring Matters in EA Scripting
+[134](#why-refactoring-matters-in-ea-scripting)](#why-refactoring-matters-in-ea-scripting)
+
+[The AI Advantage in Refactoring
+[135](#the-ai-advantage-in-refactoring)](#the-ai-advantage-in-refactoring)
+
+[Common Refactoring Needs
+[135](#common-refactoring-needs)](#common-refactoring-needs)
+
+[Risks of AI Refactoring
+[136](#risks-of-ai-refactoring)](#risks-of-ai-refactoring)
+
+[A Human–AI Workflow for Refactoring
+[136](#a-humanai-workflow-for-refactoring)](#a-humanai-workflow-for-refactoring)
+
+[AI for Documentation Retrofitting
+[136](#ai-for-documentation-retrofitting)](#ai-for-documentation-retrofitting)
+
+[Refactoring for Governance
+[137](#refactoring-for-governance)](#refactoring-for-governance)
+
+[Beyond EA: Refactoring Across Languages
+[137](#beyond-ea-refactoring-across-languages)](#beyond-ea-refactoring-across-languages)
+
+[The Cultural Impact of Refactoring with AI
+[137](#the-cultural-impact-of-refactoring-with-ai)](#the-cultural-impact-of-refactoring-with-ai)
+
+[Examples [138](#examples-5)](#examples-5)
+
+[Summary [141](#summary-5)](#summary-5)
+
+[Chapter 16: AI in Daily Workflow
+[143](#chapter-16-ai-in-daily-workflow)](#chapter-16-ai-in-daily-workflow)
+
+[From Occasional Help to Daily Companion
+[143](#from-occasional-help-to-daily-companion)](#from-occasional-help-to-daily-companion)
+
+[The Role of a Prompt Library
+[144](#the-role-of-a-prompt-library)](#the-role-of-a-prompt-library)
+
+[Automating Boilerplate
+[144](#automating-boilerplate)](#automating-boilerplate)
+
+[AI as a Debugging Partner
+[144](#ai-as-a-debugging-partner)](#ai-as-a-debugging-partner)
+
+[Integration with Version Control
+[145](#integration-with-version-control)](#integration-with-version-control)
+
+[Governance and Reporting
+[145](#governance-and-reporting)](#governance-and-reporting)
+
+[Risks of Daily AI Use
+[145](#risks-of-daily-ai-use)](#risks-of-daily-ai-use)
+
+[AI as a Team Enabler
+[146](#ai-as-a-team-enabler)](#ai-as-a-team-enabler)
+
+[Git + AI Workflow [148](#git-ai-workflow)](#git-ai-workflow)
+
+[AI-Assisted Governance Check
+[148](#ai-assisted-governance-check)](#ai-assisted-governance-check)
+
+[Summary [149](#summary-6)](#summary-6)
+
+[Chapter 17: Performance & Scaling
+[150](#chapter-17-performance-scaling)](#chapter-17-performance-scaling)
+
+[Why Performance Matters
+[150](#why-performance-matters)](#why-performance-matters)
+
+[Sources of Slowness [150](#sources-of-slowness)](#sources-of-slowness)
+
+[Measure First [151](#measure-first)](#measure-first)
+
+[Tips [151](#tips)](#tips)
+
+[Principles [152](#principles)](#principles)
+
+[Examples [154](#examples-6)](#examples-6)
+
+[Dos & Don’ts (cheat-sheet)
+[161](#dos-donts-cheat-sheet)](#dos-donts-cheat-sheet)
+
+[Putting It Together [162](#putting-it-together)](#putting-it-together)
+
+[Chapter 18: Integrating with Workflows
+[163](#chapter-18-integrating-with-workflows)](#chapter-18-integrating-with-workflows)
+
+[Why Integration Matters
+[163](#why-integration-matters)](#why-integration-matters)
+
+[The Role of Automation in Integration
+[163](#the-role-of-automation-in-integration)](#the-role-of-automation-in-integration)
+
+[Common Integration Targets
+[164](#common-integration-targets)](#common-integration-targets)
+
+[Integration Approaches
+[164](#integration-approaches)](#integration-approaches)
+
+[The Cultural Dimension of Integration
+[166](#the-cultural-dimension-of-integration)](#the-cultural-dimension-of-integration)
+
+[Risks of Integration
+[166](#risks-of-integration)](#risks-of-integration)
+
+[Examples [167](#examples-7)](#examples-7)
+
+[Notes [169](#notes)](#notes)
+
+[Secrets, auth & bitness (read this!)
+[174](#secrets-auth-bitness-read-this)](#secrets-auth-bitness-read-this)
+
+[Putting it together (one realistic flow)
+[174](#putting-it-together-one-realistic-flow)](#putting-it-together-one-realistic-flow)
+
+[Troubleshooting quick wins
+[175](#troubleshooting-quick-wins)](#troubleshooting-quick-wins)
+
+[Checklist (cheat-sheet)
+[175](#checklist-cheat-sheet)](#checklist-cheat-sheet)
+
+[Chapter 19: Add-ins vs Scripts
+[176](#chapter-19-add-ins-vs-scripts)](#chapter-19-add-ins-vs-scripts)
+
+[Scripts as the First Line of Automation
+[176](#scripts-as-the-first-line-of-automation)](#scripts-as-the-first-line-of-automation)
+
+[Add-ins as Compiled Extensions
+[177](#add-ins-as-compiled-extensions)](#add-ins-as-compiled-extensions)
+
+[Why Move from Script to Add-in?
+[177](#why-move-from-script-to-add-in)](#why-move-from-script-to-add-in)
+
+[Trade-offs [177](#trade-offs-1)](#trade-offs-1)
+
+[Add-ins and Governance
+[178](#add-ins-and-governance)](#add-ins-and-governance)
+
+[The Learning Curve [178](#the-learning-curve)](#the-learning-curve)
+
+[A Progressive Path [179](#a-progressive-path)](#a-progressive-path)
+
+[Cultural Impact [179](#cultural-impact)](#cultural-impact)
+
+[Risks of Add-ins [179](#risks-of-add-ins)](#risks-of-add-ins)
+
+[Example [179](#example)](#example)
+
+[When to Migrate Script → Add-in
+[181](#when-to-migrate-script-add-in)](#when-to-migrate-script-add-in)
+
+[Migration Example [181](#migration-example)](#migration-example)
+
+[Summary [181](#summary-7)](#summary-7)
+
+[Chapter 20: Troubleshooting
+[183](#chapter-20-troubleshooting)](#chapter-20-troubleshooting)
+
+[Why Troubleshooting Matters
+[183](#why-troubleshooting-matters)](#why-troubleshooting-matters)
+
+[The Nature of EA’s Quirks
+[183](#the-nature-of-eas-quirks)](#the-nature-of-eas-quirks)
+
+[The Usual Suspects [184](#the-usual-suspects)](#the-usual-suspects)
+
+[The Value of Defensive Patterns
+[185](#the-value-of-defensive-patterns)](#the-value-of-defensive-patterns)
+
+[Troubleshooting as a Team Resource
+[186](#troubleshooting-as-a-team-resource)](#troubleshooting-as-a-team-resource)
+
+[Safe Patterns Recap [189](#safe-patterns-recap)](#safe-patterns-recap)
+
+[Chapter 21: Reference
+[191](#chapter-21-reference)](#chapter-21-reference)
+
+[EA Object Model Map (Condensed)
+[191](#ea-object-model-map-condensed)](#ea-object-model-map-condensed)
+
+[SQL Cheat-Sheet (Read-only)
+[192](#sql-cheat-sheet-read-only)](#sql-cheat-sheet-read-only)
+
+[Standard Script Header Template
+[193](#standard-script-header-template)](#standard-script-header-template)
+
+[Logging Helper Snippet
+[193](#logging-helper-snippet)](#logging-helper-snippet)
+
+[Common ObjectType Values
+[194](#common-objecttype-values)](#common-objecttype-values)
+
+[Common Errors Quick Table
+[194](#common-errors-quick-table)](#common-errors-quick-table)
+
+[Quick Reuse Snippets
+[196](#quick-reuse-snippets)](#quick-reuse-snippets)
+
+[Summary [196](#summary-8)](#summary-8)
+
+[Appendix A: Scripting Constraints
+[198](#appendix-a-scripting-constraints)](#appendix-a-scripting-constraints)
+
+[A.1 Language Constraints
+[198](#a.1-language-constraints)](#a.1-language-constraints)
+
+[A.2 Object Handling [198](#a.2-object-handling)](#a.2-object-handling)
+
+[A.3 File I/O [198](#a.3-file-io)](#a.3-file-io)
+
+[A.4 Safety Rules [198](#a.4-safety-rules)](#a.4-safety-rules)
+
+[Appendix B: External Automation
+[199](#appendix-b-external-automation)](#appendix-b-external-automation)
+
+[B.1 Attaching Externally
+[199](#b.1-attaching-externally)](#b.1-attaching-externally)
+
+[B.2 When to Go External
+[199](#b.2-when-to-go-external)](#b.2-when-to-go-external)
+
+[B.3 Bitness [199](#b.3-bitness)](#b.3-bitness)
+
+[B.4 Add-ins [199](#b.4-add-ins)](#b.4-add-ins)
+
+[Appendix C: Glossary of Terms
+[200](#appendix-c-glossary-of-terms)](#appendix-c-glossary-of-terms)
+
+[Appendix D: Quick Reference
+[202](#appendix-d-quick-reference)](#appendix-d-quick-reference)
+
+[Appendix E: External Automation Setup
+[203](#appendix-e-external-automation-setup)](#appendix-e-external-automation-setup)
+
+[E.1 Purpose [203](#e.1-purpose)](#e.1-purpose)
+
+[E.2 Usage [203](#e.2-usage)](#e.2-usage)
+
+[E.3 The EAConnect Helper Class
+[204](#e.3-the-eaconnect-helper-class)](#e.3-the-eaconnect-helper-class)
+
+[E.4 Configuration & Setup
+[208](#e.4-configuration-setup)](#e.4-configuration-setup)

@@ -1,0 +1,50 @@
+# Appendix A: Scripting Constraints
+
+These are the **house rules** for safe scripting in Sparx EA, based on
+your *Sparx scripting constraints.txt* and reinforced by experience.
+
+## A.1 Language Constraints
+
+- EA’s internal scripting engine supports VBScript, JScript (Microsoft
+  JScript, ES3), and JavaScript (recent builds).
+
+- Always assume ES3:
+
+  - Use var (no let/const).
+
+  - No arrow functions (()=\>).
+
+  - No forEach/map (EA collections are COM, not arrays).
+
+  - No JSON.parse/stringify (manual or external only).
+
+## A.2 Object Handling
+
+- EA collections → .Count and .GetAt(i).
+
+- Always .Update() after modifying an object.
+
+- Always Repository.RefreshModelView() to sync UI.
+
+- Delete loops → iterate backwards.
+
+- Check ObjectType before assuming Package/Element.
+
+## A.3 File I/O
+
+- JScript’s FileSystemObject writes ANSI only.
+
+- For **UTF-8**, use external automation (Python/C#).
+
+- Always select an **output directory**, not a filename; filenames must
+  be auto-derived by script.
+
+## A.4 Safety Rules
+
+- Every modifying script must include a DRY_RUN flag, default true.
+
+- Every modifying script must log actions (at least to Output tab;
+  ideally to CSV).
+
+- All scripts must start with a **verbose header** (purpose, usage,
+  assumptions, safety, dependencies, update history).

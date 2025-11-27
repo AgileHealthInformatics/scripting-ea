@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Chapter 3: Getting Started – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05-System.Object[].html" rel="next">
+<link href="./03-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-System.Object[].html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-importance-of-backups" id="toc-the-importance-of-backups" class="nav-link active" data-scroll-target="#the-importance-of-backups"><span class="header-section-number">4.1</span> The Importance of Backups</a></li>
+  <li><a href="#the-dry-run-principle" id="toc-the-dry-run-principle" class="nav-link" data-scroll-target="#the-dry-run-principle"><span class="header-section-number">4.2</span> The Dry-Run Principle</a></li>
+  <li><a href="#logging-and-transparency" id="toc-logging-and-transparency" class="nav-link" data-scroll-target="#logging-and-transparency"><span class="header-section-number">4.3</span> Logging and Transparency</a></li>
+  <li><a href="#understanding-the-repository-structure" id="toc-understanding-the-repository-structure" class="nav-link" data-scroll-target="#understanding-the-repository-structure"><span class="header-section-number">4.4</span> Understanding the Repository Structure</a></li>
+  <li><a href="#update-and-refresh" id="toc-update-and-refresh" class="nav-link" data-scroll-target="#update-and-refresh"><span class="header-section-number">4.5</span> Update and Refresh</a></li>
+  <li><a href="#avoiding-dangerous-patterns" id="toc-avoiding-dangerous-patterns" class="nav-link" data-scroll-target="#avoiding-dangerous-patterns"><span class="header-section-number">4.6</span> Avoiding Dangerous Patterns</a></li>
+  <li><a href="#testing-on-small-sets" id="toc-testing-on-small-sets" class="nav-link" data-scroll-target="#testing-on-small-sets"><span class="header-section-number">4.7</span> Testing on Small Sets</a></li>
+  <li><a href="#cultural-safety" id="toc-cultural-safety" class="nav-link" data-scroll-target="#cultural-safety"><span class="header-section-number">4.8</span> Cultural Safety</a></li>
+  <li><a href="#building-the-right-habits" id="toc-building-the-right-habits" class="nav-link" data-scroll-target="#building-the-right-habits"><span class="header-section-number">4.9</span> Building the Right Habits</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Every technical journey begins with first steps, and scripting Enterprise Architect is no exception. After seeing the big picture of why scripting matters (Chapter 1) and the landscape of options available (Chapter 2), it is tempting to jump straight into code. But before you do, there is one critical lesson: <strong>safety first</strong>.</p>
+<p>Scripting in EA is not like writing macros in a spreadsheet where you can undo or close without saving. The EA repository is a live database. Every script you run has the power to add, modify, or delete hundreds or thousands of elements in a matter of seconds. There is no “undo” button for automation. That is why this chapter is dedicated to getting started safely. We will cover the principles and practices that protect your repository, minimise risk, and give you confidence when you begin experimenting with automation.</p>
+<section id="the-importance-of-backups" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="the-importance-of-backups"><span class="header-section-number">4.1</span> The Importance of Backups</h2>
+<p>The very first safeguard is <strong>backups</strong>. EA repositories come in different forms: .qea files, .eapx files, or database connections to SQL Server, Oracle, or PostgreSQL. Regardless of the backend, before you run any script that modifies content, take a backup.</p>
+<p>For file-based repositories, this can be as simple as copying the file to another folder. For server-based repositories, use database backup routines or export a snapshot to XMI. The principle is the same: always have a way back. If your script misbehaves and wipes out a branch of the model, you need the comfort of knowing you can restore it.</p>
+<p>Experienced script authors often keep a <strong>sandbox repository</strong>: a copy of the model used only for testing scripts. This lets you experiment freely without fear of damaging the production model. Once your script behaves as expected, you can run it against the real repository.</p>
+</section>
+<section id="the-dry-run-principle" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="the-dry-run-principle"><span class="header-section-number">4.2</span> The Dry-Run Principle</h2>
+<p>Perhaps the single most important safeguard in scripting is the <strong>dry-run flag</strong>. Every modifying script in this book includes a line near the top:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When DRY_RUN is true, the script logs what it <em>would</em> do, but does not commit any changes. Only when you flip it to false will the script actually update the repository. This gives you a rehearsal phase: you see what names would be changed, what tags would be added, what elements would be deleted.</p>
+<p>This principle of simulation before execution is vital. It is your safety net. Many a modeller has regretted running a bulk update script without such a safeguard. By adopting dry-run as a discipline, you make your scripts trustworthy not only for yourself but also for colleagues who may reuse them.</p>
+</section>
+<section id="logging-and-transparency" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="logging-and-transparency"><span class="header-section-number">4.3</span> Logging and Transparency</h2>
+<p>Logging is your second line of defence. A script that silently modifies hundreds of elements without telling you what it did is dangerous. A safe script always logs its actions, either to EA’s Output tab, to a CSV file, or both.</p>
+<p>Logging serves three purposes:</p>
+<ol type="1">
+<li><p><strong>Feedback</strong> — you see what the script is doing in real time.</p></li>
+<li><p><strong>Audit</strong> — you can review afterwards which elements were touched.</p></li>
+<li><p><strong>Debugging</strong> — if something goes wrong, logs help you trace the problem.</p></li>
+</ol>
+<p>Good practice is to log to CSV, with columns such as ElementID, Name, OldValue, NewValue, Action. That way you can filter and analyse in Excel or share the log with others.</p>
+</section>
+<section id="understanding-the-repository-structure" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="understanding-the-repository-structure"><span class="header-section-number">4.4</span> Understanding the Repository Structure</h2>
+<p>Before you can script safely, you must understand the structure you are scripting against. EA is more than diagrams. At the top is the <strong>Repository</strong> object. Inside are <strong>Models</strong> (also known as root packages). Each model contains <strong>Packages</strong>, and packages contain <strong>Elements</strong> and <strong>Diagrams</strong>.</p>
+<p>Think of it as a tree:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>EA Repository object model</strong></pre>
+</div>
+<pre class="text" data-filename="EA Repository object model"><code>Repository
+├─ Model (root package)
+│ ├─ Package
+│ │ ├─ Elements
+│ │ ├─ Diagrams
+│ │ └─ Sub-packages
+│ └─ Package
+└─ Other models</code></pre>
+</div>
+<p>At the element level, you have properties (name, type, status) and collections (attributes, methods, connectors, tagged values). Connectors link elements together. Diagrams show visual instances of elements.</p>
+<p>Understanding this hierarchy is essential because every script you write will involve traversing these structures. A safe script is one that navigates correctly: it knows when it is handling a package versus an element, and it never assumes without checking ObjectType.</p>
+</section>
+<section id="update-and-refresh" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="update-and-refresh"><span class="header-section-number">4.5</span> Update and Refresh</h2>
+<p>Another foundational safety concept is the difference between <strong>Update()</strong> and <strong>RefreshModelView()</strong>.</p>
+<ul>
+<li><p><strong>Update()</strong> commits your change to the repository. Without it, the change is lost.</p></li>
+<li><p><strong>RefreshModelView()</strong> tells EA’s user interface to reload content. Without it, the change may be invisible until you close and reopen EA.</p></li>
+</ul>
+<p>Many beginners forget one or the other. Forgetting Update() means the script appears to work but nothing actually changes. Forgetting RefreshModelView() means the script did work but you can’t see the result.</p>
+<p>The safe pattern is:</p>
+<ol type="1">
+<li><p>Modify the object.</p></li>
+<li><p>Call .Update().</p></li>
+<li><p>At the end of the script (or per batch), call Repository.RefreshModelView().</p></li>
+</ol>
+</section>
+<section id="avoiding-dangerous-patterns" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="avoiding-dangerous-patterns"><span class="header-section-number">4.6</span> Avoiding Dangerous Patterns</h2>
+<p>Certain scripting mistakes are particularly hazardous:</p>
+<ul>
+<li><p><strong>Forward deletion loops</strong>: deleting items in a forward loop causes index shifts, skipping items. Always delete backwards.</p></li>
+<li><p><strong>Assuming selection type</strong>: don’t assume the user has selected a package; they may have selected a diagram or element. Always check ObjectType.</p></li>
+<li><p><strong>Using names as keys</strong>: element names are not unique. Use GUIDs or IDs for identification.</p></li>
+<li><p><strong>Direct SQL writes</strong>: avoid Repository.Execute(“UPDATE…”). This bypasses EA’s business rules and can corrupt the repository. Use SQL only for <em>reading</em> (SQLQuery), never for writing.</p></li>
+</ul>
+</section>
+<section id="testing-on-small-sets" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="testing-on-small-sets"><span class="header-section-number">4.7</span> Testing on Small Sets</h2>
+<p>Before applying a script to thousands of elements, test it on a small package with a handful of items. This lets you confirm behaviour without risking widespread impact. A safe workflow is:</p>
+<ol type="1">
+<li><p>Copy a few elements into a test package.</p></li>
+<li><p>Run the script with DRY_RUN = true.</p></li>
+<li><p>Check the log output.</p></li>
+<li><p>Switch to DRY_RUN = false and run.</p></li>
+<li><p>Verify the changes.</p></li>
+<li><p>Only then apply to the full repository.</p></li>
+</ol>
+</section>
+<section id="cultural-safety" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="cultural-safety"><span class="header-section-number">4.8</span> Cultural Safety</h2>
+<p>Safety is not just technical; it is cultural. Teams should adopt norms:</p>
+<ul>
+<li><p>Never run destructive scripts in production without dry-run first.</p></li>
+<li><p>Always share logs of what was changed.</p></li>
+<li><p>Keep a shared script library under version control (Git).</p></li>
+<li><p>Review scripts with peers before first run.</p></li>
+</ul>
+<p>These norms build trust. Architects and modellers become more willing to use automation when they know safeguards are built in.</p>
+</section>
+<section id="building-the-right-habits" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="building-the-right-habits"><span class="header-section-number">4.9</span> Building the Right Habits</h2>
+<p>The purpose of this chapter is not to scare you, but to build the right habits from the start. If you learn to always include a dry-run flag, always log, always test on small sets, and always backup, then scripting EA becomes an empowering tool rather than a risky gamble.</p>
+<p>Think of it like climbing: the harness, helmet, and rope may feel restrictive at first, but they enable you to climb higher with confidence. In the same way, scripting safety patterns may feel like overhead at first, but they let you automate more ambitious tasks without fear.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03-System.Object[].html" class="pagination-link" aria-label="Chapter 2: Automation Landscape">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05-System.Object[].html" class="pagination-link" aria-label="Chapter 4: API Essentials">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu"># Chapter 3: Getting Started </span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>Every technical journey begins with first steps, and scripting</span>
+<span id="cb3-4"><a href="#cb3-4"></a>Enterprise Architect is no exception. After seeing the big picture of</span>
+<span id="cb3-5"><a href="#cb3-5"></a>why scripting matters (Chapter 1) and the landscape of options available</span>
+<span id="cb3-6"><a href="#cb3-6"></a>(Chapter 2), it is tempting to jump straight into code. But before you</span>
+<span id="cb3-7"><a href="#cb3-7"></a>do, there is one critical lesson: **safety first**.</span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a>Scripting in EA is not like writing macros in a spreadsheet where you</span>
+<span id="cb3-10"><a href="#cb3-10"></a>can undo or close without saving. The EA repository is a live database.</span>
+<span id="cb3-11"><a href="#cb3-11"></a>Every script you run has the power to add, modify, or delete hundreds or</span>
+<span id="cb3-12"><a href="#cb3-12"></a>thousands of elements in a matter of seconds. There is no “undo” button</span>
+<span id="cb3-13"><a href="#cb3-13"></a>for automation. That is why this chapter is dedicated to getting started</span>
+<span id="cb3-14"><a href="#cb3-14"></a>safely. We will cover the principles and practices that protect your</span>
+<span id="cb3-15"><a href="#cb3-15"></a>repository, minimise risk, and give you confidence when you begin</span>
+<span id="cb3-16"><a href="#cb3-16"></a>experimenting with automation.</span>
+<span id="cb3-17"><a href="#cb3-17"></a></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="fu">## The Importance of Backups</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a>The very first safeguard is **backups**. EA repositories come in</span>
+<span id="cb3-21"><a href="#cb3-21"></a>different forms: .qea files, .eapx files, or database connections to SQL</span>
+<span id="cb3-22"><a href="#cb3-22"></a>Server, Oracle, or PostgreSQL. Regardless of the backend, before you run</span>
+<span id="cb3-23"><a href="#cb3-23"></a>any script that modifies content, take a backup.</span>
+<span id="cb3-24"><a href="#cb3-24"></a></span>
+<span id="cb3-25"><a href="#cb3-25"></a>For file-based repositories, this can be as simple as copying the file</span>
+<span id="cb3-26"><a href="#cb3-26"></a>to another folder. For server-based repositories, use database backup</span>
+<span id="cb3-27"><a href="#cb3-27"></a>routines or export a snapshot to XMI. The principle is the same: always</span>
+<span id="cb3-28"><a href="#cb3-28"></a>have a way back. If your script misbehaves and wipes out a branch of the</span>
+<span id="cb3-29"><a href="#cb3-29"></a>model, you need the comfort of knowing you can restore it.</span>
+<span id="cb3-30"><a href="#cb3-30"></a></span>
+<span id="cb3-31"><a href="#cb3-31"></a>Experienced script authors often keep a **sandbox repository**: a copy</span>
+<span id="cb3-32"><a href="#cb3-32"></a>of the model used only for testing scripts. This lets you experiment</span>
+<span id="cb3-33"><a href="#cb3-33"></a>freely without fear of damaging the production model. Once your script</span>
+<span id="cb3-34"><a href="#cb3-34"></a>behaves as expected, you can run it against the real repository.</span>
+<span id="cb3-35"><a href="#cb3-35"></a></span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="fu">## The Dry-Run Principle</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a></span>
+<span id="cb3-38"><a href="#cb3-38"></a>Perhaps the single most important safeguard in scripting is the</span>
+<span id="cb3-39"><a href="#cb3-39"></a>**dry-run flag**. Every modifying script in this book includes a line</span>
+<span id="cb3-40"><a href="#cb3-40"></a>near the top:</span>
+<span id="cb3-41"><a href="#cb3-41"></a></span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="in">``` js</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="kw">var</span> DRY_RUN <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-44"><a href="#cb3-44"></a><span class="in">```</span></span>
+<span id="cb3-45"><a href="#cb3-45"></a></span>
+<span id="cb3-46"><a href="#cb3-46"></a>When DRY_RUN is true, the script logs what it *would* do, but does not</span>
+<span id="cb3-47"><a href="#cb3-47"></a>commit any changes. Only when you flip it to false will the script</span>
+<span id="cb3-48"><a href="#cb3-48"></a>actually update the repository. This gives you a rehearsal phase: you</span>
+<span id="cb3-49"><a href="#cb3-49"></a>see what names would be changed, what tags would be added, what elements</span>
+<span id="cb3-50"><a href="#cb3-50"></a>would be deleted.</span>
+<span id="cb3-51"><a href="#cb3-51"></a></span>
+<span id="cb3-52"><a href="#cb3-52"></a>This principle of simulation before execution is vital. It is your</span>
+<span id="cb3-53"><a href="#cb3-53"></a>safety net. Many a modeller has regretted running a bulk update script</span>
+<span id="cb3-54"><a href="#cb3-54"></a>without such a safeguard. By adopting dry-run as a discipline, you make</span>
+<span id="cb3-55"><a href="#cb3-55"></a>your scripts trustworthy not only for yourself but also for colleagues</span>
+<span id="cb3-56"><a href="#cb3-56"></a>who may reuse them.</span>
+<span id="cb3-57"><a href="#cb3-57"></a></span>
+<span id="cb3-58"><a href="#cb3-58"></a><span class="fu">## Logging and Transparency</span></span>
+<span id="cb3-59"><a href="#cb3-59"></a></span>
+<span id="cb3-60"><a href="#cb3-60"></a>Logging is your second line of defence. A script that silently modifies</span>
+<span id="cb3-61"><a href="#cb3-61"></a>hundreds of elements without telling you what it did is dangerous. A</span>
+<span id="cb3-62"><a href="#cb3-62"></a>safe script always logs its actions, either to EA’s Output tab, to a CSV</span>
+<span id="cb3-63"><a href="#cb3-63"></a>file, or both.</span>
+<span id="cb3-64"><a href="#cb3-64"></a></span>
+<span id="cb3-65"><a href="#cb3-65"></a>Logging serves three purposes:</span>
+<span id="cb3-66"><a href="#cb3-66"></a></span>
+<span id="cb3-67"><a href="#cb3-67"></a><span class="ss">1.  </span>**Feedback** — you see what the script is doing in real time.</span>
+<span id="cb3-68"><a href="#cb3-68"></a></span>
+<span id="cb3-69"><a href="#cb3-69"></a><span class="ss">2.  </span>**Audit** — you can review afterwards which elements were touched.</span>
+<span id="cb3-70"><a href="#cb3-70"></a></span>
+<span id="cb3-71"><a href="#cb3-71"></a><span class="ss">3.  </span>**Debugging** — if something goes wrong, logs help you trace the</span>
+<span id="cb3-72"><a href="#cb3-72"></a>    problem.</span>
+<span id="cb3-73"><a href="#cb3-73"></a></span>
+<span id="cb3-74"><a href="#cb3-74"></a>Good practice is to log to CSV, with columns such as ElementID, Name,</span>
+<span id="cb3-75"><a href="#cb3-75"></a>OldValue, NewValue, Action. That way you can filter and analyse in Excel</span>
+<span id="cb3-76"><a href="#cb3-76"></a>or share the log with others.</span>
+<span id="cb3-77"><a href="#cb3-77"></a></span>
+<span id="cb3-78"><a href="#cb3-78"></a><span class="fu">## Understanding the Repository Structure</span></span>
+<span id="cb3-79"><a href="#cb3-79"></a></span>
+<span id="cb3-80"><a href="#cb3-80"></a>Before you can script safely, you must understand the structure you are</span>
+<span id="cb3-81"><a href="#cb3-81"></a>scripting against. EA is more than diagrams. At the top is the</span>
+<span id="cb3-82"><a href="#cb3-82"></a>**Repository** object. Inside are **Models** (also known as root</span>
+<span id="cb3-83"><a href="#cb3-83"></a>packages). Each model contains **Packages**, and packages contain</span>
+<span id="cb3-84"><a href="#cb3-84"></a>**Elements** and **Diagrams**.</span>
+<span id="cb3-85"><a href="#cb3-85"></a></span>
+<span id="cb3-86"><a href="#cb3-86"></a>Think of it as a tree:</span>
+<span id="cb3-87"><a href="#cb3-87"></a><span class="in">```{.text filename="EA Repository object model" code-line-numbers="false"}</span></span>
+<span id="cb3-88"><a href="#cb3-88"></a><span class="in">Repository</span></span>
+<span id="cb3-89"><a href="#cb3-89"></a><span class="in">├─ Model (root package)</span></span>
+<span id="cb3-90"><a href="#cb3-90"></a><span class="in">│ ├─ Package</span></span>
+<span id="cb3-91"><a href="#cb3-91"></a><span class="in">│ │ ├─ Elements</span></span>
+<span id="cb3-92"><a href="#cb3-92"></a><span class="in">│ │ ├─ Diagrams</span></span>
+<span id="cb3-93"><a href="#cb3-93"></a><span class="in">│ │ └─ Sub-packages</span></span>
+<span id="cb3-94"><a href="#cb3-94"></a><span class="in">│ └─ Package</span></span>
+<span id="cb3-95"><a href="#cb3-95"></a><span class="in">└─ Other models</span></span>
+<span id="cb3-96"><a href="#cb3-96"></a><span class="in">```</span></span>
+<span id="cb3-97"><a href="#cb3-97"></a>At the element level, you have properties (name, type, status) and</span>
+<span id="cb3-98"><a href="#cb3-98"></a>collections (attributes, methods, connectors, tagged values). Connectors</span>
+<span id="cb3-99"><a href="#cb3-99"></a>link elements together. Diagrams show visual instances of elements.</span>
+<span id="cb3-100"><a href="#cb3-100"></a></span>
+<span id="cb3-101"><a href="#cb3-101"></a>Understanding this hierarchy is essential because every script you write</span>
+<span id="cb3-102"><a href="#cb3-102"></a>will involve traversing these structures. A safe script is one that</span>
+<span id="cb3-103"><a href="#cb3-103"></a>navigates correctly: it knows when it is handling a package versus an</span>
+<span id="cb3-104"><a href="#cb3-104"></a>element, and it never assumes without checking ObjectType.</span>
+<span id="cb3-105"><a href="#cb3-105"></a></span>
+<span id="cb3-106"><a href="#cb3-106"></a><span class="fu">## Update and Refresh</span></span>
+<span id="cb3-107"><a href="#cb3-107"></a></span>
+<span id="cb3-108"><a href="#cb3-108"></a>Another foundational safety concept is the difference between</span>
+<span id="cb3-109"><a href="#cb3-109"></a>**Update()** and **RefreshModelView()**.</span>
+<span id="cb3-110"><a href="#cb3-110"></a></span>
+<span id="cb3-111"><a href="#cb3-111"></a><span class="ss">- </span>**Update()** commits your change to the repository. Without it, the</span>
+<span id="cb3-112"><a href="#cb3-112"></a>  change is lost.</span>
+<span id="cb3-113"><a href="#cb3-113"></a></span>
+<span id="cb3-114"><a href="#cb3-114"></a><span class="ss">- </span>**RefreshModelView()** tells EA’s user interface to reload content.</span>
+<span id="cb3-115"><a href="#cb3-115"></a>  Without it, the change may be invisible until you close and reopen EA.</span>
+<span id="cb3-116"><a href="#cb3-116"></a></span>
+<span id="cb3-117"><a href="#cb3-117"></a>Many beginners forget one or the other. Forgetting Update() means the</span>
+<span id="cb3-118"><a href="#cb3-118"></a>script appears to work but nothing actually changes. Forgetting</span>
+<span id="cb3-119"><a href="#cb3-119"></a>RefreshModelView() means the script did work but you can’t see the</span>
+<span id="cb3-120"><a href="#cb3-120"></a>result.</span>
+<span id="cb3-121"><a href="#cb3-121"></a></span>
+<span id="cb3-122"><a href="#cb3-122"></a>The safe pattern is:</span>
+<span id="cb3-123"><a href="#cb3-123"></a></span>
+<span id="cb3-124"><a href="#cb3-124"></a><span class="ss">1.  </span>Modify the object.</span>
+<span id="cb3-125"><a href="#cb3-125"></a></span>
+<span id="cb3-126"><a href="#cb3-126"></a><span class="ss">2.  </span>Call .Update().</span>
+<span id="cb3-127"><a href="#cb3-127"></a></span>
+<span id="cb3-128"><a href="#cb3-128"></a><span class="ss">3.  </span>At the end of the script (or per batch), call</span>
+<span id="cb3-129"><a href="#cb3-129"></a>    Repository.RefreshModelView().</span>
+<span id="cb3-130"><a href="#cb3-130"></a></span>
+<span id="cb3-131"><a href="#cb3-131"></a><span class="fu">## Avoiding Dangerous Patterns</span></span>
+<span id="cb3-132"><a href="#cb3-132"></a></span>
+<span id="cb3-133"><a href="#cb3-133"></a>Certain scripting mistakes are particularly hazardous:</span>
+<span id="cb3-134"><a href="#cb3-134"></a></span>
+<span id="cb3-135"><a href="#cb3-135"></a><span class="ss">- </span>**Forward deletion loops**: deleting items in a forward loop causes</span>
+<span id="cb3-136"><a href="#cb3-136"></a>  index shifts, skipping items. Always delete backwards.</span>
+<span id="cb3-137"><a href="#cb3-137"></a></span>
+<span id="cb3-138"><a href="#cb3-138"></a><span class="ss">- </span>**Assuming selection type**: don’t assume the user has selected a</span>
+<span id="cb3-139"><a href="#cb3-139"></a>  package; they may have selected a diagram or element. Always check</span>
+<span id="cb3-140"><a href="#cb3-140"></a>  ObjectType.</span>
+<span id="cb3-141"><a href="#cb3-141"></a></span>
+<span id="cb3-142"><a href="#cb3-142"></a><span class="ss">- </span>**Using names as keys**: element names are not unique. Use GUIDs or</span>
+<span id="cb3-143"><a href="#cb3-143"></a>  IDs for identification.</span>
+<span id="cb3-144"><a href="#cb3-144"></a></span>
+<span id="cb3-145"><a href="#cb3-145"></a><span class="ss">- </span>**Direct SQL writes**: avoid Repository.Execute("UPDATE…"). This</span>
+<span id="cb3-146"><a href="#cb3-146"></a>  bypasses EA’s business rules and can corrupt the repository. Use SQL</span>
+<span id="cb3-147"><a href="#cb3-147"></a>  only for *reading* (SQLQuery), never for writing.</span>
+<span id="cb3-148"><a href="#cb3-148"></a></span>
+<span id="cb3-149"><a href="#cb3-149"></a><span class="fu">## Testing on Small Sets</span></span>
+<span id="cb3-150"><a href="#cb3-150"></a></span>
+<span id="cb3-151"><a href="#cb3-151"></a>Before applying a script to thousands of elements, test it on a small</span>
+<span id="cb3-152"><a href="#cb3-152"></a>package with a handful of items. This lets you confirm behaviour without</span>
+<span id="cb3-153"><a href="#cb3-153"></a>risking widespread impact. A safe workflow is:</span>
+<span id="cb3-154"><a href="#cb3-154"></a></span>
+<span id="cb3-155"><a href="#cb3-155"></a><span class="ss">1.  </span>Copy a few elements into a test package.</span>
+<span id="cb3-156"><a href="#cb3-156"></a></span>
+<span id="cb3-157"><a href="#cb3-157"></a><span class="ss">2.  </span>Run the script with DRY_RUN = true.</span>
+<span id="cb3-158"><a href="#cb3-158"></a></span>
+<span id="cb3-159"><a href="#cb3-159"></a><span class="ss">3.  </span>Check the log output.</span>
+<span id="cb3-160"><a href="#cb3-160"></a></span>
+<span id="cb3-161"><a href="#cb3-161"></a><span class="ss">4.  </span>Switch to DRY_RUN = false and run.</span>
+<span id="cb3-162"><a href="#cb3-162"></a></span>
+<span id="cb3-163"><a href="#cb3-163"></a><span class="ss">5.  </span>Verify the changes.</span>
+<span id="cb3-164"><a href="#cb3-164"></a></span>
+<span id="cb3-165"><a href="#cb3-165"></a><span class="ss">6.  </span>Only then apply to the full repository.</span>
+<span id="cb3-166"><a href="#cb3-166"></a></span>
+<span id="cb3-167"><a href="#cb3-167"></a><span class="fu">## Cultural Safety</span></span>
+<span id="cb3-168"><a href="#cb3-168"></a></span>
+<span id="cb3-169"><a href="#cb3-169"></a>Safety is not just technical; it is cultural. Teams should adopt norms:</span>
+<span id="cb3-170"><a href="#cb3-170"></a></span>
+<span id="cb3-171"><a href="#cb3-171"></a><span class="ss">- </span>Never run destructive scripts in production without dry-run first.</span>
+<span id="cb3-172"><a href="#cb3-172"></a></span>
+<span id="cb3-173"><a href="#cb3-173"></a><span class="ss">- </span>Always share logs of what was changed.</span>
+<span id="cb3-174"><a href="#cb3-174"></a></span>
+<span id="cb3-175"><a href="#cb3-175"></a><span class="ss">- </span>Keep a shared script library under version control (Git).</span>
+<span id="cb3-176"><a href="#cb3-176"></a></span>
+<span id="cb3-177"><a href="#cb3-177"></a><span class="ss">- </span>Review scripts with peers before first run.</span>
+<span id="cb3-178"><a href="#cb3-178"></a></span>
+<span id="cb3-179"><a href="#cb3-179"></a>These norms build trust. Architects and modellers become more willing to</span>
+<span id="cb3-180"><a href="#cb3-180"></a>use automation when they know safeguards are built in.</span>
+<span id="cb3-181"><a href="#cb3-181"></a></span>
+<span id="cb3-182"><a href="#cb3-182"></a><span class="fu">## Building the Right Habits</span></span>
+<span id="cb3-183"><a href="#cb3-183"></a></span>
+<span id="cb3-184"><a href="#cb3-184"></a>The purpose of this chapter is not to scare you, but to build the right</span>
+<span id="cb3-185"><a href="#cb3-185"></a>habits from the start. If you learn to always include a dry-run flag,</span>
+<span id="cb3-186"><a href="#cb3-186"></a>always log, always test on small sets, and always backup, then scripting</span>
+<span id="cb3-187"><a href="#cb3-187"></a>EA becomes an empowering tool rather than a risky gamble.</span>
+<span id="cb3-188"><a href="#cb3-188"></a></span>
+<span id="cb3-189"><a href="#cb3-189"></a>Think of it like climbing: the harness, helmet, and rope may feel</span>
+<span id="cb3-190"><a href="#cb3-190"></a>restrictive at first, but they enable you to climb higher with</span>
+<span id="cb3-191"><a href="#cb3-191"></a>confidence. In the same way, scripting safety patterns may feel like</span>
+<span id="cb3-192"><a href="#cb3-192"></a>overhead at first, but they let you automate more ambitious tasks</span>
+<span id="cb3-193"><a href="#cb3-193"></a>without fear.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

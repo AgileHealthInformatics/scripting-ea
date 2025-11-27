@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>21&nbsp; Chapter 20: Troubleshooting – Scripting Sparx Enterprise Architect: A Practical Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./22-System.Object[].html" rel="next">
+<link href="./20-System.Object[].html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b4ddde2c4c77ed14ccfa95278770da4f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./21-System.Object[].html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Scripting Sparx Enterprise Architect</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 1: Why Script EA?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 2: Automation Landscape</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 3: Getting Started</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Chapter 4: API Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Chapter 5: Inside EA with JScript</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Chapter 6: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Chapter 7: Script Design Patterns</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Chapter 8: Object Details</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Chapter 9: Imports &amp; Exports</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Chapter 10: MDG-Aware Scripting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Chapter 11: Governance Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Chapter 12: Cookbook of Examples</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Chapter 13: Why AI Helps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Chapter 14: Prompt Engineering</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Chapter 15: AI Refactoring Partner</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chapter 16: AI in Daily Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chapter 17: Performance &amp; Scaling</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Chapter 18: Integrating with Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-System.Object[].html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Appendix A: Scripting Constraints</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Appendix B: External Automation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Appendix C: Glossary of Terms</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Appendix D: Quick Reference</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-System.Object[].html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Appendix E: External Automation Setup</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-troubleshooting-matters" id="toc-why-troubleshooting-matters" class="nav-link active" data-scroll-target="#why-troubleshooting-matters"><span class="header-section-number">21.1</span> Why Troubleshooting Matters</a></li>
+  <li><a href="#the-nature-of-eas-quirks" id="toc-the-nature-of-eas-quirks" class="nav-link" data-scroll-target="#the-nature-of-eas-quirks"><span class="header-section-number">21.2</span> The Nature of EA’s Quirks</a></li>
+  <li><a href="#the-usual-suspects" id="toc-the-usual-suspects" class="nav-link" data-scroll-target="#the-usual-suspects"><span class="header-section-number">21.3</span> The Usual Suspects</a>
+  <ul class="collapse">
+  <li><a href="#silent-failures" id="toc-silent-failures" class="nav-link" data-scroll-target="#silent-failures"><span class="header-section-number">21.3.1</span> Silent Failures</a></li>
+  <li><a href="#collection-confusion" id="toc-collection-confusion" class="nav-link" data-scroll-target="#collection-confusion"><span class="header-section-number">21.3.2</span> Collection Confusion</a></li>
+  <li><a href="#deletion-pitfalls" id="toc-deletion-pitfalls" class="nav-link" data-scroll-target="#deletion-pitfalls"><span class="header-section-number">21.3.3</span> Deletion Pitfalls</a></li>
+  <li><a href="#sql-misuse" id="toc-sql-misuse" class="nav-link" data-scroll-target="#sql-misuse"><span class="header-section-number">21.3.4</span> SQL Misuse</a></li>
+  <li><a href="#encoding-problems" id="toc-encoding-problems" class="nav-link" data-scroll-target="#encoding-problems"><span class="header-section-number">21.3.5</span> Encoding Problems</a></li>
+  <li><a href="#objecttype-confusion" id="toc-objecttype-confusion" class="nav-link" data-scroll-target="#objecttype-confusion"><span class="header-section-number">21.3.6</span> ObjectType Confusion</a></li>
+  </ul></li>
+  <li><a href="#the-value-of-defensive-patterns" id="toc-the-value-of-defensive-patterns" class="nav-link" data-scroll-target="#the-value-of-defensive-patterns"><span class="header-section-number">21.4</span> The Value of Defensive Patterns</a></li>
+  <li><a href="#troubleshooting-as-a-team-resource" id="toc-troubleshooting-as-a-team-resource" class="nav-link" data-scroll-target="#troubleshooting-as-a-team-resource"><span class="header-section-number">21.5</span> Troubleshooting as a Team Resource</a>
+  <ul class="collapse">
+  <li><a href="#update-forgotten" id="toc-update-forgotten" class="nav-link" data-scroll-target="#update-forgotten"><span class="header-section-number">21.5.1</span> Update() Forgotten</a></li>
+  <li><a href="#refreshmodelview-missing" id="toc-refreshmodelview-missing" class="nav-link" data-scroll-target="#refreshmodelview-missing"><span class="header-section-number">21.5.2</span> RefreshModelView() Missing</a></li>
+  <li><a href="#fix-with-wrapper" id="toc-fix-with-wrapper" class="nav-link" data-scroll-target="#fix-with-wrapper"><span class="header-section-number">21.5.3</span> Fix with wrapper</a></li>
+  <li><a href="#collections-misused" id="toc-collections-misused" class="nav-link" data-scroll-target="#collections-misused"><span class="header-section-number">21.5.4</span> Collections Misused</a></li>
+  <li><a href="#delete-without-backwards-iteration" id="toc-delete-without-backwards-iteration" class="nav-link" data-scroll-target="#delete-without-backwards-iteration"><span class="header-section-number">21.5.5</span> Delete Without Backwards Iteration</a></li>
+  <li><a href="#unicode-encoding-headaches" id="toc-unicode-encoding-headaches" class="nav-link" data-scroll-target="#unicode-encoding-headaches"><span class="header-section-number">21.5.6</span> Unicode / Encoding Headaches</a></li>
+  <li><a href="#external-python-for-utf-8-csv" id="toc-external-python-for-utf-8-csv" class="nav-link" data-scroll-target="#external-python-for-utf-8-csv"><span class="header-section-number">21.5.7</span> External Python for UTF-8 CSV</a></li>
+  <li><a href="#misusing-session.output-too-much-logging" id="toc-misusing-session.output-too-much-logging" class="nav-link" data-scroll-target="#misusing-session.output-too-much-logging"><span class="header-section-number">21.5.8</span> Misusing Session.Output (too much logging)</a></li>
+  <li><a href="#api-vs-direct-sql-write" id="toc-api-vs-direct-sql-write" class="nav-link" data-scroll-target="#api-vs-direct-sql-write"><span class="header-section-number">21.5.9</span> API vs Direct SQL Write</a></li>
+  <li><a href="#objecttype-confusion-1" id="toc-objecttype-confusion-1" class="nav-link" data-scroll-target="#objecttype-confusion-1"><span class="header-section-number">21.5.10</span> ObjectType Confusion</a></li>
+  </ul></li>
+  <li><a href="#safe-patterns-recap" id="toc-safe-patterns-recap" class="nav-link" data-scroll-target="#safe-patterns-recap"><span class="header-section-number">21.6</span> Safe Patterns Recap</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Chapter 20: Troubleshooting</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Every scripting environment has its quirks, and Enterprise Architect is no exception. By now, you’ve learned how to navigate the API, use patterns, enforce governance, and even integrate EA into wider workflows. Yet no matter how careful you are, you will encounter frustrating moments where “nothing happens” or “it worked yesterday but not today.” These issues are not signs of failure — they are a normal part of scripting EA.</p>
+<p>This chapter collects the <strong>most common errors and pitfalls</strong> you will run into, explains why they occur, and shows how to recognise them quickly. It is less about teaching new capabilities and more about providing a troubleshooting handbook. By knowing the usual suspects, you can save hours of debugging.</p>
+<section id="why-troubleshooting-matters" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="why-troubleshooting-matters"><span class="header-section-number">21.1</span> Why Troubleshooting Matters</h2>
+<p>When a script fails silently, it undermines trust. Users may stop running governance checks if they think the results are unreliable. Architects may give up on automation if every export requires trial and error. Building confidence in scripting requires not only writing good scripts but also being able to <strong>diagnose problems fast</strong>.</p>
+<p>Troubleshooting is also essential for team knowledge transfer. If one person understands the quirks but others do not, automation becomes fragile. A shared troubleshooting guide empowers everyone to fix common issues.</p>
+</section>
+<section id="the-nature-of-eas-quirks" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="the-nature-of-eas-quirks"><span class="header-section-number">21.2</span> The Nature of EA’s Quirks</h2>
+<p>Why does EA feel quirky to script against? A few reasons:</p>
+<ul>
+<li><p><strong>COM-based API</strong>: EA exposes its object model through COM, an old but powerful technology with idiosyncrasies.</p></li>
+<li><p><strong>Legacy scripting engine</strong>: JScript is stuck at ES3, which means modern constructs are missing.</p></li>
+<li><p><strong>UI lag</strong>: EA’s interface does not always refresh automatically when the repository changes.</p></li>
+<li><p><strong>Database underpinnings</strong>: EA stores content in relational tables, and API calls must keep schema integrity.</p></li>
+</ul>
+<p>These constraints create subtle traps that new script writers fall into again and again.</p>
+</section>
+<section id="the-usual-suspects" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="the-usual-suspects"><span class="header-section-number">21.3</span> The Usual Suspects</h2>
+<p>From years of practice and community wisdom, a handful of issues account for the majority of problems:</p>
+<ul>
+<li><p>Forgetting Update() after setting a property.</p></li>
+<li><p>Forgetting RefreshModelView() after a bulk change.</p></li>
+<li><p>Confusing Stereotype with StereotypeEx.</p></li>
+<li><p>Treating EA collections as arrays (forEach instead of .GetAt()).</p></li>
+<li><p>Forward-deleting instead of backward-deleting.</p></li>
+<li><p>Misusing SQL (writing instead of reading).</p></li>
+<li><p>Encoding errors when exporting text.</p></li>
+<li><p>Failing to check ObjectType before casting.</p></li>
+</ul>
+<p>These “usual suspects” are the core of this chapter.</p>
+<section id="silent-failures" class="level3" data-number="21.3.1">
+<h3 data-number="21.3.1" class="anchored" data-anchor-id="silent-failures"><span class="header-section-number">21.3.1</span> Silent Failures</h3>
+<p>One of the most frustrating experiences in EA scripting is the silent failure: your script runs, no errors are thrown, but nothing changes. In almost all cases, the culprit is forgetting Update(). EA only persists changes when you explicitly call Update(). Without it, modifications stay in memory and are discarded.</p>
+<p>Another form of silent failure is forgetting to refresh the UI. Changes exist in the database but are invisible until you call Repository.RefreshModelView(). Recognising these two patterns will resolve half your troubleshooting cases.</p>
+</section>
+<section id="collection-confusion" class="level3" data-number="21.3.2">
+<h3 data-number="21.3.2" class="anchored" data-anchor-id="collection-confusion"><span class="header-section-number">21.3.2</span> Collection Confusion</h3>
+<p>Another common cause of errors is treating EA collections like standard arrays. They are not. They only support .Count and .GetAt(). Any attempt to use forEach, map, or array indexing will fail. Scripts that AI generates often stumble here, which is why human review is essential.</p>
+</section>
+<section id="deletion-pitfalls" class="level3" data-number="21.3.3">
+<h3 data-number="21.3.3" class="anchored" data-anchor-id="deletion-pitfalls"><span class="header-section-number">21.3.3</span> Deletion Pitfalls</h3>
+<p>Deleting items is particularly risky. Forward loops that delete as they go will skip elements because the index shifts. The safe pattern is always to delete backwards: from the last index down to zero. Forgetting this leads to half-deleted collections or inconsistent states.</p>
+</section>
+<section id="sql-misuse" class="level3" data-number="21.3.4">
+<h3 data-number="21.3.4" class="anchored" data-anchor-id="sql-misuse"><span class="header-section-number">21.3.4</span> SQL Misuse</h3>
+<p>EA allows direct SQL queries via Repository.SQLQuery() and Repository.Execute(). The former is safe (read-only), the latter dangerous (write). Beginners sometimes attempt to UPDATE directly via SQL, bypassing the API. This risks corrupting the repository because the API enforces consistency.</p>
+<p>The safe rule is: <strong>SQL for find, API for write</strong>. Never write to the database directly unless you absolutely understand the schema and consequences.</p>
+</section>
+<section id="encoding-problems" class="level3" data-number="21.3.5">
+<h3 data-number="21.3.5" class="anchored" data-anchor-id="encoding-problems"><span class="header-section-number">21.3.5</span> Encoding Problems</h3>
+<p>Because JScript’s FileSystemObject writes files in ANSI encoding, exports often lose special characters (e.g.&nbsp;accented letters, non-Latin scripts). This leads to CSVs with “???” instead of correct text. The fix is to use external automation (Python, C#) for UTF-8 output. Inside EA, the workaround is to stick to ASCII.</p>
+</section>
+<section id="objecttype-confusion" class="level3" data-number="21.3.6">
+<h3 data-number="21.3.6" class="anchored" data-anchor-id="objecttype-confusion"><span class="header-section-number">21.3.6</span> ObjectType Confusion</h3>
+<p>Scripts often fail because the developer assumes a selected object is a package or element, but the user actually selected a diagram or attribute. The solution is always to check ObjectType before acting. This prevents runtime errors and makes scripts more robust.</p>
+</section>
+</section>
+<section id="the-value-of-defensive-patterns" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="the-value-of-defensive-patterns"><span class="header-section-number">21.4</span> The Value of Defensive Patterns</h2>
+<p>The best way to avoid troubleshooting later is to adopt defensive coding patterns now:</p>
+<ul>
+<li><p>Wrap every modification in if (!DRY_RUN).</p></li>
+<li><p>Always check ObjectType.</p></li>
+<li><p>Use backward deletion.</p></li>
+<li><p>Always Update() and RefreshModelView().</p></li>
+<li><p>Validate stereotypes with StereotypeEx.</p></li>
+</ul>
+<p>By embedding these patterns, you avoid the majority of common errors.</p>
+</section>
+<section id="troubleshooting-as-a-team-resource" class="level2" data-number="21.5">
+<h2 data-number="21.5" class="anchored" data-anchor-id="troubleshooting-as-a-team-resource"><span class="header-section-number">21.5</span> Troubleshooting as a Team Resource</h2>
+<p>Troubleshooting knowledge should be shared, not hoarded. Teams benefit from keeping a living “troubleshooting wiki” that documents issues encountered and solutions. AI can also play a role: paste an error into AI and ask for explanations. But the foundation is a shared understanding of EA’s quirks, documented and available to all.</p>
+<section id="update-forgotten" class="level3" data-number="21.5.1">
+<h3 data-number="21.5.1" class="anchored" data-anchor-id="update-forgotten"><span class="header-section-number">21.5.1</span> Update() Forgotten</h3>
+<p><strong>Symptom</strong>: You change an element property, run the script, and nothing changes in EA.</p>
+<p><strong>Cause</strong>: EA requires Update() on nearly every object after modification. Without it, changes stay in memory only.</p>
+<section id="wrong" class="level4" data-number="21.5.1.1">
+<h4 data-number="21.5.1.1" class="anchored" data-anchor-id="wrong"><span class="header-section-number">21.5.1.1</span> Wrong</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// [x] Forgets Update()</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">var</span> e <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a>e<span class="op">.</span><span class="at">Name</span> <span class="op">=</span> <span class="st">"NewName"</span><span class="op">;</span> <span class="co">// appears to succeed, but won’t persist</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">// no e.Update()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="fixed" class="level4" data-number="21.5.1.2">
+<h4 data-number="21.5.1.2" class="anchored" data-anchor-id="fixed"><span class="header-section-number">21.5.1.2</span> Fixed</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">// [✓] Always call Update()</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">var</span> e <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>e<span class="op">.</span><span class="at">Name</span> <span class="op">=</span> <span class="st">"NewName"</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a>e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> <span class="co">// persist to repository</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="refreshmodelview-missing" class="level3" data-number="21.5.2">
+<h3 data-number="21.5.2" class="anchored" data-anchor-id="refreshmodelview-missing"><span class="header-section-number">21.5.2</span> RefreshModelView() Missing</h3>
+<p><strong>Symptom</strong>: The change <em>did</em> persist (e.g., new name), but you don’t see it in the Project Browser until you close/reopen EA.</p>
+<p><strong>Cause</strong>: EA’s UI cache isn’t automatically updated. Call Repository.RefreshModelView() to refresh.</p>
+<section id="fixed-1" class="level4" data-number="21.5.2.1">
+<h4 data-number="21.5.2.1" class="anchored" data-anchor-id="fixed-1"><span class="header-section-number">21.5.2.1</span> Fixed</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">var</span> e <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"TempClass"</span><span class="op">,</span> <span class="st">"Class"</span>)<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">// Refresh the package tree so the user sees the new class</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a>Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="wrong-method-name" class="level4" data-number="21.5.2.2">
+<h4 data-number="21.5.2.2" class="anchored" data-anchor-id="wrong-method-name"><span class="header-section-number">21.5.2.2</span> Wrong Method Name</h4>
+<p><strong>Symptom</strong>: AI-generated code crashes with “function not defined.”</p>
+<p><strong>Cause</strong>: Different EA versions expose slightly different casing (GetElementByGuid vs GetElementByGUID).</p>
+</section>
+</section>
+<section id="fix-with-wrapper" class="level3" data-number="21.5.3">
+<h3 data-number="21.5.3" class="anchored" data-anchor-id="fix-with-wrapper"><span class="header-section-number">21.5.3</span> Fix with wrapper</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">// [✓] Compatibility wrapper</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">function</span> <span class="fu">getElementByGuidSafe</span>(guid) {</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="cf">try</span> { <span class="cf">return</span> Repository<span class="op">.</span><span class="fu">GetElementByGuid</span>(guid)<span class="op">;</span> }</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="cf">catch</span>(e) {</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="cf">try</span> { <span class="cf">return</span> Repository<span class="op">.</span><span class="fu">GetElementByGUID</span>(guid)<span class="op">;</span> }</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="cf">catch</span>(e2) { <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a>}</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="collections-misused" class="level3" data-number="21.5.4">
+<h3 data-number="21.5.4" class="anchored" data-anchor-id="collections-misused"><span class="header-section-number">21.5.4</span> Collections Misused</h3>
+<p><strong>Symptom</strong>: “Object doesn’t support property or method ‘forEach’” or “undefined.”</p>
+<p><strong>Cause</strong>: EA collections are COM objects, not JS arrays. You must use .Count and .GetAt(i).</p>
+<section id="wrong-1" class="level4" data-number="21.5.4.1">
+<h4 data-number="21.5.4.1" class="anchored" data-anchor-id="wrong-1"><span class="header-section-number">21.5.4.1</span> Wrong</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">// [x] This will fail</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">forEach</span>(<span class="kw">function</span>(e){ Session<span class="op">.</span><span class="fu">Output</span>(e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span> })<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="fixed-2" class="level4" data-number="21.5.4.2">
+<h4 data-number="21.5.4.2" class="anchored" data-anchor-id="fixed-2"><span class="header-section-number">21.5.4.2</span> Fixed</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">// [✓] Correct</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i\<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a>Session<span class="op">.</span><span class="fu">Output</span>(e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="delete-without-backwards-iteration" class="level3" data-number="21.5.5">
+<h3 data-number="21.5.5" class="anchored" data-anchor-id="delete-without-backwards-iteration"><span class="header-section-number">21.5.5</span> Delete Without Backwards Iteration</h3>
+<p><strong>Symptom</strong>: Some elements are skipped when deleting in loops.</p>
+<p><strong>Cause</strong>: Deleting while looping forward shifts indices.</p>
+<section id="wrong-2" class="level4" data-number="21.5.5.1">
+<h4 data-number="21.5.5.1" class="anchored" data-anchor-id="wrong-2"><span class="header-section-number">21.5.5.1</span> Wrong</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">// [x] Deletes only half</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i\<span class="op">&lt;</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">DeleteAt</span>(i<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="fixed-3" class="level4" data-number="21.5.5.2">
+<h4 data-number="21.5.5.2" class="anchored" data-anchor-id="fixed-3"><span class="header-section-number">21.5.5.2</span> Fixed</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">// [✓] Loop backwards</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="at">Count</span><span class="op">-</span><span class="dv">1</span><span class="op">;</span> i\<span class="op">&gt;=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">--</span>) {</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">DeleteAt</span>(i<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>}</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a>Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="unicode-encoding-headaches" class="level3" data-number="21.5.6">
+<h3 data-number="21.5.6" class="anchored" data-anchor-id="unicode-encoding-headaches"><span class="header-section-number">21.5.6</span> Unicode / Encoding Headaches</h3>
+<p><strong>Symptom</strong>: Exported CSV shows “???” instead of accented characters.</p>
+<p><strong>Cause</strong>: EA’s JScript FileSystemObject writes in ANSI by default.</p>
+<p><strong>Workaround:</strong></p>
+<ul>
+<li><p>Keep exports simple (ASCII where possible).</p></li>
+<li><p>If you need UTF-8: use external automation (Python/C#).</p></li>
+</ul>
+</section>
+<section id="external-python-for-utf-8-csv" class="level3" data-number="21.5.7">
+<h3 data-number="21.5.7" class="anchored" data-anchor-id="external-python-for-utf-8-csv"><span class="header-section-number">21.5.7</span> External Python for UTF-8 CSV</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource .py number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>\<span class="co"># utf8_export.py</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="im">import</span> win32com.client, csv</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a>ea <span class="op">=</span> win32com.client.Dispatch(<span class="st">"EA.App"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a>repo <span class="op">=</span> ea.Repository</span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a>pkg <span class="op">=</span> repo.GetTreeSelectedPackage()</span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"export.csv"</span>,<span class="st">"w"</span>,newline<span class="op">=</span><span class="st">""</span>,encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb9-12"><a href="#cb9-12"></a></span>
+<span id="cb9-13"><a href="#cb9-13"></a>wr <span class="op">=</span> csv.writer(f)</span>
+<span id="cb9-14"><a href="#cb9-14"></a></span>
+<span id="cb9-15"><a href="#cb9-15"></a>wr.writerow(\[<span class="st">"ID"</span>,<span class="st">"Name"</span>\])</span>
+<span id="cb9-16"><a href="#cb9-16"></a></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(pkg.Elements.Count):</span>
+<span id="cb9-18"><a href="#cb9-18"></a></span>
+<span id="cb9-19"><a href="#cb9-19"></a>e <span class="op">=</span> pkg.Elements.GetAt(i)</span>
+<span id="cb9-20"><a href="#cb9-20"></a></span>
+<span id="cb9-21"><a href="#cb9-21"></a>wr.writerow(\[e.ElementID, e.Name\])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="misusing-session.output-too-much-logging" class="level3" data-number="21.5.8">
+<h3 data-number="21.5.8" class="anchored" data-anchor-id="misusing-session.output-too-much-logging"><span class="header-section-number">21.5.8</span> Misusing Session.Output (too much logging)</h3>
+<p><strong>Symptom</strong>: Script becomes slow or EA hangs.</p>
+<p><strong>Cause</strong>: Printing thousands of lines to EA’s Output tab is slow.</p>
+<p><strong>Fix:</strong></p>
+<ul>
+<li><p>Use CSV/file logging for detail.</p></li>
+<li><p>Use Session.Output only for summary.</p></li>
+</ul>
+</section>
+<section id="api-vs-direct-sql-write" class="level3" data-number="21.5.9">
+<h3 data-number="21.5.9" class="anchored" data-anchor-id="api-vs-direct-sql-write"><span class="header-section-number">21.5.9</span> API vs Direct SQL Write</h3>
+<p><strong>Symptom</strong>: Repository corrupted or constraints broken.</p>
+<p><strong>Cause</strong>: Direct Repository.Execute(“UPDATE…”) writes to EA tables skip API integrity.</p>
+<p><strong>Rule</strong>:</p>
+<ul>
+<li><p>Use Repository.SQLQuery() for <em>read-only</em>.</p></li>
+<li><p>Use object API (.Update()) for writes.</p></li>
+<li><p>Only use direct SQL writes if you fully understand EA’s schema (rare).</p></li>
+</ul>
+</section>
+<section id="objecttype-confusion-1" class="level3" data-number="21.5.10">
+<h3 data-number="21.5.10" class="anchored" data-anchor-id="objecttype-confusion-1"><span class="header-section-number">21.5.10</span> ObjectType Confusion</h3>
+<p><strong>Symptom</strong>: Code assumes everything from GetTreeSelectedObject() is an element, but sometimes it’s a package or diagram.</p>
+<p><strong>Fix</strong>: Always check ObjectType.</p>
+<section id="example" class="level4" data-number="21.5.10.1">
+<h4 data-number="21.5.10.1" class="anchored" data-anchor-id="example"><span class="header-section-number">21.5.10.1</span> Example</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource .js number-lines code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">var</span> obj <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="cf">if</span> (obj<span class="op">.</span><span class="at">ObjectType</span> <span class="op">==</span> otPackage) {</span>
+<span id="cb10-4"><a href="#cb10-4"></a></span>
+<span id="cb10-5"><a href="#cb10-5"></a>Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Selected a package: "</span> <span class="op">+</span> obj<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a>} <span class="cf">else</span> <span class="cf">if</span> (obj<span class="op">.</span><span class="at">ObjectType</span> <span class="op">==</span> otElement) {</span>
+<span id="cb10-8"><a href="#cb10-8"></a></span>
+<span id="cb10-9"><a href="#cb10-9"></a>Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Selected element: "</span> <span class="op">+</span> obj<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a>} <span class="cf">else</span> {</span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a>Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Unsupported object type."</span>)<span class="op">;</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a></span>
+<span id="cb10-15"><a href="#cb10-15"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+</section>
+<section id="safe-patterns-recap" class="level2" data-number="21.6">
+<h2 data-number="21.6" class="anchored" data-anchor-id="safe-patterns-recap"><span class="header-section-number">21.6</span> Safe Patterns Recap</h2>
+<ul>
+<li><p><strong>Always Update()</strong> after modifying objects.</p></li>
+<li><p><strong>Always RefreshModelView()</strong> after changes if you want UI sync.</p></li>
+<li><p><strong>Loop with .Count / .GetAt(i)</strong>, not forEach.</p></li>
+<li><p><strong>Delete backwards</strong>.</p></li>
+<li><p><strong>Don’t rely on names alone</strong>: use GUIDs or IDs.</p></li>
+<li><p><strong>Prefer API writes</strong> over SQL.</p></li>
+<li><p><strong>Minimise Session.Output</strong> inside large loops.</p></li>
+<li><p><strong>Check ObjectType</strong> before casting.</p></li>
+<li><p><strong>Expect case differences</strong> in API (GUID vs Guid).</p></li>
+<li><p><strong>Export UTF-8 externally</strong> if needed.</p></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Prefer the margin sidebar if it exists; otherwise try the TOC sidebar.
+
+  const margin = document.querySelector('#quarto-margin-sidebar, .margin-sidebar, .column-margin');
+
+  const toc    = document.querySelector('nav#TOC');
+
+  const sidebar = margin || (toc && toc.closest('.sidebar, .quarto-sidebar, .margin-sidebar'));
+
+
+
+  if (!sidebar) return; // no margin column on this layout
+
+
+
+  const holder = document.createElement('div');
+
+  holder.className = 'cover-above-toc';
+
+  holder.innerHTML = `
+
+    <a href="index.html">
+
+      <img src="images/cover.png" alt="Book cover" class="cover-above-toc__img" width="140" />
+
+    </a>
+
+  `;
+
+  sidebar.prepend(holder);
+
+});
+
+</script>
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./20-System.Object[].html" class="pagination-link" aria-label="Chapter 19: Add-ins vs Scripts">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Chapter 19: Add-ins vs Scripts</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./22-System.Object[].html" class="pagination-link" aria-label="Chapter 21: Reference">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Chapter 21: Reference</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu"># Chapter 20: Troubleshooting</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a>Every scripting environment has its quirks, and Enterprise Architect is</span>
+<span id="cb11-4"><a href="#cb11-4"></a>no exception. By now, you’ve learned how to navigate the API, use</span>
+<span id="cb11-5"><a href="#cb11-5"></a>patterns, enforce governance, and even integrate EA into wider</span>
+<span id="cb11-6"><a href="#cb11-6"></a>workflows. Yet no matter how careful you are, you will encounter</span>
+<span id="cb11-7"><a href="#cb11-7"></a>frustrating moments where “nothing happens” or “it worked yesterday but</span>
+<span id="cb11-8"><a href="#cb11-8"></a>not today.” These issues are not signs of failure — they are a normal</span>
+<span id="cb11-9"><a href="#cb11-9"></a>part of scripting EA.</span>
+<span id="cb11-10"><a href="#cb11-10"></a></span>
+<span id="cb11-11"><a href="#cb11-11"></a>This chapter collects the **most common errors and pitfalls** you will</span>
+<span id="cb11-12"><a href="#cb11-12"></a>run into, explains why they occur, and shows how to recognise them</span>
+<span id="cb11-13"><a href="#cb11-13"></a>quickly. It is less about teaching new capabilities and more about</span>
+<span id="cb11-14"><a href="#cb11-14"></a>providing a troubleshooting handbook. By knowing the usual suspects, you</span>
+<span id="cb11-15"><a href="#cb11-15"></a>can save hours of debugging.</span>
+<span id="cb11-16"><a href="#cb11-16"></a></span>
+<span id="cb11-17"><a href="#cb11-17"></a><span class="fu">## Why Troubleshooting Matters</span></span>
+<span id="cb11-18"><a href="#cb11-18"></a></span>
+<span id="cb11-19"><a href="#cb11-19"></a>When a script fails silently, it undermines trust. Users may stop</span>
+<span id="cb11-20"><a href="#cb11-20"></a>running governance checks if they think the results are unreliable.</span>
+<span id="cb11-21"><a href="#cb11-21"></a>Architects may give up on automation if every export requires trial and</span>
+<span id="cb11-22"><a href="#cb11-22"></a>error. Building confidence in scripting requires not only writing good</span>
+<span id="cb11-23"><a href="#cb11-23"></a>scripts but also being able to **diagnose problems fast**.</span>
+<span id="cb11-24"><a href="#cb11-24"></a></span>
+<span id="cb11-25"><a href="#cb11-25"></a>Troubleshooting is also essential for team knowledge transfer. If one</span>
+<span id="cb11-26"><a href="#cb11-26"></a>person understands the quirks but others do not, automation becomes</span>
+<span id="cb11-27"><a href="#cb11-27"></a>fragile. A shared troubleshooting guide empowers everyone to fix common</span>
+<span id="cb11-28"><a href="#cb11-28"></a>issues.</span>
+<span id="cb11-29"><a href="#cb11-29"></a></span>
+<span id="cb11-30"><a href="#cb11-30"></a><span class="fu">## The Nature of EA’s Quirks</span></span>
+<span id="cb11-31"><a href="#cb11-31"></a></span>
+<span id="cb11-32"><a href="#cb11-32"></a>Why does EA feel quirky to script against? A few reasons:</span>
+<span id="cb11-33"><a href="#cb11-33"></a></span>
+<span id="cb11-34"><a href="#cb11-34"></a><span class="ss">- </span>**COM-based API**: EA exposes its object model through COM, an old but</span>
+<span id="cb11-35"><a href="#cb11-35"></a>  powerful technology with idiosyncrasies.</span>
+<span id="cb11-36"><a href="#cb11-36"></a></span>
+<span id="cb11-37"><a href="#cb11-37"></a><span class="ss">- </span>**Legacy scripting engine**: JScript is stuck at ES3, which means</span>
+<span id="cb11-38"><a href="#cb11-38"></a>  modern constructs are missing.</span>
+<span id="cb11-39"><a href="#cb11-39"></a></span>
+<span id="cb11-40"><a href="#cb11-40"></a><span class="ss">- </span>**UI lag**: EA’s interface does not always refresh automatically when</span>
+<span id="cb11-41"><a href="#cb11-41"></a>  the repository changes.</span>
+<span id="cb11-42"><a href="#cb11-42"></a></span>
+<span id="cb11-43"><a href="#cb11-43"></a><span class="ss">- </span>**Database underpinnings**: EA stores content in relational tables,</span>
+<span id="cb11-44"><a href="#cb11-44"></a>  and API calls must keep schema integrity.</span>
+<span id="cb11-45"><a href="#cb11-45"></a></span>
+<span id="cb11-46"><a href="#cb11-46"></a>These constraints create subtle traps that new script writers fall into</span>
+<span id="cb11-47"><a href="#cb11-47"></a>again and again.</span>
+<span id="cb11-48"><a href="#cb11-48"></a></span>
+<span id="cb11-49"><a href="#cb11-49"></a><span class="fu">## The Usual Suspects</span></span>
+<span id="cb11-50"><a href="#cb11-50"></a></span>
+<span id="cb11-51"><a href="#cb11-51"></a>From years of practice and community wisdom, a handful of issues account</span>
+<span id="cb11-52"><a href="#cb11-52"></a>for the majority of problems:</span>
+<span id="cb11-53"><a href="#cb11-53"></a></span>
+<span id="cb11-54"><a href="#cb11-54"></a><span class="ss">- </span>Forgetting Update() after setting a property.</span>
+<span id="cb11-55"><a href="#cb11-55"></a></span>
+<span id="cb11-56"><a href="#cb11-56"></a><span class="ss">- </span>Forgetting RefreshModelView() after a bulk change.</span>
+<span id="cb11-57"><a href="#cb11-57"></a></span>
+<span id="cb11-58"><a href="#cb11-58"></a><span class="ss">- </span>Confusing Stereotype with StereotypeEx.</span>
+<span id="cb11-59"><a href="#cb11-59"></a></span>
+<span id="cb11-60"><a href="#cb11-60"></a><span class="ss">- </span>Treating EA collections as arrays (forEach instead of .GetAt()).</span>
+<span id="cb11-61"><a href="#cb11-61"></a></span>
+<span id="cb11-62"><a href="#cb11-62"></a><span class="ss">- </span>Forward-deleting instead of backward-deleting.</span>
+<span id="cb11-63"><a href="#cb11-63"></a></span>
+<span id="cb11-64"><a href="#cb11-64"></a><span class="ss">- </span>Misusing SQL (writing instead of reading).</span>
+<span id="cb11-65"><a href="#cb11-65"></a></span>
+<span id="cb11-66"><a href="#cb11-66"></a><span class="ss">- </span>Encoding errors when exporting text.</span>
+<span id="cb11-67"><a href="#cb11-67"></a></span>
+<span id="cb11-68"><a href="#cb11-68"></a><span class="ss">- </span>Failing to check ObjectType before casting.</span>
+<span id="cb11-69"><a href="#cb11-69"></a></span>
+<span id="cb11-70"><a href="#cb11-70"></a>These “usual suspects” are the core of this chapter.</span>
+<span id="cb11-71"><a href="#cb11-71"></a></span>
+<span id="cb11-72"><a href="#cb11-72"></a><span class="fu">### Silent Failures</span></span>
+<span id="cb11-73"><a href="#cb11-73"></a></span>
+<span id="cb11-74"><a href="#cb11-74"></a>One of the most frustrating experiences in EA scripting is the silent</span>
+<span id="cb11-75"><a href="#cb11-75"></a>failure: your script runs, no errors are thrown, but nothing changes. In</span>
+<span id="cb11-76"><a href="#cb11-76"></a>almost all cases, the culprit is forgetting Update(). EA only persists</span>
+<span id="cb11-77"><a href="#cb11-77"></a>changes when you explicitly call Update(). Without it, modifications</span>
+<span id="cb11-78"><a href="#cb11-78"></a>stay in memory and are discarded.</span>
+<span id="cb11-79"><a href="#cb11-79"></a></span>
+<span id="cb11-80"><a href="#cb11-80"></a>Another form of silent failure is forgetting to refresh the UI. Changes</span>
+<span id="cb11-81"><a href="#cb11-81"></a>exist in the database but are invisible until you call</span>
+<span id="cb11-82"><a href="#cb11-82"></a>Repository.RefreshModelView(). Recognising these two patterns will</span>
+<span id="cb11-83"><a href="#cb11-83"></a>resolve half your troubleshooting cases.</span>
+<span id="cb11-84"><a href="#cb11-84"></a></span>
+<span id="cb11-85"><a href="#cb11-85"></a><span class="fu">### Collection Confusion</span></span>
+<span id="cb11-86"><a href="#cb11-86"></a></span>
+<span id="cb11-87"><a href="#cb11-87"></a>Another common cause of errors is treating EA collections like standard</span>
+<span id="cb11-88"><a href="#cb11-88"></a>arrays. They are not. They only support .Count and .GetAt(). Any attempt</span>
+<span id="cb11-89"><a href="#cb11-89"></a>to use forEach, map, or array indexing will fail. Scripts that AI</span>
+<span id="cb11-90"><a href="#cb11-90"></a>generates often stumble here, which is why human review is essential.</span>
+<span id="cb11-91"><a href="#cb11-91"></a></span>
+<span id="cb11-92"><a href="#cb11-92"></a><span class="fu">### Deletion Pitfalls</span></span>
+<span id="cb11-93"><a href="#cb11-93"></a></span>
+<span id="cb11-94"><a href="#cb11-94"></a>Deleting items is particularly risky. Forward loops that delete as they</span>
+<span id="cb11-95"><a href="#cb11-95"></a>go will skip elements because the index shifts. The safe pattern is</span>
+<span id="cb11-96"><a href="#cb11-96"></a>always to delete backwards: from the last index down to zero. Forgetting</span>
+<span id="cb11-97"><a href="#cb11-97"></a>this leads to half-deleted collections or inconsistent states.</span>
+<span id="cb11-98"><a href="#cb11-98"></a></span>
+<span id="cb11-99"><a href="#cb11-99"></a><span class="fu">### SQL Misuse</span></span>
+<span id="cb11-100"><a href="#cb11-100"></a></span>
+<span id="cb11-101"><a href="#cb11-101"></a>EA allows direct SQL queries via Repository.SQLQuery() and</span>
+<span id="cb11-102"><a href="#cb11-102"></a>Repository.Execute(). The former is safe (read-only), the latter</span>
+<span id="cb11-103"><a href="#cb11-103"></a>dangerous (write). Beginners sometimes attempt to UPDATE directly via</span>
+<span id="cb11-104"><a href="#cb11-104"></a>SQL, bypassing the API. This risks corrupting the repository because the</span>
+<span id="cb11-105"><a href="#cb11-105"></a>API enforces consistency.</span>
+<span id="cb11-106"><a href="#cb11-106"></a></span>
+<span id="cb11-107"><a href="#cb11-107"></a>The safe rule is: **SQL for find, API for write**. Never write to the</span>
+<span id="cb11-108"><a href="#cb11-108"></a>database directly unless you absolutely understand the schema and</span>
+<span id="cb11-109"><a href="#cb11-109"></a>consequences.</span>
+<span id="cb11-110"><a href="#cb11-110"></a></span>
+<span id="cb11-111"><a href="#cb11-111"></a><span class="fu">### Encoding Problems</span></span>
+<span id="cb11-112"><a href="#cb11-112"></a></span>
+<span id="cb11-113"><a href="#cb11-113"></a>Because JScript’s FileSystemObject writes files in ANSI encoding,</span>
+<span id="cb11-114"><a href="#cb11-114"></a>exports often lose special characters (e.g. accented letters, non-Latin</span>
+<span id="cb11-115"><a href="#cb11-115"></a>scripts). This leads to CSVs with “???” instead of correct text. The fix</span>
+<span id="cb11-116"><a href="#cb11-116"></a>is to use external automation (Python, C#) for UTF-8 output. Inside EA,</span>
+<span id="cb11-117"><a href="#cb11-117"></a>the workaround is to stick to ASCII.</span>
+<span id="cb11-118"><a href="#cb11-118"></a></span>
+<span id="cb11-119"><a href="#cb11-119"></a><span class="fu">### ObjectType Confusion</span></span>
+<span id="cb11-120"><a href="#cb11-120"></a></span>
+<span id="cb11-121"><a href="#cb11-121"></a>Scripts often fail because the developer assumes a selected object is a</span>
+<span id="cb11-122"><a href="#cb11-122"></a>package or element, but the user actually selected a diagram or</span>
+<span id="cb11-123"><a href="#cb11-123"></a>attribute. The solution is always to check ObjectType before acting.</span>
+<span id="cb11-124"><a href="#cb11-124"></a>This prevents runtime errors and makes scripts more robust.</span>
+<span id="cb11-125"><a href="#cb11-125"></a></span>
+<span id="cb11-126"><a href="#cb11-126"></a><span class="fu">## The Value of Defensive Patterns</span></span>
+<span id="cb11-127"><a href="#cb11-127"></a></span>
+<span id="cb11-128"><a href="#cb11-128"></a>The best way to avoid troubleshooting later is to adopt defensive coding</span>
+<span id="cb11-129"><a href="#cb11-129"></a>patterns now:</span>
+<span id="cb11-130"><a href="#cb11-130"></a></span>
+<span id="cb11-131"><a href="#cb11-131"></a><span class="ss">- </span>Wrap every modification in if (!DRY_RUN).</span>
+<span id="cb11-132"><a href="#cb11-132"></a></span>
+<span id="cb11-133"><a href="#cb11-133"></a><span class="ss">- </span>Always check ObjectType.</span>
+<span id="cb11-134"><a href="#cb11-134"></a></span>
+<span id="cb11-135"><a href="#cb11-135"></a><span class="ss">- </span>Use backward deletion.</span>
+<span id="cb11-136"><a href="#cb11-136"></a></span>
+<span id="cb11-137"><a href="#cb11-137"></a><span class="ss">- </span>Always Update() and RefreshModelView().</span>
+<span id="cb11-138"><a href="#cb11-138"></a></span>
+<span id="cb11-139"><a href="#cb11-139"></a><span class="ss">- </span>Validate stereotypes with StereotypeEx.</span>
+<span id="cb11-140"><a href="#cb11-140"></a></span>
+<span id="cb11-141"><a href="#cb11-141"></a>By embedding these patterns, you avoid the majority of common errors.</span>
+<span id="cb11-142"><a href="#cb11-142"></a></span>
+<span id="cb11-143"><a href="#cb11-143"></a><span class="fu">## Troubleshooting as a Team Resource</span></span>
+<span id="cb11-144"><a href="#cb11-144"></a></span>
+<span id="cb11-145"><a href="#cb11-145"></a>Troubleshooting knowledge should be shared, not hoarded. Teams benefit</span>
+<span id="cb11-146"><a href="#cb11-146"></a>from keeping a living “troubleshooting wiki” that documents issues</span>
+<span id="cb11-147"><a href="#cb11-147"></a>encountered and solutions. AI can also play a role: paste an error into</span>
+<span id="cb11-148"><a href="#cb11-148"></a>AI and ask for explanations. But the foundation is a shared</span>
+<span id="cb11-149"><a href="#cb11-149"></a>understanding of EA’s quirks, documented and available to all.</span>
+<span id="cb11-150"><a href="#cb11-150"></a></span>
+<span id="cb11-151"><a href="#cb11-151"></a><span class="fu">### Update() Forgotten</span></span>
+<span id="cb11-152"><a href="#cb11-152"></a></span>
+<span id="cb11-153"><a href="#cb11-153"></a>**Symptom**: You change an element property, run the script, and nothing</span>
+<span id="cb11-154"><a href="#cb11-154"></a>changes in EA.</span>
+<span id="cb11-155"><a href="#cb11-155"></a></span>
+<span id="cb11-156"><a href="#cb11-156"></a>**Cause**: EA requires Update() on nearly every object after</span>
+<span id="cb11-157"><a href="#cb11-157"></a>modification. Without it, changes stay in memory only.</span>
+<span id="cb11-158"><a href="#cb11-158"></a></span>
+<span id="cb11-159"><a href="#cb11-159"></a><span class="fu">#### Wrong</span></span>
+<span id="cb11-160"><a href="#cb11-160"></a><span class="in">``` .js</span></span>
+<span id="cb11-161"><a href="#cb11-161"></a><span class="co">// [x] Forgets Update()</span></span>
+<span id="cb11-162"><a href="#cb11-162"></a></span>
+<span id="cb11-163"><a href="#cb11-163"></a><span class="kw">var</span> e <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb11-164"><a href="#cb11-164"></a></span>
+<span id="cb11-165"><a href="#cb11-165"></a>e<span class="op">.</span><span class="at">Name</span> <span class="op">=</span> <span class="st">"NewName"</span><span class="op">;</span> <span class="co">// appears to succeed, but won’t persist</span></span>
+<span id="cb11-166"><a href="#cb11-166"></a></span>
+<span id="cb11-167"><a href="#cb11-167"></a><span class="co">// no e.Update()</span></span>
+<span id="cb11-168"><a href="#cb11-168"></a><span class="in">```</span></span>
+<span id="cb11-169"><a href="#cb11-169"></a></span>
+<span id="cb11-170"><a href="#cb11-170"></a><span class="fu">#### Fixed</span></span>
+<span id="cb11-171"><a href="#cb11-171"></a><span class="in">``` .js</span></span>
+<span id="cb11-172"><a href="#cb11-172"></a><span class="co">// [✓] Always call Update()</span></span>
+<span id="cb11-173"><a href="#cb11-173"></a></span>
+<span id="cb11-174"><a href="#cb11-174"></a><span class="kw">var</span> e <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb11-175"><a href="#cb11-175"></a></span>
+<span id="cb11-176"><a href="#cb11-176"></a>e<span class="op">.</span><span class="at">Name</span> <span class="op">=</span> <span class="st">"NewName"</span><span class="op">;</span></span>
+<span id="cb11-177"><a href="#cb11-177"></a></span>
+<span id="cb11-178"><a href="#cb11-178"></a>e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span> <span class="co">// persist to repository</span></span>
+<span id="cb11-179"><a href="#cb11-179"></a><span class="in">```</span></span>
+<span id="cb11-180"><a href="#cb11-180"></a><span class="fu">### RefreshModelView() Missing</span></span>
+<span id="cb11-181"><a href="#cb11-181"></a></span>
+<span id="cb11-182"><a href="#cb11-182"></a>**Symptom**: The change *did* persist (e.g., new name), but you don’t</span>
+<span id="cb11-183"><a href="#cb11-183"></a>see it in the Project Browser until you close/reopen EA.</span>
+<span id="cb11-184"><a href="#cb11-184"></a></span>
+<span id="cb11-185"><a href="#cb11-185"></a>**Cause**: EA’s UI cache isn’t automatically updated. Call</span>
+<span id="cb11-186"><a href="#cb11-186"></a>Repository.RefreshModelView() to refresh.</span>
+<span id="cb11-187"><a href="#cb11-187"></a></span>
+<span id="cb11-188"><a href="#cb11-188"></a><span class="fu">#### Fixed</span></span>
+<span id="cb11-189"><a href="#cb11-189"></a><span class="in">``` .js</span></span>
+<span id="cb11-190"><a href="#cb11-190"></a><span class="kw">var</span> pkg <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span>()<span class="op">;</span></span>
+<span id="cb11-191"><a href="#cb11-191"></a></span>
+<span id="cb11-192"><a href="#cb11-192"></a><span class="kw">var</span> e <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">AddNew</span>(<span class="st">"TempClass"</span><span class="op">,</span> <span class="st">"Class"</span>)<span class="op">;</span></span>
+<span id="cb11-193"><a href="#cb11-193"></a></span>
+<span id="cb11-194"><a href="#cb11-194"></a>e<span class="op">.</span><span class="fu">Update</span>()<span class="op">;</span></span>
+<span id="cb11-195"><a href="#cb11-195"></a></span>
+<span id="cb11-196"><a href="#cb11-196"></a><span class="co">// Refresh the package tree so the user sees the new class</span></span>
+<span id="cb11-197"><a href="#cb11-197"></a></span>
+<span id="cb11-198"><a href="#cb11-198"></a>Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb11-199"><a href="#cb11-199"></a><span class="in">```</span></span>
+<span id="cb11-200"><a href="#cb11-200"></a><span class="fu">#### Wrong Method Name</span></span>
+<span id="cb11-201"><a href="#cb11-201"></a></span>
+<span id="cb11-202"><a href="#cb11-202"></a>**Symptom**: AI-generated code crashes with “function not defined.”</span>
+<span id="cb11-203"><a href="#cb11-203"></a></span>
+<span id="cb11-204"><a href="#cb11-204"></a>**Cause**: Different EA versions expose slightly different casing</span>
+<span id="cb11-205"><a href="#cb11-205"></a>(GetElementByGuid vs GetElementByGUID).</span>
+<span id="cb11-206"><a href="#cb11-206"></a></span>
+<span id="cb11-207"><a href="#cb11-207"></a><span class="fu">### Fix with wrapper</span></span>
+<span id="cb11-208"><a href="#cb11-208"></a><span class="in">``` .js</span></span>
+<span id="cb11-209"><a href="#cb11-209"></a><span class="co">// [✓] Compatibility wrapper</span></span>
+<span id="cb11-210"><a href="#cb11-210"></a></span>
+<span id="cb11-211"><a href="#cb11-211"></a><span class="kw">function</span> <span class="fu">getElementByGuidSafe</span>(guid) {</span>
+<span id="cb11-212"><a href="#cb11-212"></a></span>
+<span id="cb11-213"><a href="#cb11-213"></a><span class="cf">try</span> { <span class="cf">return</span> Repository<span class="op">.</span><span class="fu">GetElementByGuid</span>(guid)<span class="op">;</span> }</span>
+<span id="cb11-214"><a href="#cb11-214"></a></span>
+<span id="cb11-215"><a href="#cb11-215"></a><span class="cf">catch</span>(e) {</span>
+<span id="cb11-216"><a href="#cb11-216"></a></span>
+<span id="cb11-217"><a href="#cb11-217"></a><span class="cf">try</span> { <span class="cf">return</span> Repository<span class="op">.</span><span class="fu">GetElementByGUID</span>(guid)<span class="op">;</span> }</span>
+<span id="cb11-218"><a href="#cb11-218"></a></span>
+<span id="cb11-219"><a href="#cb11-219"></a><span class="cf">catch</span>(e2) { <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span> }</span>
+<span id="cb11-220"><a href="#cb11-220"></a></span>
+<span id="cb11-221"><a href="#cb11-221"></a>}</span>
+<span id="cb11-222"><a href="#cb11-222"></a></span>
+<span id="cb11-223"><a href="#cb11-223"></a>}</span>
+<span id="cb11-224"><a href="#cb11-224"></a><span class="in">```</span></span>
+<span id="cb11-225"><a href="#cb11-225"></a></span>
+<span id="cb11-226"><a href="#cb11-226"></a><span class="fu">### Collections Misused</span></span>
+<span id="cb11-227"><a href="#cb11-227"></a></span>
+<span id="cb11-228"><a href="#cb11-228"></a>**Symptom**: “Object doesn’t support property or method ‘forEach’” or</span>
+<span id="cb11-229"><a href="#cb11-229"></a>“undefined.”</span>
+<span id="cb11-230"><a href="#cb11-230"></a></span>
+<span id="cb11-231"><a href="#cb11-231"></a>**Cause**: EA collections are COM objects, not JS arrays. You must use</span>
+<span id="cb11-232"><a href="#cb11-232"></a>.Count and .GetAt(i).</span>
+<span id="cb11-233"><a href="#cb11-233"></a></span>
+<span id="cb11-234"><a href="#cb11-234"></a><span class="fu">#### Wrong</span></span>
+<span id="cb11-235"><a href="#cb11-235"></a><span class="in">``` .js</span></span>
+<span id="cb11-236"><a href="#cb11-236"></a><span class="co">// [x] This will fail</span></span>
+<span id="cb11-237"><a href="#cb11-237"></a></span>
+<span id="cb11-238"><a href="#cb11-238"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">forEach</span>(<span class="kw">function</span>(e){ Session<span class="op">.</span><span class="fu">Output</span>(e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span> })<span class="op">;</span></span>
+<span id="cb11-239"><a href="#cb11-239"></a><span class="in">```</span></span>
+<span id="cb11-240"><a href="#cb11-240"></a></span>
+<span id="cb11-241"><a href="#cb11-241"></a><span class="fu">#### Fixed</span></span>
+<span id="cb11-242"><a href="#cb11-242"></a><span class="in">``` .js</span></span>
+<span id="cb11-243"><a href="#cb11-243"></a><span class="co">// [✓] Correct</span></span>
+<span id="cb11-244"><a href="#cb11-244"></a></span>
+<span id="cb11-245"><a href="#cb11-245"></a><span class="kw">var</span> els <span class="op">=</span> pkg<span class="op">.</span><span class="at">Elements</span><span class="op">;</span></span>
+<span id="cb11-246"><a href="#cb11-246"></a></span>
+<span id="cb11-247"><a href="#cb11-247"></a><span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i\<span class="op">&lt;</span>els<span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb11-248"><a href="#cb11-248"></a></span>
+<span id="cb11-249"><a href="#cb11-249"></a><span class="kw">var</span> e <span class="op">=</span> els<span class="op">.</span><span class="fu">GetAt</span>(i)<span class="op">;</span></span>
+<span id="cb11-250"><a href="#cb11-250"></a></span>
+<span id="cb11-251"><a href="#cb11-251"></a>Session<span class="op">.</span><span class="fu">Output</span>(e<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb11-252"><a href="#cb11-252"></a></span>
+<span id="cb11-253"><a href="#cb11-253"></a>}</span>
+<span id="cb11-254"><a href="#cb11-254"></a><span class="in">```</span></span>
+<span id="cb11-255"><a href="#cb11-255"></a></span>
+<span id="cb11-256"><a href="#cb11-256"></a><span class="fu">### Delete Without Backwards Iteration</span></span>
+<span id="cb11-257"><a href="#cb11-257"></a></span>
+<span id="cb11-258"><a href="#cb11-258"></a>**Symptom**: Some elements are skipped when deleting in loops.</span>
+<span id="cb11-259"><a href="#cb11-259"></a></span>
+<span id="cb11-260"><a href="#cb11-260"></a>**Cause**: Deleting while looping forward shifts indices.</span>
+<span id="cb11-261"><a href="#cb11-261"></a></span>
+<span id="cb11-262"><a href="#cb11-262"></a><span class="fu">#### Wrong</span></span>
+<span id="cb11-263"><a href="#cb11-263"></a><span class="in">``` .js</span></span>
+<span id="cb11-264"><a href="#cb11-264"></a><span class="co">// [x] Deletes only half</span></span>
+<span id="cb11-265"><a href="#cb11-265"></a></span>
+<span id="cb11-266"><a href="#cb11-266"></a><span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span><span class="dv">0</span><span class="op">;</span> i\<span class="op">&lt;</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="at">Count</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb11-267"><a href="#cb11-267"></a></span>
+<span id="cb11-268"><a href="#cb11-268"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">DeleteAt</span>(i<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb11-269"><a href="#cb11-269"></a></span>
+<span id="cb11-270"><a href="#cb11-270"></a>}</span>
+<span id="cb11-271"><a href="#cb11-271"></a><span class="in">```</span></span>
+<span id="cb11-272"><a href="#cb11-272"></a></span>
+<span id="cb11-273"><a href="#cb11-273"></a><span class="fu">#### Fixed</span></span>
+<span id="cb11-274"><a href="#cb11-274"></a><span class="in">``` .js</span></span>
+<span id="cb11-275"><a href="#cb11-275"></a><span class="co">// [✓] Loop backwards</span></span>
+<span id="cb11-276"><a href="#cb11-276"></a></span>
+<span id="cb11-277"><a href="#cb11-277"></a><span class="cf">for</span> (<span class="kw">var</span> i<span class="op">=</span>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="at">Count</span><span class="op">-</span><span class="dv">1</span><span class="op">;</span> i\<span class="op">&gt;=</span><span class="dv">0</span><span class="op">;</span> i<span class="op">--</span>) {</span>
+<span id="cb11-278"><a href="#cb11-278"></a></span>
+<span id="cb11-279"><a href="#cb11-279"></a>pkg<span class="op">.</span><span class="at">Elements</span><span class="op">.</span><span class="fu">DeleteAt</span>(i<span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb11-280"><a href="#cb11-280"></a></span>
+<span id="cb11-281"><a href="#cb11-281"></a>}</span>
+<span id="cb11-282"><a href="#cb11-282"></a></span>
+<span id="cb11-283"><a href="#cb11-283"></a>Repository<span class="op">.</span><span class="fu">RefreshModelView</span>(pkg<span class="op">.</span><span class="at">PackageID</span>)<span class="op">;</span></span>
+<span id="cb11-284"><a href="#cb11-284"></a><span class="in">```</span></span>
+<span id="cb11-285"><a href="#cb11-285"></a></span>
+<span id="cb11-286"><a href="#cb11-286"></a><span class="fu">### Unicode / Encoding Headaches</span></span>
+<span id="cb11-287"><a href="#cb11-287"></a></span>
+<span id="cb11-288"><a href="#cb11-288"></a>**Symptom**: Exported CSV shows “???” instead of accented characters.</span>
+<span id="cb11-289"><a href="#cb11-289"></a></span>
+<span id="cb11-290"><a href="#cb11-290"></a>**Cause**: EA’s JScript FileSystemObject writes in ANSI by default.</span>
+<span id="cb11-291"><a href="#cb11-291"></a></span>
+<span id="cb11-292"><a href="#cb11-292"></a>**Workaround:**</span>
+<span id="cb11-293"><a href="#cb11-293"></a></span>
+<span id="cb11-294"><a href="#cb11-294"></a><span class="ss">- </span>Keep exports simple (ASCII where possible).</span>
+<span id="cb11-295"><a href="#cb11-295"></a></span>
+<span id="cb11-296"><a href="#cb11-296"></a><span class="ss">- </span>If you need UTF-8: use external automation (Python/C#).</span>
+<span id="cb11-297"><a href="#cb11-297"></a></span>
+<span id="cb11-298"><a href="#cb11-298"></a><span class="fu">### External Python for UTF-8 CSV</span></span>
+<span id="cb11-299"><a href="#cb11-299"></a><span class="in">``` .py</span></span>
+<span id="cb11-300"><a href="#cb11-300"></a>\<span class="co"># utf8_export.py</span></span>
+<span id="cb11-301"><a href="#cb11-301"></a></span>
+<span id="cb11-302"><a href="#cb11-302"></a><span class="im">import</span> win32com.client, csv</span>
+<span id="cb11-303"><a href="#cb11-303"></a></span>
+<span id="cb11-304"><a href="#cb11-304"></a>ea <span class="op">=</span> win32com.client.Dispatch(<span class="st">"EA.App"</span>)</span>
+<span id="cb11-305"><a href="#cb11-305"></a></span>
+<span id="cb11-306"><a href="#cb11-306"></a>repo <span class="op">=</span> ea.Repository</span>
+<span id="cb11-307"><a href="#cb11-307"></a></span>
+<span id="cb11-308"><a href="#cb11-308"></a>pkg <span class="op">=</span> repo.GetTreeSelectedPackage()</span>
+<span id="cb11-309"><a href="#cb11-309"></a></span>
+<span id="cb11-310"><a href="#cb11-310"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"export.csv"</span>,<span class="st">"w"</span>,newline<span class="op">=</span><span class="st">""</span>,encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb11-311"><a href="#cb11-311"></a></span>
+<span id="cb11-312"><a href="#cb11-312"></a>wr <span class="op">=</span> csv.writer(f)</span>
+<span id="cb11-313"><a href="#cb11-313"></a></span>
+<span id="cb11-314"><a href="#cb11-314"></a>wr.writerow(\[<span class="st">"ID"</span>,<span class="st">"Name"</span>\])</span>
+<span id="cb11-315"><a href="#cb11-315"></a></span>
+<span id="cb11-316"><a href="#cb11-316"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(pkg.Elements.Count):</span>
+<span id="cb11-317"><a href="#cb11-317"></a></span>
+<span id="cb11-318"><a href="#cb11-318"></a>e <span class="op">=</span> pkg.Elements.GetAt(i)</span>
+<span id="cb11-319"><a href="#cb11-319"></a></span>
+<span id="cb11-320"><a href="#cb11-320"></a>wr.writerow(\[e.ElementID, e.Name\])</span>
+<span id="cb11-321"><a href="#cb11-321"></a><span class="in">```</span></span>
+<span id="cb11-322"><a href="#cb11-322"></a></span>
+<span id="cb11-323"><a href="#cb11-323"></a><span class="fu">### Misusing Session.Output (too much logging)</span></span>
+<span id="cb11-324"><a href="#cb11-324"></a></span>
+<span id="cb11-325"><a href="#cb11-325"></a>**Symptom**: Script becomes slow or EA hangs.</span>
+<span id="cb11-326"><a href="#cb11-326"></a></span>
+<span id="cb11-327"><a href="#cb11-327"></a>**Cause**: Printing thousands of lines to EA’s Output tab is slow.</span>
+<span id="cb11-328"><a href="#cb11-328"></a></span>
+<span id="cb11-329"><a href="#cb11-329"></a>**Fix:**</span>
+<span id="cb11-330"><a href="#cb11-330"></a></span>
+<span id="cb11-331"><a href="#cb11-331"></a><span class="ss">- </span>Use CSV/file logging for detail.</span>
+<span id="cb11-332"><a href="#cb11-332"></a></span>
+<span id="cb11-333"><a href="#cb11-333"></a><span class="ss">- </span>Use Session.Output only for summary.</span>
+<span id="cb11-334"><a href="#cb11-334"></a></span>
+<span id="cb11-335"><a href="#cb11-335"></a><span class="fu">### API vs Direct SQL Write</span></span>
+<span id="cb11-336"><a href="#cb11-336"></a></span>
+<span id="cb11-337"><a href="#cb11-337"></a>**Symptom**: Repository corrupted or constraints broken.</span>
+<span id="cb11-338"><a href="#cb11-338"></a></span>
+<span id="cb11-339"><a href="#cb11-339"></a>**Cause**: Direct Repository.Execute("UPDATE…") writes to EA tables skip</span>
+<span id="cb11-340"><a href="#cb11-340"></a>API integrity.</span>
+<span id="cb11-341"><a href="#cb11-341"></a></span>
+<span id="cb11-342"><a href="#cb11-342"></a>**Rule**:</span>
+<span id="cb11-343"><a href="#cb11-343"></a></span>
+<span id="cb11-344"><a href="#cb11-344"></a><span class="ss">- </span>Use Repository.SQLQuery() for *read-only*.</span>
+<span id="cb11-345"><a href="#cb11-345"></a></span>
+<span id="cb11-346"><a href="#cb11-346"></a><span class="ss">- </span>Use object API (.Update()) for writes.</span>
+<span id="cb11-347"><a href="#cb11-347"></a></span>
+<span id="cb11-348"><a href="#cb11-348"></a><span class="ss">- </span>Only use direct SQL writes if you fully understand EA’s schema (rare).</span>
+<span id="cb11-349"><a href="#cb11-349"></a></span>
+<span id="cb11-350"><a href="#cb11-350"></a><span class="fu">### ObjectType Confusion</span></span>
+<span id="cb11-351"><a href="#cb11-351"></a></span>
+<span id="cb11-352"><a href="#cb11-352"></a>**Symptom**: Code assumes everything from GetTreeSelectedObject() is an</span>
+<span id="cb11-353"><a href="#cb11-353"></a>element, but sometimes it’s a package or diagram.</span>
+<span id="cb11-354"><a href="#cb11-354"></a></span>
+<span id="cb11-355"><a href="#cb11-355"></a>**Fix**: Always check ObjectType.</span>
+<span id="cb11-356"><a href="#cb11-356"></a></span>
+<span id="cb11-357"><a href="#cb11-357"></a><span class="fu">#### Example</span></span>
+<span id="cb11-358"><a href="#cb11-358"></a><span class="in">``` .js</span></span>
+<span id="cb11-359"><a href="#cb11-359"></a><span class="kw">var</span> obj <span class="op">=</span> Repository<span class="op">.</span><span class="fu">GetTreeSelectedObject</span>()<span class="op">;</span></span>
+<span id="cb11-360"><a href="#cb11-360"></a></span>
+<span id="cb11-361"><a href="#cb11-361"></a><span class="cf">if</span> (obj<span class="op">.</span><span class="at">ObjectType</span> <span class="op">==</span> otPackage) {</span>
+<span id="cb11-362"><a href="#cb11-362"></a></span>
+<span id="cb11-363"><a href="#cb11-363"></a>Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Selected a package: "</span> <span class="op">+</span> obj<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb11-364"><a href="#cb11-364"></a></span>
+<span id="cb11-365"><a href="#cb11-365"></a>} <span class="cf">else</span> <span class="cf">if</span> (obj<span class="op">.</span><span class="at">ObjectType</span> <span class="op">==</span> otElement) {</span>
+<span id="cb11-366"><a href="#cb11-366"></a></span>
+<span id="cb11-367"><a href="#cb11-367"></a>Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Selected element: "</span> <span class="op">+</span> obj<span class="op">.</span><span class="at">Name</span>)<span class="op">;</span></span>
+<span id="cb11-368"><a href="#cb11-368"></a></span>
+<span id="cb11-369"><a href="#cb11-369"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-370"><a href="#cb11-370"></a></span>
+<span id="cb11-371"><a href="#cb11-371"></a>Session<span class="op">.</span><span class="fu">Output</span>(<span class="st">"Unsupported object type."</span>)<span class="op">;</span></span>
+<span id="cb11-372"><a href="#cb11-372"></a></span>
+<span id="cb11-373"><a href="#cb11-373"></a>}</span>
+<span id="cb11-374"><a href="#cb11-374"></a><span class="in">```</span></span>
+<span id="cb11-375"><a href="#cb11-375"></a></span>
+<span id="cb11-376"><a href="#cb11-376"></a><span class="fu">## Safe Patterns Recap</span></span>
+<span id="cb11-377"><a href="#cb11-377"></a></span>
+<span id="cb11-378"><a href="#cb11-378"></a><span class="ss">- </span>**Always Update()** after modifying objects.</span>
+<span id="cb11-379"><a href="#cb11-379"></a></span>
+<span id="cb11-380"><a href="#cb11-380"></a><span class="ss">- </span>**Always RefreshModelView()** after changes if you want UI sync.</span>
+<span id="cb11-381"><a href="#cb11-381"></a></span>
+<span id="cb11-382"><a href="#cb11-382"></a><span class="ss">- </span>**Loop with .Count / .GetAt(i)**, not forEach.</span>
+<span id="cb11-383"><a href="#cb11-383"></a></span>
+<span id="cb11-384"><a href="#cb11-384"></a><span class="ss">- </span>**Delete backwards**.</span>
+<span id="cb11-385"><a href="#cb11-385"></a></span>
+<span id="cb11-386"><a href="#cb11-386"></a><span class="ss">- </span>**Don’t rely on names alone**: use GUIDs or IDs.</span>
+<span id="cb11-387"><a href="#cb11-387"></a></span>
+<span id="cb11-388"><a href="#cb11-388"></a><span class="ss">- </span>**Prefer API writes** over SQL.</span>
+<span id="cb11-389"><a href="#cb11-389"></a></span>
+<span id="cb11-390"><a href="#cb11-390"></a><span class="ss">- </span>**Minimise Session.Output** inside large loops.</span>
+<span id="cb11-391"><a href="#cb11-391"></a></span>
+<span id="cb11-392"><a href="#cb11-392"></a><span class="ss">- </span>**Check ObjectType** before casting.</span>
+<span id="cb11-393"><a href="#cb11-393"></a></span>
+<span id="cb11-394"><a href="#cb11-394"></a><span class="ss">- </span>**Expect case differences** in API (GUID vs Guid).</span>
+<span id="cb11-395"><a href="#cb11-395"></a></span>
+<span id="cb11-396"><a href="#cb11-396"></a><span class="ss">- </span>**Export UTF-8 externally** if needed.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

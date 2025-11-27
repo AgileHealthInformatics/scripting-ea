@@ -1,0 +1,45 @@
+# Appendix B: External Automation
+
+Sometimes EA’s internal scripting isn’t enough. That’s when you use
+**COM automation** from languages like **Python, C#, Java**.
+
+## B.1 Attaching Externally
+
+- Launch EA first, or start via COM.
+
+- Use the EA.App ProgID:
+
+> import win32com.client
+>
+> ea = win32com.client.Dispatch("EA.App")
+>
+> repo = ea.Repository
+
+- In C#, add reference to Interop.EA.dll (from EA install folder).
+
+## B.2 When to Go External
+
+- You need **UTF-8 I/O** (CSV/JSON).
+
+- You need **HTTP/REST APIs** (Jira, Confluence, registries).
+
+- You need **better libraries** (Python csv, json; C# Newtonsoft.Json).
+
+- You want CI/CD automation or Git integration.
+
+## B.3 Bitness
+
+- EA is typically **32-bit**.
+
+- Python/C# must match bitness (32-bit Python to attach via COM).
+
+- Check Interop.EA.dll reference matches installed EA.
+
+## B.4 Add-ins
+
+- C# Class Library DLL, COM-visible, registry entry under EAAddins.
+
+- EA calls known methods: EA_Connect, EA_GetMenuItems, EA_MenuClick,
+  etc.
+
+- Use Add-ins when you need: permanent menus, event handling, richer UI.

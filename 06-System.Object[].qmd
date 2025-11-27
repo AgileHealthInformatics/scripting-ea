@@ -1,0 +1,413 @@
+# Chapter 5: Inside EA with JScript
+
+The previous chapters have explained why you would script Enterprise
+Architect (EA), how automation fits into the overall landscape, and
+which core objects form the backbone of the API. Now it is time to get
+specific about the scripting language you will actually use inside EA.
+
+EA provides three options in its built-in scripting window:
+**VBScript**, **JScript**, and in newer versions, **JavaScript**. Each
+of these has its own history, syntax, and quirks. For most users today,
+the best balance of accessibility, capability, and long-term viability
+is found in **JavaScript** — or more accurately, in Microsoft’s JScript
+engine, which is EA’s internal implementation of ECMAScript 3.
+
+This chapter explores what it means to work inside EA with
+JavaScript/JScript. It explains the constraints of the runtime, the
+pitfalls of assuming modern ECMAScript features, and the techniques that
+make the language usable for practical automation. It also sets
+expectations: you will not be writing modern Node.js code, but you can
+still achieve powerful results with a lean, disciplined subset of
+JavaScript.
+
+## The Language Landscape
+
+Why does EA support these languages? The answer lies in its history. In
+the early 2000s, Windows scripting was dominated by **VBScript** and
+**JScript**, both hosted by the Windows Script Host. They were the
+default scripting choices for automation in Microsoft Office and many
+other applications. EA adopted them as its embedded scripting languages.
+
+VBScript is verbose, procedural, and feels like a cousin of Visual Basic
+for Applications (VBA). JScript is Microsoft’s implementation of
+ECMAScript 3 (ES3), roughly equivalent to JavaScript as it existed in
+Internet Explorer 6.
+
+More recently, Sparx Systems added support for JavaScript labelled as
+such, but under the hood it is still the JScript ES3 runtime. That means
+many of the features you may expect from modern JavaScript — let, const,
+arrow functions, array methods like forEach, JSON parsing — are missing.
+If you try to use them, your script will fail.
+
+## JavaScript or JScript?
+
+Given these limitations, why choose JavaScript over VBScript? There are
+several reasons:
+
+- **Familiarity**: even with its older syntax, JavaScript feels more
+  familiar to today’s developers and architects than VBScript.
+
+- **Readability**: JScript code tends to be shorter and cleaner than
+  equivalent VBScript.
+
+- **Longevity**: while VBScript has been officially deprecated by
+  Microsoft, JavaScript remains the world’s most widely used language.
+  Even if EA lags in its runtime, the language concepts remain
+  transferable.
+
+- **Transition potential**: once you know how to script EA in JScript,
+  moving to external JavaScript (Node.js, modern ES) or Python is
+  easier.
+
+For these reasons, this book assumes you will primarily use
+**JScript/JavaScript** as your internal scripting language. VBScript
+examples are included occasionally for reference, but JScript is the
+pragmatic choice going forward.
+
+## The Constraints of JScript ES3
+
+The most important thing to understand is what you **cannot do** in EA’s
+JScript engine. Here are the key constraints:
+
+- **No modern declarations**: only var is allowed; let and const are not
+  recognised.
+
+- **No arrow functions**: ()=\> syntax is invalid. Use function()
+  instead.
+
+- **No array helpers**: methods like forEach, map, filter, reduce do not
+  exist.
+
+- **No JSON methods**: JSON.parse and JSON.stringify are not available.
+  If you need JSON, you must parse manually or use external automation.
+
+- **No promises or async/await**: everything is synchronous.
+
+- **String handling**: only basic functions like indexOf, substring,
+  replace are available.
+
+This feels restrictive, especially if you come from modern JavaScript.
+But it is enough for the kinds of tasks EA scripting requires:
+traversing collections, setting properties, logging, and basic string
+manipulation.
+
+## Scripting Tips
+
+### Adapting to EA Collections
+
+One of the most common mistakes beginners make is assuming EA’s
+collections behave like JavaScript arrays. They do not. EA’s collections
+are COM objects. They expose only two members: .Count and .GetAt(index).
+
+That means you must loop with a standard for loop:
+
+``` js 
+var els = pkg.Elements;
+for (var i = 0; i < els.Count; i++) {
+    var e = els.GetAt(i);
+    Session.Output(e.Name);
+}
+```
+
+Try to call els.forEach(...) and you will get an error. Understanding
+this quirk is half the battle of learning EA scripting.
+
+### Logging with Session.Output
+
+Another adaptation is how you print feedback. There is no console.log.
+Instead, EA provides Session.Output, which writes to the Output tab. For
+example:
+
+Session.Output("Hello from EA!");
+
+For large operations, use file logging instead (via FileSystemObject),
+because thousands of lines in the Output tab will slow EA down.
+
+### Dry-Run and Logging Discipline
+
+The limitations of the language make **discipline even more important**.
+That is why this book insists on starting every modifying script with a
+DRY_RUN flag and embedding structured logging. Because there is no undo,
+and because the debugging tools are limited, you must build safety into
+your scripts from the start.
+
+### The Benefits of Simplicity
+
+There is a positive side to JScript’s limitations: it forces you to keep
+scripts **simple and focused**. Each script should do one thing well —
+rename elements, export to CSV, check for missing tags. You won’t be
+tempted to over-engineer or add unnecessary abstractions.
+
+For larger tasks, the advice is clear: use external automation in Python
+or C#. Internal JScript is for sharp, focused tools that run close to
+the model.
+
+### Thinking Like a Modeller
+
+It is worth remembering that most EA users are not professional
+programmers. They are architects, analysts, engineers — people who need
+automation to support modelling, not to build software products. JScript
+inside EA is perfectly suited to this audience. It lets you express
+simple logic in a few lines. It integrates directly with the repository.
+It is always available without external setup.
+
+This chapter is therefore less about writing elegant JavaScript and more
+about **thinking like a modeller who scripts**. The aim is clarity,
+safety, and repeatability.
+
+## A Progressive Learning Curve
+
+The examples in this chapter begin simple — how to add an element, set a
+tagged value, or traverse a package tree. They then build toward more
+practical utilities: bulk renaming, enforcing conventions, exporting
+tagged values. Each example is fully commented so you see not only the
+syntax but also the reasoning.
+
+As you practice, you will find that most tasks follow similar patterns:
+
+- Find a package.
+
+- Loop through elements.
+
+- Check a property.
+
+- Modify or log as needed.
+
+- Call Update().
+
+- Refresh the view.
+
+This pattern is so common it becomes second nature. Once you see it a
+few times, you can adapt it to almost anything.
+
+## Preparing for the Examples
+
+The worked examples that follow this introduction will show how to:
+
+- Create elements inside a package.
+
+- Set stereotypes and tagged values.
+
+- Traverse package hierarchies.
+
+- Safely update and refresh content.
+
+Remember as you study them:
+
+1.  JScript is old, but it works.
+
+2.  Stick to ES3 constructs (var, for, function).
+
+3.  Treat EA collections as COM objects, not arrays.
+
+4.  Use Session.Output for small logs, CSV files for large ones.
+
+5.  Always keep DRY_RUN = true until you are certain.
+
+Mastering these basics will make you comfortable in EA’s scripting
+environment, ready to explore external automation and add-ins later.
+
+**  **
+
+### Safe Variable Declarations
+```{.js filename="Example 5.1 – Safe variable declarations in JScript"}
+// -------------------------------------------------------
+// Example 5.1 - Safe variable declarations in JScript
+// -------------------------------------------------------
+
+// ❌ Wrong (not supported in JScript)
+// let x = 10;
+// const y = 20;
+
+// ✅ Correct
+var x = 10;
+var y = 20;
+
+// Variables declared inside blocks are still visible outside
+if (true) {
+    var z = 30;   // visible outside the if block
+}
+
+Session.Output("x=" + x + ", y=" + y + ", z=" + z);
+```
+
+### Utility Functions
+
+Since JScript lacks many string and array helpers, you should include
+utility functions in most scripts.
+
+```{.js filename="Example 5.2 – Common utility functions for JScript"}
+// -------------------------------------------------------
+// Example 5.2 - Common utility functions for JScript
+// -------------------------------------------------------
+
+// Trim whitespace
+function trim(str) {
+    if (str == null || str == undefined) return "";
+    return String(str).replace(/^\s+|\s+$/g, "");
+}
+
+// Case-insensitive string comparison
+function safeCompare(str1, str2) {
+    return String(str1 || "").toLowerCase() === String(str2 || "").toLowerCase();
+}
+
+// Check if string starts with a prefix
+function startsWith(str, prefix) {
+    return String(str || "").indexOf(prefix) === 0;
+}
+
+// Check if string contains substring
+function contains(str, substring) {
+    return String(str || "").indexOf(substring) !== -1;
+}
+
+// Demonstration
+Session.Output("Trimmed: '" + trim("   hello  ") + "'");
+Session.Output("Compare: " + safeCompare("Test","test"));
+Session.Output("StartsWith: " + startsWith("Enterprise Architect","Enter"));
+Session.Output("Contains: " + contains("Enterprise Architect","Architect"));
+```
+### Iterating EA Collections
+EA collections are **not** JavaScript arrays.
+```{.js filename="Example 5.3 – Iterating through EA collections"}
+// -------------------------------------------------------
+// Example 5.3 - Iterating through EA collections
+// -------------------------------------------------------
+
+!INC Local Scripts.EAConstants-JScript
+
+function main() {
+    var package = Repository.GetTreeSelectedPackage();
+    if (!package) {
+        Session.Prompt("Please select a package.", promptOK);
+        return;
+    }
+
+    var elements = package.Elements;
+
+    // ❌ Wrong – this will fail
+    // elements.forEach(function(e) { ... });
+
+    // ✅ Correct – use Count and GetAt()
+    for (var i = 0; i < elements.Count; i++) {
+        var element = elements.GetAt(i);
+        Session.Output("Element: " + element.Name);
+    }
+}
+
+main();
+```
+
+### File I/O with ActiveX
+
+If you need to read or write files, use the Windows FileSystemObject.
+```{.js filename="Example 5.4 – Reading a text file in JScript"}
+// -------------------------------------------------------
+// Example 5.4 - Reading a text file in JScript
+// -------------------------------------------------------
+
+function readFile(filePath) {
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var file = fso.OpenTextFile(filePath, 1);  // 1 = ForReading
+    var content = file.ReadAll();
+    file.Close();
+    return content;
+}
+
+function main() {
+    try {
+        var text = readFile("C:\\temp\\example.txt");
+        Session.Output("File contents: " + text);
+    } catch(e) {
+        Session.Output("Error: " + e.message);
+    }
+}
+
+main();
+```
+
+### Debugging with Session.Output
+
+Unlike modern environments, you don’t have a console. Use
+Session.Output() to print values and track progress.
+```{.js filename="Example 5.5 – Debugging with Session.Output"}
+// -------------------------------------------------------
+// Example 5.5 - Debugging with Session.Output
+// -------------------------------------------------------
+
+function main() {
+    Session.Output("Debugging start...");
+
+    var package = Repository.GetTreeSelectedPackage();
+    if (!package) {
+        Session.Output("No package selected.");
+        return;
+    }
+
+    Session.Output("Selected package: " + package.Name);
+
+    var elements = package.Elements;
+    Session.Output("Element count: " + elements.Count);
+
+    for (var i = 0; i < elements.Count; i++) {
+        var element = elements.GetAt(i);
+        Session.Output("Element[" + i + "]: " + element.Name);
+    }
+
+    Session.Output("Debugging finished.");
+}
+
+main();
+```
+
+### Error Handling
+
+JScript supports try–catch, but exceptions are limited.
+```{.js filename="Example 5.6 – Error handling in JScript"}
+// -------------------------------------------------------
+// Example 5.6 - Error handling in JScript
+// -------------------------------------------------------
+
+function main() {
+    try {
+        var result = 10 / 0;  // Still valid, result = Infinity
+        Session.Output("Result: " + result);
+
+        // Force an error by calling undefined function
+        undefinedFunction();
+    } catch (e) {
+        // e.message is usually the only useful property
+        Session.Output("Caught error: " + e.message);
+    }
+}
+
+main();
+```
+
+### Putting It All Together
+
+By combining these patterns, you can write safe, predictable scripts
+inside EA:
+
+1.  Always use var for variables.
+
+2.  Include helper functions for missing features.
+
+3.  Loop over collections with .Count and .GetAt(i).
+
+4.  Use Update() to persist changes and RefreshModelView() to update the
+    UI.
+
+5.  Use Session.Output() for debugging.
+
+6.  Use try–catch, but don’t expect detailed stack traces.
+
+## Looking Ahead
+
+This chapter has focused on the quirks of JScript inside EA. With this
+knowledge, you can write safe, basic scripts without falling into the
+traps of modern JavaScript expectations. In the next chapter we move to
+**external automation**, where Python, C#, and other modern languages
+open up much more powerful possibilities for integration and data
+processing.

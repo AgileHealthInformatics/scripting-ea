@@ -1,0 +1,11 @@
+# Appendix D: Quick Reference
+
+| Error Symptom | Likely Cause | Fix |
+|----|----|----|
+| Change not saved | Forgot .Update() | Always update objects |
+| Change not visible until restart | Forgot Repository.RefreshModelView() | Refresh after updates |
+| “forEach is not a function” | Used JS array method on EA collection | Use .Count/.GetAt(i) |
+| Deletes skip items | Forward loop while deleting | Loop backwards |
+| UTF-8 characters become “???” | FSO writes ANSI only | Use external Python/C# |
+| “Method not found: GetElementByGUID” | API casing differences | Use safe wrapper (Guid/GUID) |
+| Object type mismatch | Assumed element, got package/diagram | Always check ObjectType |

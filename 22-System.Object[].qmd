@@ -1,0 +1,222 @@
+# Chapter 21: Reference 
+
+This section is your **desk-side companion**. It gathers the essentials
+you’ll need regularly: the EA object hierarchy, quick SQL snippets, a
+reusable script header template, and a logging helper you can drop into
+any script.
+
+## EA Object Model Map (Condensed)
+
+EA’s Automation API is huge, but most scripts use a handful of objects.
+
+```{.text filename="EA Repository object model" code-line-numbers="false"}
+Repository
+├─ Models (Collection of Package)
+│ └─ Package
+│ ├─ Packages (child packages)
+│ ├─ Elements
+│ │ └─ Element
+│ │ ├─ Attributes
+│ │ ├─ Methods
+│ │ ├─ Connectors
+│ │ └─ TaggedValues
+│ └─ Diagrams
+│ └─ Diagram
+│ └─ DiagramObjects
+└─ Methods
+├─ GetTreeSelectedPackage()
+├─ GetTreeSelectedObject()
+├─ GetElementByID(id)
+├─ GetElementByGUID(guid)
+├─ SQLQuery(sql)
+└─ RefreshModelView(id)
+```
+
+**Key points**
+
+- Everything starts with Repository.
+
+- Package.Elements gives semantic content.
+
+- Element.Connectors gives relationships.
+
+- Diagram.DiagramObjects gives *visual instances*, not the element
+  itself.
+
+- Always Update() after modification.
+
+- Use RefreshModelView() for UI sync.
+
+## SQL Cheat-Sheet (Read-only)
+
+EA stores models in tables. Use **Repository.SQLQuery()** (safe,
+read-only) to fetch information quickly. It returns XML you parse with
+string functions.
+```{.js filename="Example 21.1 - SQLQuery_Classes.js – JScript (ES3)"}
+// -------------------------------------------------------
+// Example 21.1 - SQLQuery_Classes.js – JScript (ES3)
+// Purpose: Query DB for all Class names
+// -------------------------------------------------------
+!INC Local Scripts.EAConstants-JScript
+
+function between(h,a,b){
+  var i=h.indexOf(a); if(i<0)return"";
+  var j=h.indexOf(b,i+a.length); if(j<0)return"";
+  return h.substring(i+a.length,j);
+}
+
+function main(){
+  var sql = "SELECT Name FROM t_object WHERE Object_Type='Class'";
+  var xml = Repository.SQLQuery(sql);
+  var rows = xml.split("<Row>");
+  for (var i=1;i<rows.length;i++){
+    var nm = between(rows[i],"<Name>","</Name>");
+    Session.Output("Class: "+nm);
+  }
+}
+main();
+```
+
+### Count Requirements
+``` .sql
+var sql = "SELECT COUNT(\*) AS CNT FROM t_object WHERE Object_Type='Requirement'";
+var xml = Repository.SQLQuery(sql);
+Session.Output("Requirement count = "+between(xml,"\<CNT\>","\</CNT\>"));
+```
+
+**Tips**
+
+- Table t_object → elements.
+
+- Table t_package → packages.
+
+- Table t_connector → relationships.
+
+- Use Repository.SQLQuery only; avoid Repository.Execute for writes
+  (unsafe).
+
+## Standard Script Header Template
+
+Consistency makes scripts maintainable. Always include a header like
+this:
+``` .js
+// -------------------------------------------------------
+// Script Name: [NameHere]
+// Purpose: [What the script does in plain language]
+// Usage: [How to run it; context required]
+// Assumptions: [What must be selected; ES3 runtime only]
+// Safety: [Read-only / DRY_RUN / destructive with caution]
+// Dependencies: [Shared helpers, external tools]
+// Update history:
+//   v1.0 (2025-08-26) – Initial
+//   v1.1 (2025-09-01) – Added dry-run flag
+// -------------------------------------------------------
+``` 
+
+## Logging Helper Snippet
+
+Logging is essential for dry-run, auditing, and governance. Use a helper
+that writes both to Output and CSV.
+
+``` .js
+// -------------------------------------------------------
+// Logger.js – reusable helper
+// Purpose: Write logs both to Output tab and CSV
+// -------------------------------------------------------
+function Logger(tabName, filePath){
+  this.tab = tabName;
+  Repository.CreateOutputTab(tabName);
+  Repository.ClearOutput(tabName);
+
+  var fso = new ActiveXObject("Scripting.FileSystemObject");
+  var file = fso.OpenTextFile(filePath, 8 /*append*/, true /*create*/);
+
+  this.log = function(msg){
+    Session.Output(msg);
+    file.WriteLine(msg);
+  };
+
+  this.close = function(){ file.Close(); };
+}
+
+// Usage example:
+function main(){
+  var log = new Logger("MyScript","C:\\temp\\myscript.log");
+  log.log("Script started.");
+  // ... your logic ...
+  log.close();
+}
+```
+
+## Common ObjectType Values
+
+When checking what the user has selected:
+
+- otElement (4) — an element (Class, Requirement, etc.).
+
+- otPackage (5) — a package.
+
+- otDiagram (8) — a diagram.
+
+- otAttribute (9) — a class attribute.
+
+- otMethod (10) — a method.
+
+**Pattern**
+``` .js
+var obj = Repository.GetTreeSelectedObject();
+if (obj.ObjectType == otPackage) {
+  Session.Output("Package: " + obj.Name);
+} else if (obj.ObjectType == otElement) {
+  Session.Output("Element: " + obj.Name);
+}
+``` 
+
+## Common Errors Quick Table
+
+| Symptom | Likely Cause | Fix |
+|----|----|----|
+| Change not saved | Forgot .Update() | Always call Update() |
+| Change saved but not visible | Forgot RefreshModelView() | Refresh at end of script |
+| “Object doesn’t support forEach” | Tried JS array methods on collections | Use .Count / .GetAt(i) |
+| Deletes skip items | Looping forward while deleting | Loop backwards |
+| Characters “???” in export | ANSI encoding in JScript FSO | Use Python/C# for UTF-8 |
+
+# 
+
+## Quick Reuse Snippets
+
+### Safe delete loop
+``` .js
+for (var i=col.Count-1; i\>=0; i--) col.DeleteAt(i,false);
+``` 
+
+### DRY_RUN guard
+``` .js
+if (!DRY_RUN) { e.Update(); }
+```
+
+### String trim
+``` .js
+function trim(s){return
+s==null?"":String(s).replace(/^\s+\|\s+\$/g,"");}
+```
+
+## Summary
+
+This reference chapter gives you the **essentials at a glance**:
+
+- The object model map.
+
+- SQL query patterns.
+
+- Standard headers.
+
+- Logging helper.
+
+- Common ObjectTypes and errors.
+
+Keep it open as your **daily cheat-sheet**: it saves time, avoids
+mistakes, and makes your scripts consistent.**  **
+
+Appendices

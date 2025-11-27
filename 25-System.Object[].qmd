@@ -1,0 +1,46 @@
+# Appendix C: Glossary of Terms
+
+**Add-in** — A COM-visible DLL (C# or VB.NET) that EA loads at startup,
+adding menus, toolbars, and event handlers.
+
+**API (Automation Interface)** — The COM object model exposed by EA
+(Repository, Package, Element, Connector, etc.).
+
+**Attribute** — A property of a Class element; accessed via
+Element.Attributes.
+
+**Connector** — A relationship between elements (e.g., Association,
+Realisation). Access via Element.Connectors.
+
+**DiagramObject** — A visual instance of an element on a diagram; stores
+coordinates and style, not semantics.
+
+**Dry Run (DRY_RUN)** — A safety flag in scripts: simulate changes and
+log, but don’t commit updates.
+
+**Element** — A modelled item (Class, Requirement, UseCase, Component,
+etc.).
+
+**GUID** — Global Unique Identifier string assigned to every element,
+connector, and package. Prefer GUIDs for stable identification.
+
+**MDG Technology** — A profile/extension package for EA (stereotypes,
+tagged values, toolboxes, etc.). Scripts must use StereotypeEx for full
+qualified stereotypes (profile::stereo).
+
+**ObjectType** — Integer enum identifying what an object is (otElement,
+otPackage, otDiagram, etc.).
+
+**Package** — Container for elements, diagrams, and child packages.
+
+**Repository** — Root of the automation API; represents the current EA
+model (QEA/EAP file or DB connection).
+
+**SQLQuery** — Repository.SQLQuery(sql) executes a SQL SELECT against
+EA’s database and returns XML. Use only for *reads*.
+
+**Update()** — Method to persist changes to database; required after
+modifying any object.
+
+**WinHTTP** — Windows COM object (WinHttp.WinHttpRequest.5.1) usable
+from JScript for basic HTTP requests.
