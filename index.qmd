@@ -2,7 +2,7 @@
 title: "Scripting Sparx Enterprise Architect"
 subtitle: "A Practical Handbook"
 author: "Tito Castillo"
-date: "2025"
+date: 2025-11-27
 ---
 
 Scripting in **Sparx Enterprise Architect (EA)** has always been both an art and a science.  
