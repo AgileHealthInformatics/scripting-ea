@@ -16,3 +16,6 @@ _book/
 # OS cruft
 .DS_Store
 Thumbs.db
+
+/.quarto/
+**/*.quarto_ipynb

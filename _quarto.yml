@@ -10,7 +10,7 @@ project:
 book:
   title: "Scripting Sparx Enterprise Architect: A Practical Handbook"
   author: "Tito Castillo"
-  date: "2025"
+  date: 2025-11-27
 
   chapters:
     - index.qmd
