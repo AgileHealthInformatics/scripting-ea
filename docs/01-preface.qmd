@@ -1,0 +1,34 @@
+# Preface
+
+Scripting in **Sparx Enterprise Architect (EA)** has always been both an art and a science.  
+Most modellers discover the scripting window by accident, write a few lines of JScript or VBScript, and quickly realise that the possibilities extend far beyond simple automation.  
+A well-structured script can transform EA from a drawing tool into a complete modelling environment—one that enforces standards, generates documentation, and maintains semantic consistency across large repositories.
+
+This handbook was written for practitioners who have reached that moment of discovery and want to go further.  
+It assumes you already understand EA’s modelling concepts but want to learn how to harness its automation interface responsibly and effectively.  
+Each chapter builds practical skills through worked examples, annotated listings, and clear explanations of what is happening behind the scenes.
+
+The code examples use a deliberately **verbose commenting style**.  
+This reflects the author’s conviction that scripts in EA are not disposable experiments but integral parts of the architectural record.  
+A script that can explain itself is a script that can be maintained, audited, and reused.
+
+You will encounter snippets written in **JScript**, **VBScript**, and **Python**, each chosen for a particular purpose.  
+JScript remains the most widely used within EA because of its direct integration and immediate execution.  
+VBScript appears in legacy environments and in examples where readability or COM automation syntax is clearer.  
+Python is included to illustrate how EA can be automated externally through its COM interface, opening the door to advanced analytics, testing, and integration pipelines.
+
+Beyond code, this book emphasises **discipline**.  
+Automation without discipline quickly becomes chaos.  
+By treating scripts as first-class architectural artefacts—version-controlled, documented, and tested—you build confidence not only in your tools but in the models that depend on them.
+
+The examples that follow have been developed and refined through real-world use across government, healthcare, and defence projects.  
+They are designed to be copied, adapted, and improved.  
+Each one begins with a clear purpose, a short description of assumptions, and a structured header that records when and why it was written.  
+Together they form a working library that you can evolve to suit your own organisation.
+
+My hope is that this book helps you move from **drawing diagrams** to **engineering models**—from manipulating shapes on a screen to crafting automated reasoning tools that truly represent the systems you design.  
+If it inspires you to share your own scripts, extend these techniques, or simply think differently about what EA can become, it will have achieved its purpose.
+
+Tito Castillo  
+*London, 2025*
+

@@ -12,8 +12,10 @@ book:
   author: "Tito Castillo"
   date: 2025-11-27
 
+
   chapters:
     - index.qmd
+    - 00-System.Object[].qmd
     - 02-System.Object[].qmd
     - 03-System.Object[].qmd
     - 04-System.Object[].qmd
@@ -40,6 +42,8 @@ book:
     - 25-System.Object[].qmd
     - 26-System.Object[].qmd
     - 27-System.Object[].qmd
+
+number-sections: false
 
 format:
   html:
