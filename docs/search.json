@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Scripting Sparx Enterprise Architect: A Practical Handbook",
     "section": "",
-    "text": "Scripting Sparx Enterprise Architect\nSparx Enterprise Architect is widely used as a modelling tool.\nThis handbook shows how to turn it into a scripting-enabled modelling environment that is disciplined, repeatable, and integrated with the wider lifecycle of your organisation.\nIt is written for practitioners who already use EA in anger and want to go further: automating routine tasks, enforcing modelling standards, and treating scripts as first-class architectural artefacts rather than throwaway experiments.",
+    "text": "Scripting Sparx Enterprise Architect\nSparx Enterprise Architect is widely used as a modelling tool. This handbook shows how to turn it into a scripting-enabled modelling environment that is disciplined, repeatable, and integrated with the wider lifecycle of your organisation.\nIt is written for practitioners who already use EA in anger and want to go further: automating routine tasks, enforcing modelling standards, and treating scripts as first-class architectural artefacts rather than throwaway experiments.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Scripting Sparx Enterprise Architect</span>"
     ]
