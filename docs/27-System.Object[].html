@@ -135,9 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <a href="./index.html" class="sidebar-logo-link">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">
-      Scripting Sparx Enterprise Architect: A Practical Handbook
-      </a> 
+      <a href="./">Scripting Sparx Enterprise Architect: A Practical Handbook</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -154,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-Preface.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Preface</span></a>
+  <a href="./00-System.Object[].html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -300,11 +298,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#e.1-purpose" id="toc-e.1-purpose" class="nav-link active" data-scroll-target="#e.1-purpose">E.1 Purpose</a></li>
   <li><a href="#e.2-usage" id="toc-e.2-usage" class="nav-link" data-scroll-target="#e.2-usage">E.2 Usage</a></li>
   <li><a href="#e.3-the-eaconnect-helper-class" id="toc-e.3-the-eaconnect-helper-class" class="nav-link" data-scroll-target="#e.3-the-eaconnect-helper-class">E.3 The EAConnect Helper Class</a></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">//</a>
+  <li><a href="#e.4-configuration-setup" id="toc-e.4-configuration-setup" class="nav-link" data-scroll-target="#e.4-configuration-setup">E.4 Configuration &amp; Setup</a>
   <ul class="collapse">
-  <li><a href="#e.3-the-eaconnect-helper-class-1" id="toc-e.3-the-eaconnect-helper-class-1" class="nav-link" data-scroll-target="#e.3-the-eaconnect-helper-class-1">E.3 The EAConnect Helper Class</a></li>
+  <li><a href="#bitness" id="toc-bitness" class="nav-link" data-scroll-target="#bitness">Bitness</a></li>
+  <li><a href="#interop.ea.dll" id="toc-interop.ea.dll" class="nav-link" data-scroll-target="#interop.ea.dll">Interop.EA.dll</a></li>
+  <li><a href="#stathread" id="toc-stathread" class="nav-link" data-scroll-target="#stathread">STAThread</a></li>
+  <li><a href="#model-files" id="toc-model-files" class="nav-link" data-scroll-target="#model-files">Model Files</a></li>
+  <li><a href="#dry-run-logging" id="toc-dry-run-logging" class="nav-link" data-scroll-target="#dry-run-logging">Dry Run &amp; Logging</a></li>
+  <li><a href="#distribution" id="toc-distribution" class="nav-link" data-scroll-target="#distribution">Distribution</a></li>
   </ul></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">//</a></li>
   </ul>
 </nav>
     </div>
@@ -384,645 +386,433 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="e.3-the-eaconnect-helper-class" class="level2">
 <h2 class="anchored" data-anchor-id="e.3-the-eaconnect-helper-class">E.3 The EAConnect Helper Class</h2>
-<p>’’’csharp // =======================================================================</p>
-<p>// File: EAConnect.cs</p>
-<p>// Project: EA Automation Helper</p>
-<p>// Author: &lt;Your Name&gt;</p>
-<p>// Created: 2025-08-31</p>
-<p>// Last Update: 2025-08-31</p>
-<p>//</p>
-<p>// PURPOSE</p>
-<p>// ——-</p>
-<p>// Provides a safe, reusable abstraction over EA’s COM automation API.</p>
-<p>// Handles: attach/launch, repository polling, model open, package</p>
-<p>// resolution,</p>
-<p>// element creation, tagged value creation, CSV logging, and UI refresh.</p>
-<p>//</p>
-<p>// USAGE</p>
-<p>// —–</p>
-<p>// using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options {</p>
-<p>// ShowUI = true });</p>
-<p>// var pkg = ea.GetSelectedPackageOrRoot();</p>
-<p>// var result = EAConnect.AddElement(ea.Repo, pkg, “NewClass”, “Class”,</p>
-<p>// “Notes”, true);</p>
-<p>// Console.WriteLine(result.Summary);</p>
-<p>//</p>
-<p>// ASSUMPTIONS</p>
-<p>// ———–</p>
-<p>// - EA is installed and COM-registered (ProgID = “EA.App”).</p>
-<p>// - Interop.EA.dll referenced (from EA install folder).</p>
-<p>// - Bitness of project matches EA (x64 for EA 64-bit; x86 for 32-bit).</p>
-<p>// - .NET project marked [STAThread] on entry point.</p>
-<p>//</p>
-<p>// SAFETY</p>
-<p>// ——</p>
-<p>// - Dry-run enabled by default in sample programs.</p>
-<p>// - CSV audit logging for all writes.</p>
-<p>// - UI refresh at batch boundaries only.</p>
-<p>//</p>
-<p>// DEPENDENCIES</p>
-<p>// ————</p>
-<p>// - System.Runtime.InteropServices (Marshal.GetActiveObject).</p>
-<p>// - Interop.EA.dll.</p>
-<p>//</p>
-<p>// UPDATE HISTORY</p>
-<p>// ————–</p>
-<p>// - 2025-08-31: Initial helper version.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource csharp number-lines code-with-copy"><code class="sourceCode cs"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">//</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="op">=======================================================================</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">// File: EAConnect.cs</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">// Project: EA Automation Helper</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co">// Author: \&lt;Your Name\&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">// Created: 2025-08-31</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">// Last Update: 2025-08-31</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">//</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="co">// PURPOSE</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">// -------</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">// Provides a safe, reusable abstraction over EA’s COM automation API.</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co">// Handles: attach/launch, repository polling, model open, package</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">// resolution,</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="co">// element creation, tagged value creation, CSV logging, and UI refresh.</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="co">//</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a></span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co">// USAGE</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="co">// -----</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a></span>
+<span id="cb2-34"><a href="#cb2-34"></a><span class="co">// using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options {</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a></span>
+<span id="cb2-36"><a href="#cb2-36"></a><span class="co">// ShowUI = true });</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a></span>
+<span id="cb2-38"><a href="#cb2-38"></a><span class="co">// var pkg = ea.GetSelectedPackageOrRoot();</span></span>
+<span id="cb2-39"><a href="#cb2-39"></a></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="co">// var result = EAConnect.AddElement(ea.Repo, pkg, "NewClass", "Class",</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a></span>
+<span id="cb2-42"><a href="#cb2-42"></a><span class="co">// "Notes", true);</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a></span>
+<span id="cb2-44"><a href="#cb2-44"></a><span class="co">// Console.WriteLine(result.Summary);</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a></span>
+<span id="cb2-46"><a href="#cb2-46"></a><span class="co">//</span></span>
+<span id="cb2-47"><a href="#cb2-47"></a></span>
+<span id="cb2-48"><a href="#cb2-48"></a><span class="co">// ASSUMPTIONS</span></span>
+<span id="cb2-49"><a href="#cb2-49"></a></span>
+<span id="cb2-50"><a href="#cb2-50"></a><span class="co">// -----------</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a></span>
+<span id="cb2-52"><a href="#cb2-52"></a><span class="co">// - EA is installed and COM-registered (ProgID = "EA.App").</span></span>
+<span id="cb2-53"><a href="#cb2-53"></a></span>
+<span id="cb2-54"><a href="#cb2-54"></a><span class="co">// - Interop.EA.dll referenced (from EA install folder).</span></span>
+<span id="cb2-55"><a href="#cb2-55"></a></span>
+<span id="cb2-56"><a href="#cb2-56"></a><span class="co">// - Bitness of project matches EA (x64 for EA 64-bit; x86 for 32-bit).</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="co">// - .NET project marked \[STAThread\] on entry point.</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a></span>
+<span id="cb2-60"><a href="#cb2-60"></a><span class="co">//</span></span>
+<span id="cb2-61"><a href="#cb2-61"></a></span>
+<span id="cb2-62"><a href="#cb2-62"></a><span class="co">// SAFETY</span></span>
+<span id="cb2-63"><a href="#cb2-63"></a></span>
+<span id="cb2-64"><a href="#cb2-64"></a><span class="co">// ------</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a></span>
+<span id="cb2-66"><a href="#cb2-66"></a><span class="co">// - Dry-run enabled by default in sample programs.</span></span>
+<span id="cb2-67"><a href="#cb2-67"></a></span>
+<span id="cb2-68"><a href="#cb2-68"></a><span class="co">// - CSV audit logging for all writes.</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a></span>
+<span id="cb2-70"><a href="#cb2-70"></a><span class="co">// - UI refresh at batch boundaries only.</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a></span>
+<span id="cb2-72"><a href="#cb2-72"></a><span class="co">//</span></span>
+<span id="cb2-73"><a href="#cb2-73"></a></span>
+<span id="cb2-74"><a href="#cb2-74"></a><span class="co">// DEPENDENCIES</span></span>
+<span id="cb2-75"><a href="#cb2-75"></a></span>
+<span id="cb2-76"><a href="#cb2-76"></a><span class="co">// ------------</span></span>
+<span id="cb2-77"><a href="#cb2-77"></a></span>
+<span id="cb2-78"><a href="#cb2-78"></a><span class="co">// - System.Runtime.InteropServices (Marshal.GetActiveObject).</span></span>
+<span id="cb2-79"><a href="#cb2-79"></a></span>
+<span id="cb2-80"><a href="#cb2-80"></a><span class="co">// - Interop.EA.dll.</span></span>
+<span id="cb2-81"><a href="#cb2-81"></a></span>
+<span id="cb2-82"><a href="#cb2-82"></a><span class="co">//</span></span>
+<span id="cb2-83"><a href="#cb2-83"></a></span>
+<span id="cb2-84"><a href="#cb2-84"></a><span class="co">// UPDATE HISTORY</span></span>
+<span id="cb2-85"><a href="#cb2-85"></a></span>
+<span id="cb2-86"><a href="#cb2-86"></a><span class="co">// --------------</span></span>
+<span id="cb2-87"><a href="#cb2-87"></a></span>
+<span id="cb2-88"><a href="#cb2-88"></a><span class="co">// - 2025-08-31: Initial helper version.</span></span>
+<span id="cb2-89"><a href="#cb2-89"></a></span>
+<span id="cb2-90"><a href="#cb2-90"></a><span class="co">//</span></span>
+<span id="cb2-91"><a href="#cb2-91"></a><span class="op">=======================================================================</span></span>
+<span id="cb2-92"><a href="#cb2-92"></a></span>
+<span id="cb2-93"><a href="#cb2-93"></a><span class="kw">using</span> System<span class="op">;</span></span>
+<span id="cb2-94"><a href="#cb2-94"></a></span>
+<span id="cb2-95"><a href="#cb2-95"></a><span class="kw">using</span> System<span class="op">.</span><span class="fu">IO</span><span class="op">;</span></span>
+<span id="cb2-96"><a href="#cb2-96"></a></span>
+<span id="cb2-97"><a href="#cb2-97"></a><span class="kw">using</span> System<span class="op">.</span><span class="fu">Runtime</span><span class="op">.</span><span class="fu">InteropServices</span><span class="op">;</span></span>
+<span id="cb2-98"><a href="#cb2-98"></a></span>
+<span id="cb2-99"><a href="#cb2-99"></a><span class="kw">using</span> EA<span class="op">;</span></span>
+<span id="cb2-100"><a href="#cb2-100"></a></span>
+<span id="cb2-101"><a href="#cb2-101"></a><span class="kw">namespace</span> EA<span class="op">.</span><span class="fu">Automation</span></span>
+<span id="cb2-102"><a href="#cb2-102"></a></span>
+<span id="cb2-103"><a href="#cb2-103"></a><span class="op">{</span></span>
+<span id="cb2-104"><a href="#cb2-104"></a></span>
+<span id="cb2-105"><a href="#cb2-105"></a><span class="kw">public</span> <span class="kw">static</span> <span class="kw">class</span> EAConnect</span>
+<span id="cb2-106"><a href="#cb2-106"></a></span>
+<span id="cb2-107"><a href="#cb2-107"></a><span class="op">{</span></span>
+<span id="cb2-108"><a href="#cb2-108"></a></span>
+<span id="cb2-109"><a href="#cb2-109"></a><span class="co">// Encapsulates a connected EA session</span></span>
+<span id="cb2-110"><a href="#cb2-110"></a></span>
+<span id="cb2-111"><a href="#cb2-111"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> Session <span class="op">:</span> IDisposable</span>
+<span id="cb2-112"><a href="#cb2-112"></a></span>
+<span id="cb2-113"><a href="#cb2-113"></a><span class="op">{</span></span>
+<span id="cb2-114"><a href="#cb2-114"></a></span>
+<span id="cb2-115"><a href="#cb2-115"></a><span class="kw">public</span> EA<span class="op">.</span><span class="fu">App</span> App <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-116"><a href="#cb2-116"></a></span>
+<span id="cb2-117"><a href="#cb2-117"></a><span class="kw">public</span> EA<span class="op">.</span><span class="fu">Repository</span> Repo <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-118"><a href="#cb2-118"></a></span>
+<span id="cb2-119"><a href="#cb2-119"></a><span class="kw">internal</span> <span class="fu">Session</span><span class="op">(</span>EA<span class="op">.</span><span class="fu">App</span> app<span class="op">,</span> EA<span class="op">.</span><span class="fu">Repository</span> repo<span class="op">)</span></span>
+<span id="cb2-120"><a href="#cb2-120"></a></span>
+<span id="cb2-121"><a href="#cb2-121"></a><span class="op">{</span></span>
+<span id="cb2-122"><a href="#cb2-122"></a></span>
+<span id="cb2-123"><a href="#cb2-123"></a>App <span class="op">=</span> app<span class="op">;</span></span>
+<span id="cb2-124"><a href="#cb2-124"></a></span>
+<span id="cb2-125"><a href="#cb2-125"></a>Repo <span class="op">=</span> repo<span class="op">;</span></span>
+<span id="cb2-126"><a href="#cb2-126"></a></span>
+<span id="cb2-127"><a href="#cb2-127"></a><span class="op">}</span></span>
+<span id="cb2-128"><a href="#cb2-128"></a></span>
+<span id="cb2-129"><a href="#cb2-129"></a><span class="kw">public</span> Package <span class="fu">GetSelectedPackageOrRoot</span><span class="op">()</span></span>
+<span id="cb2-130"><a href="#cb2-130"></a></span>
+<span id="cb2-131"><a href="#cb2-131"></a><span class="op">{</span></span>
+<span id="cb2-132"><a href="#cb2-132"></a></span>
+<span id="cb2-133"><a href="#cb2-133"></a>Package<span class="op">?</span> pkg <span class="op">=</span> Repo<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span><span class="op">();</span></span>
+<span id="cb2-134"><a href="#cb2-134"></a></span>
+<span id="cb2-135"><a href="#cb2-135"></a><span class="kw">if</span> <span class="op">(</span>pkg <span class="op">!=</span> <span class="kw">null</span><span class="op">)</span> <span class="kw">return</span> pkg<span class="op">;</span></span>
+<span id="cb2-136"><a href="#cb2-136"></a></span>
+<span id="cb2-137"><a href="#cb2-137"></a><span class="kw">if</span> <span class="op">(</span>Repo<span class="op">.</span><span class="fu">Models</span><span class="op">.</span><span class="fu">Count</span> \<span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="kw">return</span></span>
+<span id="cb2-138"><a href="#cb2-138"></a></span>
+<span id="cb2-139"><a href="#cb2-139"></a><span class="op">&gt;</span> <span class="op">(</span>Package<span class="op">)</span>Repo<span class="op">.</span><span class="fu">Models</span><span class="op">.</span><span class="fu">GetAt</span><span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb2-140"><a href="#cb2-140"></a></span>
+<span id="cb2-141"><a href="#cb2-141"></a><span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span></span>
+<span id="cb2-142"><a href="#cb2-142"></a></span>
+<span id="cb2-143"><a href="#cb2-143"></a><span class="op">&gt;</span> <span class="st">"No package available in repository."</span><span class="op">);</span></span>
+<span id="cb2-144"><a href="#cb2-144"></a></span>
+<span id="cb2-145"><a href="#cb2-145"></a><span class="op">}</span></span>
+<span id="cb2-146"><a href="#cb2-146"></a></span>
+<span id="cb2-147"><a href="#cb2-147"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">Dispose</span><span class="op">()</span></span>
+<span id="cb2-148"><a href="#cb2-148"></a></span>
+<span id="cb2-149"><a href="#cb2-149"></a><span class="op">{</span></span>
+<span id="cb2-150"><a href="#cb2-150"></a></span>
+<span id="cb2-151"><a href="#cb2-151"></a><span class="co">// Release COM references cleanly</span></span>
+<span id="cb2-152"><a href="#cb2-152"></a></span>
+<span id="cb2-153"><a href="#cb2-153"></a>Marshal<span class="op">.</span><span class="fu">ReleaseComObject</span><span class="op">(</span>Repo<span class="op">);</span></span>
+<span id="cb2-154"><a href="#cb2-154"></a></span>
+<span id="cb2-155"><a href="#cb2-155"></a>Marshal<span class="op">.</span><span class="fu">ReleaseComObject</span><span class="op">(</span>App<span class="op">);</span></span>
+<span id="cb2-156"><a href="#cb2-156"></a></span>
+<span id="cb2-157"><a href="#cb2-157"></a><span class="op">}</span></span>
+<span id="cb2-158"><a href="#cb2-158"></a></span>
+<span id="cb2-159"><a href="#cb2-159"></a><span class="op">}</span></span>
+<span id="cb2-160"><a href="#cb2-160"></a></span>
+<span id="cb2-161"><a href="#cb2-161"></a><span class="co">// Options for attaching or launching EA</span></span>
+<span id="cb2-162"><a href="#cb2-162"></a></span>
+<span id="cb2-163"><a href="#cb2-163"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> Options</span>
+<span id="cb2-164"><a href="#cb2-164"></a></span>
+<span id="cb2-165"><a href="#cb2-165"></a><span class="op">{</span></span>
+<span id="cb2-166"><a href="#cb2-166"></a></span>
+<span id="cb2-167"><a href="#cb2-167"></a><span class="kw">public</span> <span class="dt">bool</span> PreferAttach <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb2-168"><a href="#cb2-168"></a></span>
+<span id="cb2-169"><a href="#cb2-169"></a><span class="kw">public</span> <span class="dt">bool</span> LaunchIfNotRunning <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb2-170"><a href="#cb2-170"></a></span>
+<span id="cb2-171"><a href="#cb2-171"></a><span class="kw">public</span> <span class="dt">string</span><span class="op">?</span> ModelPath <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-172"><a href="#cb2-172"></a></span>
+<span id="cb2-173"><a href="#cb2-173"></a><span class="kw">public</span> <span class="dt">bool</span> ShowUI <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb2-174"><a href="#cb2-174"></a></span>
+<span id="cb2-175"><a href="#cb2-175"></a><span class="kw">public</span> <span class="dt">int</span> StartupWaitMs <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="dv">1500</span><span class="op">;</span></span>
+<span id="cb2-176"><a href="#cb2-176"></a></span>
+<span id="cb2-177"><a href="#cb2-177"></a><span class="kw">public</span> <span class="dt">int</span> RepoPollMs <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="dv">100</span><span class="op">;</span></span>
+<span id="cb2-178"><a href="#cb2-178"></a></span>
+<span id="cb2-179"><a href="#cb2-179"></a><span class="kw">public</span> <span class="dt">int</span> RepoPollMax <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="dv">50</span><span class="op">;</span></span>
+<span id="cb2-180"><a href="#cb2-180"></a></span>
+<span id="cb2-181"><a href="#cb2-181"></a><span class="op">}</span></span>
+<span id="cb2-182"><a href="#cb2-182"></a></span>
+<span id="cb2-183"><a href="#cb2-183"></a><span class="co">// Attach to EA or launch new instance</span></span>
+<span id="cb2-184"><a href="#cb2-184"></a></span>
+<span id="cb2-185"><a href="#cb2-185"></a><span class="kw">public</span> <span class="kw">static</span> Session <span class="fu">AttachOrLaunch</span><span class="op">(</span>Options<span class="op">?</span> options <span class="op">=</span> <span class="kw">null</span><span class="op">)</span></span>
+<span id="cb2-186"><a href="#cb2-186"></a></span>
+<span id="cb2-187"><a href="#cb2-187"></a><span class="op">{</span></span>
+<span id="cb2-188"><a href="#cb2-188"></a></span>
+<span id="cb2-189"><a href="#cb2-189"></a>options <span class="op">??=</span> <span class="kw">new</span> <span class="fu">Options</span><span class="op">();</span></span>
+<span id="cb2-190"><a href="#cb2-190"></a></span>
+<span id="cb2-191"><a href="#cb2-191"></a>EA<span class="op">.</span><span class="fu">App</span><span class="op">?</span> app <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb2-192"><a href="#cb2-192"></a></span>
+<span id="cb2-193"><a href="#cb2-193"></a><span class="kw">if</span> <span class="op">(</span>options<span class="op">.</span><span class="fu">PreferAttach</span><span class="op">)</span></span>
+<span id="cb2-194"><a href="#cb2-194"></a></span>
+<span id="cb2-195"><a href="#cb2-195"></a><span class="op">{</span></span>
+<span id="cb2-196"><a href="#cb2-196"></a></span>
+<span id="cb2-197"><a href="#cb2-197"></a><span class="kw">try</span> <span class="op">{</span> app <span class="op">=</span> <span class="op">(</span>EA<span class="op">.</span><span class="fu">App</span><span class="op">)</span>Marshal<span class="op">.</span><span class="fu">GetActiveObject</span><span class="op">(</span><span class="st">"EA.App"</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb2-198"><a href="#cb2-198"></a></span>
+<span id="cb2-199"><a href="#cb2-199"></a><span class="kw">catch</span> <span class="op">{</span> <span class="op">/</span>\<span class="op">*</span> none running \<span class="op">*/</span> <span class="op">}</span></span>
+<span id="cb2-200"><a href="#cb2-200"></a></span>
+<span id="cb2-201"><a href="#cb2-201"></a><span class="op">}</span></span>
+<span id="cb2-202"><a href="#cb2-202"></a></span>
+<span id="cb2-203"><a href="#cb2-203"></a><span class="kw">if</span> <span class="op">(</span>app <span class="op">==</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> options<span class="op">.</span><span class="fu">LaunchIfNotRunning</span><span class="op">)</span></span>
+<span id="cb2-204"><a href="#cb2-204"></a></span>
+<span id="cb2-205"><a href="#cb2-205"></a><span class="op">{</span></span>
+<span id="cb2-206"><a href="#cb2-206"></a></span>
+<span id="cb2-207"><a href="#cb2-207"></a><span class="op">&gt;</span> Type t <span class="op">=</span> Type<span class="op">.</span><span class="fu">GetTypeFromProgID</span><span class="op">(</span><span class="st">"EA.App"</span><span class="op">)</span> <span class="op">??</span> <span class="kw">throw</span> <span class="kw">new</span></span>
+<span id="cb2-208"><a href="#cb2-208"></a><span class="op">&gt;</span></span>
+<span id="cb2-209"><a href="#cb2-209"></a><span class="op">&gt;</span> <span class="fu">InvalidOperationException</span><span class="op">(</span><span class="st">"EA not installed."</span><span class="op">);</span></span>
+<span id="cb2-210"><a href="#cb2-210"></a></span>
+<span id="cb2-211"><a href="#cb2-211"></a>app <span class="op">=</span> <span class="op">(</span>EA<span class="op">.</span><span class="fu">App</span><span class="op">)</span>Activator<span class="op">.</span><span class="fu">CreateInstance</span><span class="op">(</span>t<span class="op">)!;</span></span>
+<span id="cb2-212"><a href="#cb2-212"></a></span>
+<span id="cb2-213"><a href="#cb2-213"></a><span class="kw">if</span> <span class="op">(!</span>options<span class="op">.</span><span class="fu">ShowUI</span><span class="op">)</span> app<span class="op">.</span><span class="fu">Visible</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb2-214"><a href="#cb2-214"></a></span>
+<span id="cb2-215"><a href="#cb2-215"></a>System<span class="op">.</span><span class="fu">Threading</span><span class="op">.</span><span class="fu">Thread</span><span class="op">.</span><span class="fu">Sleep</span><span class="op">(</span>options<span class="op">.</span><span class="fu">StartupWaitMs</span><span class="op">);</span></span>
+<span id="cb2-216"><a href="#cb2-216"></a></span>
+<span id="cb2-217"><a href="#cb2-217"></a><span class="op">}</span></span>
+<span id="cb2-218"><a href="#cb2-218"></a></span>
+<span id="cb2-219"><a href="#cb2-219"></a><span class="kw">if</span> <span class="op">(</span>app <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span></span>
+<span id="cb2-220"><a href="#cb2-220"></a></span>
+<span id="cb2-221"><a href="#cb2-221"></a><span class="op">&gt;</span> <span class="st">"Unable to connect to EA."</span><span class="op">);</span></span>
+<span id="cb2-222"><a href="#cb2-222"></a></span>
+<span id="cb2-223"><a href="#cb2-223"></a>EA<span class="op">.</span><span class="fu">Repository</span> repo <span class="op">=</span> app<span class="op">.</span><span class="fu">Repository</span><span class="op">;</span></span>
+<span id="cb2-224"><a href="#cb2-224"></a></span>
+<span id="cb2-225"><a href="#cb2-225"></a><span class="co">// Poll until repository becomes available</span></span>
+<span id="cb2-226"><a href="#cb2-226"></a></span>
+<span id="cb2-227"><a href="#cb2-227"></a><span class="dt">int</span> polls <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-228"><a href="#cb2-228"></a></span>
+<span id="cb2-229"><a href="#cb2-229"></a><span class="kw">while</span> <span class="op">(</span>repo <span class="op">==</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> polls \<span class="op">&lt;</span> options<span class="op">.</span><span class="fu">RepoPollMax</span><span class="op">)</span></span>
+<span id="cb2-230"><a href="#cb2-230"></a></span>
+<span id="cb2-231"><a href="#cb2-231"></a><span class="op">{</span></span>
+<span id="cb2-232"><a href="#cb2-232"></a></span>
+<span id="cb2-233"><a href="#cb2-233"></a>System<span class="op">.</span><span class="fu">Threading</span><span class="op">.</span><span class="fu">Thread</span><span class="op">.</span><span class="fu">Sleep</span><span class="op">(</span>options<span class="op">.</span><span class="fu">RepoPollMs</span><span class="op">);</span></span>
+<span id="cb2-234"><a href="#cb2-234"></a></span>
+<span id="cb2-235"><a href="#cb2-235"></a>repo <span class="op">=</span> app<span class="op">.</span><span class="fu">Repository</span><span class="op">;</span></span>
+<span id="cb2-236"><a href="#cb2-236"></a></span>
+<span id="cb2-237"><a href="#cb2-237"></a>polls<span class="op">++;</span></span>
+<span id="cb2-238"><a href="#cb2-238"></a></span>
+<span id="cb2-239"><a href="#cb2-239"></a><span class="op">}</span></span>
+<span id="cb2-240"><a href="#cb2-240"></a></span>
+<span id="cb2-241"><a href="#cb2-241"></a><span class="kw">if</span> <span class="op">(</span>repo <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span><span class="st">"</span></span>
+<span id="cb2-242"><a href="#cb2-242"></a></span>
+<span id="cb2-243"><a href="#cb2-243"></a><span class="op">&gt;</span> EA<span class="op">.</span><span class="fu">Repository</span> did not initialise<span class="op">.</span><span class="st">");</span></span>
+<span id="cb2-244"><a href="#cb2-244"></a></span>
+<span id="cb2-245"><a href="#cb2-245"></a><span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>options<span class="op">.</span><span class="fu">ModelPath</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span id="cb2-246"><a href="#cb2-246"></a></span>
+<span id="cb2-247"><a href="#cb2-247"></a><span class="op">&gt;</span> <span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>repo<span class="op">.</span><span class="fu">ConnectionString</span><span class="op">))</span></span>
+<span id="cb2-248"><a href="#cb2-248"></a></span>
+<span id="cb2-249"><a href="#cb2-249"></a>repo<span class="op">.</span><span class="fu">OpenFile</span><span class="op">(</span>options<span class="op">.</span><span class="fu">ModelPath</span><span class="op">);</span></span>
+<span id="cb2-250"><a href="#cb2-250"></a></span>
+<span id="cb2-251"><a href="#cb2-251"></a><span class="kw">return</span> <span class="kw">new</span> <span class="fu">Session</span><span class="op">(</span>app<span class="op">,</span> repo<span class="op">);</span></span>
+<span id="cb2-252"><a href="#cb2-252"></a></span>
+<span id="cb2-253"><a href="#cb2-253"></a><span class="op">}</span></span>
+<span id="cb2-254"><a href="#cb2-254"></a></span>
+<span id="cb2-255"><a href="#cb2-255"></a><span class="co">// Result container</span></span>
+<span id="cb2-256"><a href="#cb2-256"></a></span>
+<span id="cb2-257"><a href="#cb2-257"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> Result</span>
+<span id="cb2-258"><a href="#cb2-258"></a></span>
+<span id="cb2-259"><a href="#cb2-259"></a><span class="op">{</span></span>
+<span id="cb2-260"><a href="#cb2-260"></a></span>
+<span id="cb2-261"><a href="#cb2-261"></a><span class="kw">public</span> <span class="dt">int</span> UpdatedCount <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-262"><a href="#cb2-262"></a></span>
+<span id="cb2-263"><a href="#cb2-263"></a><span class="kw">public</span> <span class="dt">string</span> Summary <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb2-264"><a href="#cb2-264"></a></span>
+<span id="cb2-265"><a href="#cb2-265"></a><span class="kw">public</span> <span class="dt">string</span><span class="op">?</span> LogPath <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-266"><a href="#cb2-266"></a></span>
+<span id="cb2-267"><a href="#cb2-267"></a><span class="kw">public</span> <span class="dt">string</span><span class="op">?</span> ElementGuid <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-268"><a href="#cb2-268"></a></span>
+<span id="cb2-269"><a href="#cb2-269"></a><span class="op">}</span></span>
+<span id="cb2-270"><a href="#cb2-270"></a></span>
+<span id="cb2-271"><a href="#cb2-271"></a><span class="co">// Add a new element safely</span></span>
+<span id="cb2-272"><a href="#cb2-272"></a></span>
+<span id="cb2-273"><a href="#cb2-273"></a><span class="kw">public</span> <span class="kw">static</span> Result <span class="fu">AddElement</span><span class="op">(</span>Repository repo<span class="op">,</span></span>
+<span id="cb2-274"><a href="#cb2-274"></a></span>
+<span id="cb2-275"><a href="#cb2-275"></a><span class="op">&gt;</span> Package targetPackage<span class="op">,</span></span>
+<span id="cb2-276"><a href="#cb2-276"></a><span class="op">&gt;</span></span>
+<span id="cb2-277"><a href="#cb2-277"></a><span class="op">&gt;</span> <span class="dt">string</span> name<span class="op">,</span></span>
+<span id="cb2-278"><a href="#cb2-278"></a><span class="op">&gt;</span></span>
+<span id="cb2-279"><a href="#cb2-279"></a><span class="op">&gt;</span> <span class="dt">string</span> type<span class="op">,</span></span>
+<span id="cb2-280"><a href="#cb2-280"></a><span class="op">&gt;</span></span>
+<span id="cb2-281"><a href="#cb2-281"></a><span class="op">&gt;</span> <span class="dt">string</span><span class="op">?</span> notes<span class="op">,</span> <span class="dt">bool</span> dryRun <span class="op">=</span> <span class="kw">true</span><span class="op">,</span> CsvLogger<span class="op">?</span> logger <span class="op">=</span> <span class="kw">null</span><span class="op">)</span></span>
+<span id="cb2-282"><a href="#cb2-282"></a></span>
+<span id="cb2-283"><a href="#cb2-283"></a><span class="op">{</span></span>
+<span id="cb2-284"><a href="#cb2-284"></a></span>
+<span id="cb2-285"><a href="#cb2-285"></a><span class="dt">var</span> el <span class="op">=</span> <span class="op">(</span>Element<span class="op">)</span>targetPackage<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">AddNew</span><span class="op">(</span>name<span class="op">,</span> type<span class="op">);</span></span>
+<span id="cb2-286"><a href="#cb2-286"></a></span>
+<span id="cb2-287"><a href="#cb2-287"></a><span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>notes<span class="op">))</span> el<span class="op">.</span><span class="fu">Notes</span> <span class="op">=</span> notes<span class="op">;</span></span>
+<span id="cb2-288"><a href="#cb2-288"></a></span>
+<span id="cb2-289"><a href="#cb2-289"></a><span class="kw">if</span> <span class="op">(</span>dryRun<span class="op">)</span></span>
+<span id="cb2-290"><a href="#cb2-290"></a></span>
+<span id="cb2-291"><a href="#cb2-291"></a><span class="op">{</span></span>
+<span id="cb2-292"><a href="#cb2-292"></a></span>
+<span id="cb2-293"><a href="#cb2-293"></a>logger<span class="op">?.</span><span class="fu">WriteRow</span><span class="op">(</span>DateTime<span class="op">.</span><span class="fu">Now</span><span class="op">,</span> <span class="st">"DRYRUN"</span><span class="op">,</span></span>
+<span id="cb2-294"><a href="#cb2-294"></a></span>
+<span id="cb2-295"><a href="#cb2-295"></a><span class="op">&gt;</span> targetPackage<span class="op">.</span><span class="fu">PackageID</span><span class="op">,</span></span>
+<span id="cb2-296"><a href="#cb2-296"></a><span class="op">&gt;</span></span>
+<span id="cb2-297"><a href="#cb2-297"></a><span class="op">&gt;</span> <span class="st">""</span><span class="op">,</span> name<span class="op">,</span> type<span class="op">,</span> notes <span class="op">??</span> <span class="st">""</span><span class="op">);</span></span>
+<span id="cb2-298"><a href="#cb2-298"></a></span>
+<span id="cb2-299"><a href="#cb2-299"></a><span class="kw">return</span> <span class="kw">new</span> Result <span class="op">{</span> UpdatedCount <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb2-300"><a href="#cb2-300"></a></span>
+<span id="cb2-301"><a href="#cb2-301"></a><span class="op">&gt;</span> Summary <span class="op">=</span> \$<span class="st">"\[DRYRUN\] Would create: {name} ({type})"</span> <span class="op">};</span></span>
+<span id="cb2-302"><a href="#cb2-302"></a></span>
+<span id="cb2-303"><a href="#cb2-303"></a><span class="op">}</span></span>
+<span id="cb2-304"><a href="#cb2-304"></a></span>
+<span id="cb2-305"><a href="#cb2-305"></a><span class="kw">if</span> <span class="op">(!</span>el<span class="op">.</span><span class="fu">Update</span><span class="op">())</span></span>
+<span id="cb2-306"><a href="#cb2-306"></a></span>
+<span id="cb2-307"><a href="#cb2-307"></a><span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span></span>
+<span id="cb2-308"><a href="#cb2-308"></a></span>
+<span id="cb2-309"><a href="#cb2-309"></a><span class="op">&gt;</span> <span class="st">"Element.Update() failed."</span><span class="op">);</span></span>
+<span id="cb2-310"><a href="#cb2-310"></a></span>
+<span id="cb2-311"><a href="#cb2-311"></a>repo<span class="op">.</span><span class="fu">RefreshModelView</span><span class="op">(</span>targetPackage<span class="op">.</span><span class="fu">PackageID</span><span class="op">);</span></span>
+<span id="cb2-312"><a href="#cb2-312"></a></span>
+<span id="cb2-313"><a href="#cb2-313"></a>logger<span class="op">?.</span><span class="fu">WriteRow</span><span class="op">(</span>DateTime<span class="op">.</span><span class="fu">Now</span><span class="op">,</span> <span class="st">"CREATE"</span><span class="op">,</span></span>
+<span id="cb2-314"><a href="#cb2-314"></a></span>
+<span id="cb2-315"><a href="#cb2-315"></a><span class="op">&gt;</span> targetPackage<span class="op">.</span><span class="fu">PackageID</span><span class="op">,</span></span>
+<span id="cb2-316"><a href="#cb2-316"></a><span class="op">&gt;</span></span>
+<span id="cb2-317"><a href="#cb2-317"></a><span class="op">&gt;</span> el<span class="op">.</span><span class="fu">ElementGUID</span><span class="op">,</span> name<span class="op">,</span> type<span class="op">,</span> notes <span class="op">??</span> <span class="st">""</span><span class="op">);</span></span>
+<span id="cb2-318"><a href="#cb2-318"></a></span>
+<span id="cb2-319"><a href="#cb2-319"></a><span class="kw">return</span> <span class="kw">new</span> Result</span>
+<span id="cb2-320"><a href="#cb2-320"></a></span>
+<span id="cb2-321"><a href="#cb2-321"></a><span class="op">{</span></span>
+<span id="cb2-322"><a href="#cb2-322"></a></span>
+<span id="cb2-323"><a href="#cb2-323"></a>UpdatedCount <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb2-324"><a href="#cb2-324"></a></span>
+<span id="cb2-325"><a href="#cb2-325"></a>Summary <span class="op">=</span> \$<span class="st">"Created element: {name} ({type})"</span><span class="op">,</span></span>
+<span id="cb2-326"><a href="#cb2-326"></a></span>
+<span id="cb2-327"><a href="#cb2-327"></a>ElementGuid <span class="op">=</span> el<span class="op">.</span><span class="fu">ElementGUID</span><span class="op">,</span></span>
+<span id="cb2-328"><a href="#cb2-328"></a></span>
+<span id="cb2-329"><a href="#cb2-329"></a>LogPath <span class="op">=</span> logger<span class="op">?.</span><span class="fu">Path</span></span>
+<span id="cb2-330"><a href="#cb2-330"></a></span>
+<span id="cb2-331"><a href="#cb2-331"></a><span class="op">};</span></span>
+<span id="cb2-332"><a href="#cb2-332"></a></span>
+<span id="cb2-333"><a href="#cb2-333"></a><span class="op">}</span></span>
+<span id="cb2-334"><a href="#cb2-334"></a></span>
+<span id="cb2-335"><a href="#cb2-335"></a><span class="co">// CSV logger</span></span>
+<span id="cb2-336"><a href="#cb2-336"></a></span>
+<span id="cb2-337"><a href="#cb2-337"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> CsvLogger <span class="op">:</span> IDisposable</span>
+<span id="cb2-338"><a href="#cb2-338"></a></span>
+<span id="cb2-339"><a href="#cb2-339"></a><span class="op">{</span></span>
+<span id="cb2-340"><a href="#cb2-340"></a></span>
+<span id="cb2-341"><a href="#cb2-341"></a><span class="kw">private</span> <span class="kw">readonly</span> StreamWriter \_writer<span class="op">;</span></span>
+<span id="cb2-342"><a href="#cb2-342"></a></span>
+<span id="cb2-343"><a href="#cb2-343"></a><span class="kw">public</span> <span class="dt">string</span> Path <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-344"><a href="#cb2-344"></a></span>
+<span id="cb2-345"><a href="#cb2-345"></a><span class="kw">private</span> <span class="fu">CsvLogger</span><span class="op">(</span><span class="dt">string</span> path<span class="op">)</span></span>
+<span id="cb2-346"><a href="#cb2-346"></a></span>
+<span id="cb2-347"><a href="#cb2-347"></a><span class="op">{</span></span>
+<span id="cb2-348"><a href="#cb2-348"></a></span>
+<span id="cb2-349"><a href="#cb2-349"></a>Path <span class="op">=</span> path<span class="op">;</span></span>
+<span id="cb2-350"><a href="#cb2-350"></a></span>
+<span id="cb2-351"><a href="#cb2-351"></a>\_writer <span class="op">=</span> <span class="kw">new</span> <span class="fu">StreamWriter</span><span class="op">(</span>path<span class="op">,</span> append<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-352"><a href="#cb2-352"></a></span>
+<span id="cb2-353"><a href="#cb2-353"></a><span class="op">&gt;</span> System<span class="op">.</span><span class="fu">Text</span><span class="op">.</span><span class="fu">Encoding</span><span class="op">.</span><span class="fu">UTF8</span><span class="op">);</span></span>
+<span id="cb2-354"><a href="#cb2-354"></a></span>
+<span id="cb2-355"><a href="#cb2-355"></a><span class="op">}</span></span>
+<span id="cb2-356"><a href="#cb2-356"></a></span>
+<span id="cb2-357"><a href="#cb2-357"></a><span class="kw">public</span> <span class="kw">static</span> CsvLogger <span class="fu">Open</span><span class="op">(</span><span class="dt">string</span> path<span class="op">)</span> <span class="op">=</span>\<span class="op">&gt;</span></span>
+<span id="cb2-358"><a href="#cb2-358"></a></span>
+<span id="cb2-359"><a href="#cb2-359"></a><span class="op">&gt;</span> <span class="kw">new</span> <span class="fu">CsvLogger</span><span class="op">(</span>path<span class="op">);</span></span>
+<span id="cb2-360"><a href="#cb2-360"></a></span>
+<span id="cb2-361"><a href="#cb2-361"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">WriteHeader</span><span class="op">(</span><span class="dt">string</span> header<span class="op">)</span> <span class="op">=</span>\<span class="op">&gt;</span></span>
+<span id="cb2-362"><a href="#cb2-362"></a></span>
+<span id="cb2-363"><a href="#cb2-363"></a>\_writer<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>header<span class="op">);</span></span>
+<span id="cb2-364"><a href="#cb2-364"></a></span>
+<span id="cb2-365"><a href="#cb2-365"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">WriteRow</span><span class="op">(</span><span class="kw">params</span> <span class="dt">object</span><span class="op">?</span>\<span class="op">[</span>\<span class="op">]</span> cols<span class="op">)</span></span>
+<span id="cb2-366"><a href="#cb2-366"></a></span>
+<span id="cb2-367"><a href="#cb2-367"></a><span class="op">=</span>\<span class="op">&gt;</span> \_writer<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="dt">string</span><span class="op">.</span><span class="fu">Join</span><span class="op">(</span><span class="st">","</span><span class="op">,</span></span>
+<span id="cb2-368"><a href="#cb2-368"></a></span>
+<span id="cb2-369"><a href="#cb2-369"></a><span class="op">&gt;</span> Array<span class="op">.</span><span class="fu">ConvertAll</span><span class="op">(</span>cols<span class="op">,</span> c <span class="op">=</span>\<span class="op">&gt;</span> c<span class="op">?.</span><span class="fu">ToString</span><span class="op">()</span> <span class="op">??</span> <span class="st">""</span><span class="op">)));</span></span>
+<span id="cb2-370"><a href="#cb2-370"></a></span>
+<span id="cb2-371"><a href="#cb2-371"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">Close</span><span class="op">()</span> <span class="op">=</span>\<span class="op">&gt;</span> \_writer<span class="op">.</span><span class="fu">Flush</span><span class="op">();</span></span>
+<span id="cb2-372"><a href="#cb2-372"></a></span>
+<span id="cb2-373"><a href="#cb2-373"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">Dispose</span><span class="op">()</span> <span class="op">=</span>\<span class="op">&gt;</span> \_writer<span class="op">.</span><span class="fu">Dispose</span><span class="op">();</span></span>
+<span id="cb2-374"><a href="#cb2-374"></a></span>
+<span id="cb2-375"><a href="#cb2-375"></a><span class="op">}</span></span>
+<span id="cb2-376"><a href="#cb2-376"></a></span>
+<span id="cb2-377"><a href="#cb2-377"></a><span class="op">}</span></span>
+<span id="cb2-378"><a href="#cb2-378"></a></span>
+<span id="cb2-379"><a href="#cb2-379"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="section" class="level1">
-<h1>//</h1>
-<p>using System;</p>
-<p>using System.IO;</p>
-<p>using System.Runtime.InteropServices;</p>
-<p>using EA;</p>
-<p>namespace EA.Automation</p>
-<p>{</p>
-<p>public static class EAConnect</p>
-<p>{</p>
-<p>// Encapsulates a connected EA session</p>
-<p>public sealed class Session : IDisposable</p>
-<p>{</p>
-<p>public EA.App App { get; }</p>
-<p>public EA.Repository Repo { get; }</p>
-<p>internal Session(EA.App app, EA.Repository repo)</p>
-<p>{</p>
-<p>App = app;</p>
-<p>Repo = repo;</p>
-<p>}</p>
-<p>public Package GetSelectedPackageOrRoot()</p>
-<p>{</p>
-<p>Package? pkg = Repo.GetTreeSelectedPackage();</p>
-<p>if (pkg != null) return pkg;</p>
-<p>if (Repo.Models.Count &gt; 0) return</p>
-<blockquote class="blockquote">
-<p>(Package)Repo.Models.GetAt(0);</p>
-</blockquote>
-<p>throw new InvalidOperationException(</p>
-<blockquote class="blockquote">
-<p>“No package available in repository.”);</p>
-</blockquote>
-<p>}</p>
-<p>public void Dispose()</p>
-<p>{</p>
-<p>// Release COM references cleanly</p>
-<p>Marshal.ReleaseComObject(Repo);</p>
-<p>Marshal.ReleaseComObject(App);</p>
-<p>}</p>
-<p>}</p>
-<p>// Options for attaching or launching EA</p>
-<p>public sealed class Options</p>
-<p>{</p>
-<p>public bool PreferAttach { get; set; } = true;</p>
-<p>public bool LaunchIfNotRunning { get; set; } = true;</p>
-<p>public string? ModelPath { get; set; }</p>
-<p>public bool ShowUI { get; set; } = true;</p>
-<p>public int StartupWaitMs { get; set; } = 1500;</p>
-<p>public int RepoPollMs { get; set; } = 100;</p>
-<p>public int RepoPollMax { get; set; } = 50;</p>
-<p>}</p>
-<p>// Attach to EA or launch new instance</p>
-<p>public static Session AttachOrLaunch(Options? options = null)</p>
-<p>{</p>
-<p>options ??= new Options();</p>
-<p>EA.App? app = null;</p>
-<p>if (options.PreferAttach)</p>
-<p>{</p>
-<p>try { app = (EA.App)Marshal.GetActiveObject(“EA.App”); }</p>
-<p>catch { /* none running */ }</p>
-<p>}</p>
-<p>if (app == null &amp;&amp; options.LaunchIfNotRunning)</p>
-<p>{</p>
-<blockquote class="blockquote">
-<p>Type t = Type.GetTypeFromProgID(“EA.App”) ?? throw new</p>
-<p>InvalidOperationException(“EA not installed.”);</p>
-</blockquote>
-<p>app = (EA.App)Activator.CreateInstance(t)!;</p>
-<p>if (!options.ShowUI) app.Visible = false;</p>
-<p>System.Threading.Thread.Sleep(options.StartupWaitMs);</p>
-<p>}</p>
-<p>if (app == null) throw new InvalidOperationException(</p>
-<blockquote class="blockquote">
-<p>“Unable to connect to EA.”);</p>
-</blockquote>
-<p>EA.Repository repo = app.Repository;</p>
-<p>// Poll until repository becomes available</p>
-<p>int polls = 0;</p>
-<p>while (repo == null &amp;&amp; polls &lt; options.RepoPollMax)</p>
-<p>{</p>
-<p>System.Threading.Thread.Sleep(options.RepoPollMs);</p>
-<p>repo = app.Repository;</p>
-<p>polls++;</p>
-<p>}</p>
-<p>if (repo == null) throw new InvalidOperationException(”</p>
-<blockquote class="blockquote">
-<p>EA.Repository did not initialise.”);</p>
-</blockquote>
-<p>if (!string.IsNullOrWhiteSpace(options.ModelPath) &amp;&amp;</p>
-<blockquote class="blockquote">
-<p>string.IsNullOrWhiteSpace(repo.ConnectionString))</p>
-</blockquote>
-<p>repo.OpenFile(options.ModelPath);</p>
-<p>return new Session(app, repo);</p>
-<p>}</p>
-<p>// Result container</p>
-<p>public sealed class Result</p>
-<p>{</p>
-<p>public int UpdatedCount { get; init; }</p>
-<p>public string Summary { get; init; } = ““;</p>
-<p>public string? LogPath { get; init; }</p>
-<p>public string? ElementGuid { get; init; }</p>
-<p>}</p>
-<p>// Add a new element safely</p>
-<p>public static Result AddElement(Repository repo,</p>
-<blockquote class="blockquote">
-<p>Package targetPackage,</p>
-<p>string name,</p>
-<p>string type,</p>
-<p>string? notes, bool dryRun = true, CsvLogger? logger = null)</p>
-</blockquote>
-<p>{</p>
-<p>var el = (Element)targetPackage.Elements.AddNew(name, type);</p>
-<p>if (!string.IsNullOrWhiteSpace(notes)) el.Notes = notes;</p>
-<p>if (dryRun)</p>
-<p>{</p>
-<p>logger?.WriteRow(DateTime.Now, “DRYRUN”,</p>
-<blockquote class="blockquote">
-<p>targetPackage.PackageID,</p>
-<p>““, name, type, notes ??”“);</p>
-</blockquote>
-<p>return new Result { UpdatedCount = 0,</p>
-<blockquote class="blockquote">
-<p>Summary = $“[DRYRUN] Would create: {name} ({type})” };</p>
-</blockquote>
-<p>}</p>
-<p>if (!el.Update())</p>
-<p>throw new InvalidOperationException(</p>
-<blockquote class="blockquote">
-<p>“Element.Update() failed.”);</p>
-</blockquote>
-<p>repo.RefreshModelView(targetPackage.PackageID);</p>
-<p>logger?.WriteRow(DateTime.Now, “CREATE”,</p>
-<blockquote class="blockquote">
-<p>targetPackage.PackageID,</p>
-<p>el.ElementGUID, name, type, notes ?? ““);</p>
-</blockquote>
-<p>return new Result</p>
-<p>{</p>
-<p>UpdatedCount = 1,</p>
-<p>Summary = $“Created element: {name} ({type})”,</p>
-<p>ElementGuid = el.ElementGUID,</p>
-<p>LogPath = logger?.Path</p>
-<p>};</p>
-<p>}</p>
-<p>// CSV logger</p>
-<p>public sealed class CsvLogger : IDisposable</p>
-<p>{</p>
-<p>private readonly StreamWriter _writer;</p>
-<p>public string Path { get; }</p>
-<p>private CsvLogger(string path)</p>
-<p>{</p>
-<p>Path = path;</p>
-<p>_writer = new StreamWriter(path, append: false,</p>
-<blockquote class="blockquote">
-<p>System.Text.Encoding.UTF8);</p>
-</blockquote>
-<p>}</p>
-<p>public static CsvLogger Open(string path) =&gt;</p>
-<blockquote class="blockquote">
-<p>new CsvLogger(path);</p>
-</blockquote>
-<p>public void WriteHeader(string header) =&gt;</p>
-<p>_writer.WriteLine(header);</p>
-<p>public void WriteRow(params object?[] cols)</p>
-<p>=&gt; _writer.WriteLine(string.Join(“,”,</p>
-<blockquote class="blockquote">
-<p>Array.ConvertAll(cols, c =&gt; c?.ToString() ?? ““)));</p>
-</blockquote>
-<p>public void Close() =&gt; _writer.Flush();</p>
-<p>public void Dispose() =&gt; _writer.Dispose();</p>
-<p>}</p>
-<p>}</p>
-<p>}</p>
-<pre><code>
-## E.4 Configuration &amp; Setup
-
-### Bitness
-
-- EA 16+ is usually **64-bit**.
-
-- Match your project’s \&lt;PlatformTarget\&gt; to EA’s bitness (x64 or x86).
-
-### Interop.EA.dll
-
-- Found in EA install folder.
-
-- Add as a reference in your .NET project.
-
-### STAThread
-
-- COM automation requires \[STAThread\] on your entry point.
-
-### Model Files
-
-- Use .qea / .qeax / .eapx.
-
-- Options.ModelPath can auto-open a file if none is open.
-
-### Dry Run &amp; Logging
-
-- Always start in dryRun = true.
-
-- Review the generated CSV log before committing real updates.
-
-### Distribution
-
-- Package as a console utility or integrate into CI/CD.
-
-- Keep EAConnect.cs in a shared library for consistency.
-
-
-
-
-:::{#quarto-navigation-envelope .hidden}
-[Scripting Sparx Enterprise Architect: A Practical Handbook]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl"}
-[Scripting Sparx Enterprise Architect: A Practical Handbook]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU="}
-[&lt;span class='chapter-number'&gt;27&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix D: Quick Reference&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1wcmV2"}
-[&lt;span class='chapter-number'&gt;1&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Scripting Sparx Enterprise Architect&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi9pbmRleC5odG1sPHNwYW4tY2xhc3M9J2NoYXB0ZXItbnVtYmVyJz4xPC9zcGFuPi0tPHNwYW4tY2xhc3M9J2NoYXB0ZXItdGl0bGUnPlNjcmlwdGluZy1TcGFyeC1FbnRlcnByaXNlLUFyY2hpdGVjdDwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;2&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Preface&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wMS1QcmVmYWNlLmh0bWw8c3Bhbi1jbGFzcz0nY2hhcHRlci1udW1iZXInPjI8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+UHJlZmFjZTwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;3&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 1: Why Script EA?&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wMi1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Mzwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTE6LVdoeS1TY3JpcHQtRUE/PC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;4&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 2: Automation Landscape&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wMy1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+NDwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTI6LUF1dG9tYXRpb24tTGFuZHNjYXBlPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;5&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 3: Getting Started&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wNC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+NTwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTM6LUdldHRpbmctU3RhcnRlZDwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;6&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 4: API Essentials&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wNS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Njwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTQ6LUFQSS1Fc3NlbnRpYWxzPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;7&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 5: Inside EA with JScript&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wNi1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Nzwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTU6LUluc2lkZS1FQS13aXRoLUpTY3JpcHQ8L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;8&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 6: External Automation&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wNy1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+ODwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTY6LUV4dGVybmFsLUF1dG9tYXRpb248L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;9&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 7: Script Design Patterns&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wOC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+OTwvc3Bhbj4tLTxzcGFuLWNsYXNzPSdjaGFwdGVyLXRpdGxlJz5DaGFwdGVyLTc6LVNjcmlwdC1EZXNpZ24tUGF0dGVybnM8L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;10&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 8: Object Details&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8wOS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTA8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci04Oi1PYmplY3QtRGV0YWlsczwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;11&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 9: Imports &amp; Exports&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xMC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTE8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci05Oi1JbXBvcnRzLSYtRXhwb3J0czwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;12&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 10: MDG-Aware Scripting&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xMS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTI8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xMDotTURHLUF3YXJlLVNjcmlwdGluZzwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;13&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 11: Governance Scripts&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xMi1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTM8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xMTotR292ZXJuYW5jZS1TY3JpcHRzPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;14&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 12: Cookbook of Examples&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xMy1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTQ8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xMjotQ29va2Jvb2stb2YtRXhhbXBsZXM8L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;15&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 13: Why AI Helps&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xNC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTU8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xMzotV2h5LUFJLUhlbHBzPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;16&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 14: Prompt Engineering&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xNS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTY8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xNDotUHJvbXB0LUVuZ2luZWVyaW5nPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;17&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 15: AI Refactoring Partner&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xNi1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTc8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xNTotQUktUmVmYWN0b3JpbmctUGFydG5lcjwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;18&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 16: AI in Daily Workflow&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xNy1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTg8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xNjotQUktaW4tRGFpbHktV29ya2Zsb3c8L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;19&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 17: Performance &amp; Scaling&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xOC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MTk8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xNzotUGVyZm9ybWFuY2UtJi1TY2FsaW5nPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;20&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 18: Integrating with Workflows&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8xOS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjA8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xODotSW50ZWdyYXRpbmctd2l0aC1Xb3JrZmxvd3M8L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;21&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 19: Add-ins vs Scripts&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yMC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjE8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0xOTotQWRkLWlucy12cy1TY3JpcHRzPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;22&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 20: Troubleshooting&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yMS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjI8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0yMDotVHJvdWJsZXNob290aW5nPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;23&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Chapter 21: Reference&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yMi1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjM8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+Q2hhcHRlci0yMTotUmVmZXJlbmNlPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;24&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix A: Scripting Constraints&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yMy1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjQ8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+QXBwZW5kaXgtQTotU2NyaXB0aW5nLUNvbnN0cmFpbnRzPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;25&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix B: External Automation&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yNC1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjU8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+QXBwZW5kaXgtQjotRXh0ZXJuYWwtQXV0b21hdGlvbjwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;26&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix C: Glossary of Terms&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yNS1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+MjY8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+QXBwZW5kaXgtQzotR2xvc3Nhcnktb2YtVGVybXM8L3NwYW4+"}
-[&lt;span class='chapter-number'&gt;27&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix D: Quick Reference&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yNi1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Mjc8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+QXBwZW5kaXgtRDotUXVpY2stUmVmZXJlbmNlPC9zcGFuPg=="}
-[&lt;span class='chapter-number'&gt;28&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix E: External Automation Setup&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWludC1zaWRlYmFyOi8yNy1TeXN0ZW0uT2JqZWN0W10uaHRtbDxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Mjg8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+QXBwZW5kaXgtRTotRXh0ZXJuYWwtQXV0b21hdGlvbi1TZXR1cDwvc3Bhbj4="}
-[&lt;span class='chapter-number'&gt;28&lt;/span&gt;&nbsp; &lt;span class='chapter-title'&gt;Appendix E: External Automation Setup&lt;/span&gt;]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLWJyZWFkY3J1bWJzLTxzcGFuLWNsYXNzPSdjaGFwdGVyLW51bWJlcic+Mjg8L3NwYW4+LS08c3Bhbi1jbGFzcz0nY2hhcHRlci10aXRsZSc+QXBwZW5kaXgtRTotRXh0ZXJuYWwtQXV0b21hdGlvbi1TZXR1cDwvc3Bhbj4="}
-:::
-
-
-
-:::{#quarto-meta-markdown .hidden}
-[[Appendix E: External Automation Setup]{.chapter-title} – Scripting Sparx Enterprise Architect: A Practical Handbook]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW1ldGF0aXRsZQ=="}
-[[Appendix E: External Automation Setup]{.chapter-title} – Scripting Sparx Enterprise Architect: A Practical Handbook]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU="}
-[[Appendix E: External Automation Setup]{.chapter-title} – Scripting Sparx Enterprise Architect: A Practical Handbook]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW9nY2FyZHRpdGxl"}
-[Scripting Sparx Enterprise Architect: A Practical Handbook]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW1ldGFzaXRlbmFtZQ=="}
-[]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw=="}
-[]{.hidden .quarto-markdown-envelope-contents render-id="cXVhcnRvLW9nY2FyZGRkZXNj"}
-:::
-
-
-
-
-&lt;!-- --&gt;
-
-::: {.quarto-embedded-source-code}
-```````````````````{.markdown shortcodes="false"}
-# Appendix E: External Automation Setup
-
-This appendix provides the reusable EAConnect helper class plus the
-configuration details required to build external automation tools
-against Enterprise Architect (EA). It is intended as the “plumbing”
-layer behind the example in **Chapter 6 – External Automation**.
-
-## E.1 Purpose
-
-The EAConnect helper abstracts the complexities of EA’s COM interface
-and standardises safety practices:
-
-- Attaching to or launching EA consistently
-
-- Waiting for the Repository to become available
-
-- Opening models automatically if needed
-
-- Handling bitness and Interop.EA.dll
-
-- Providing safe wrappers for common tasks (find package, add element,
-  add tagged value)
-
-- Enforcing **dry-run by default**
-
-- Writing CSV audit logs with auto-derived filenames
-
-- Refreshing EA’s UI at sensible points
-
-With this helper, your utilities focus on intent rather than
-boilerplate.
-
-## E.2 Usage
-
-A minimal program using the helper:
-```csharp
-
-using System;
-
-using EA;
-
-using EA.Automation; // the helper namespace
-
-class Program
-
-{
-
-\[STAThread\]
-
-static void Main(string\[\] args)
-
-{
-
-using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options { ShowUI =
-true });
-
-Package pkg = ea.GetSelectedPackageOrRoot();
-
-var result = EAConnect.AddElement(ea.Repo, pkg, "DemoClass", "Class",
-
-"Created by EAConnect.", dryRun: true);
-
-Console.WriteLine(result.Summary);
-
-}
-
-}</code></pre>
-<p>This pattern keeps the Program.cs short and declarative. All detailed logic resides in the helper.</p>
-<section id="e.3-the-eaconnect-helper-class-1" class="level2">
-<h2 class="anchored" data-anchor-id="e.3-the-eaconnect-helper-class-1">E.3 The EAConnect Helper Class</h2>
-<p>’’’csharp // =======================================================================</p>
-<p>// File: EAConnect.cs</p>
-<p>// Project: EA Automation Helper</p>
-<p>// Author: &lt;Your Name&gt;</p>
-<p>// Created: 2025-08-31</p>
-<p>// Last Update: 2025-08-31</p>
-<p>//</p>
-<p>// PURPOSE</p>
-<p>// ——-</p>
-<p>// Provides a safe, reusable abstraction over EA’s COM automation API.</p>
-<p>// Handles: attach/launch, repository polling, model open, package</p>
-<p>// resolution,</p>
-<p>// element creation, tagged value creation, CSV logging, and UI refresh.</p>
-<p>//</p>
-<p>// USAGE</p>
-<p>// —–</p>
-<p>// using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options {</p>
-<p>// ShowUI = true });</p>
-<p>// var pkg = ea.GetSelectedPackageOrRoot();</p>
-<p>// var result = EAConnect.AddElement(ea.Repo, pkg, “NewClass”, “Class”,</p>
-<p>// “Notes”, true);</p>
-<p>// Console.WriteLine(result.Summary);</p>
-<p>//</p>
-<p>// ASSUMPTIONS</p>
-<p>// ———–</p>
-<p>// - EA is installed and COM-registered (ProgID = “EA.App”).</p>
-<p>// - Interop.EA.dll referenced (from EA install folder).</p>
-<p>// - Bitness of project matches EA (x64 for EA 64-bit; x86 for 32-bit).</p>
-<p>// - .NET project marked [STAThread] on entry point.</p>
-<p>//</p>
-<p>// SAFETY</p>
-<p>// ——</p>
-<p>// - Dry-run enabled by default in sample programs.</p>
-<p>// - CSV audit logging for all writes.</p>
-<p>// - UI refresh at batch boundaries only.</p>
-<p>//</p>
-<p>// DEPENDENCIES</p>
-<p>// ————</p>
-<p>// - System.Runtime.InteropServices (Marshal.GetActiveObject).</p>
-<p>// - Interop.EA.dll.</p>
-<p>//</p>
-<p>// UPDATE HISTORY</p>
-<p>// ————–</p>
-<p>// - 2025-08-31: Initial helper version.</p>
+<section id="e.4-configuration-setup" class="level2">
+<h2 class="anchored" data-anchor-id="e.4-configuration-setup">E.4 Configuration &amp; Setup</h2>
+<section id="bitness" class="level3">
+<h3 class="anchored" data-anchor-id="bitness">Bitness</h3>
+<ul>
+<li><p>EA 16+ is usually <strong>64-bit</strong>.</p></li>
+<li><p>Match your project’s &lt;PlatformTarget&gt; to EA’s bitness (x64 or x86).</p></li>
+</ul>
 </section>
+<section id="interop.ea.dll" class="level3">
+<h3 class="anchored" data-anchor-id="interop.ea.dll">Interop.EA.dll</h3>
+<ul>
+<li><p>Found in EA install folder.</p></li>
+<li><p>Add as a reference in your .NET project.</p></li>
+</ul>
 </section>
-<section id="section-1" class="level1">
-<h1>//</h1>
-<p>using System;</p>
-<p>using System.IO;</p>
-<p>using System.Runtime.InteropServices;</p>
-<p>using EA;</p>
-<p>namespace EA.Automation</p>
-<p>{</p>
-<p>public static class EAConnect</p>
-<p>{</p>
-<p>// Encapsulates a connected EA session</p>
-<p>public sealed class Session : IDisposable</p>
-<p>{</p>
-<p>public EA.App App { get; }</p>
-<p>public EA.Repository Repo { get; }</p>
-<p>internal Session(EA.App app, EA.Repository repo)</p>
-<p>{</p>
-<p>App = app;</p>
-<p>Repo = repo;</p>
-<p>}</p>
-<p>public Package GetSelectedPackageOrRoot()</p>
-<p>{</p>
-<p>Package? pkg = Repo.GetTreeSelectedPackage();</p>
-<p>if (pkg != null) return pkg;</p>
-<p>if (Repo.Models.Count &gt; 0) return</p>
-<blockquote class="blockquote">
-<p>(Package)Repo.Models.GetAt(0);</p>
-</blockquote>
-<p>throw new InvalidOperationException(</p>
-<blockquote class="blockquote">
-<p>“No package available in repository.”);</p>
-</blockquote>
-<p>}</p>
-<p>public void Dispose()</p>
-<p>{</p>
-<p>// Release COM references cleanly</p>
-<p>Marshal.ReleaseComObject(Repo);</p>
-<p>Marshal.ReleaseComObject(App);</p>
-<p>}</p>
-<p>}</p>
-<p>// Options for attaching or launching EA</p>
-<p>public sealed class Options</p>
-<p>{</p>
-<p>public bool PreferAttach { get; set; } = true;</p>
-<p>public bool LaunchIfNotRunning { get; set; } = true;</p>
-<p>public string? ModelPath { get; set; }</p>
-<p>public bool ShowUI { get; set; } = true;</p>
-<p>public int StartupWaitMs { get; set; } = 1500;</p>
-<p>public int RepoPollMs { get; set; } = 100;</p>
-<p>public int RepoPollMax { get; set; } = 50;</p>
-<p>}</p>
-<p>// Attach to EA or launch new instance</p>
-<p>public static Session AttachOrLaunch(Options? options = null)</p>
-<p>{</p>
-<p>options ??= new Options();</p>
-<p>EA.App? app = null;</p>
-<p>if (options.PreferAttach)</p>
-<p>{</p>
-<p>try { app = (EA.App)Marshal.GetActiveObject(“EA.App”); }</p>
-<p>catch { /* none running */ }</p>
-<p>}</p>
-<p>if (app == null &amp;&amp; options.LaunchIfNotRunning)</p>
-<p>{</p>
-<blockquote class="blockquote">
-<p>Type t = Type.GetTypeFromProgID(“EA.App”) ?? throw new</p>
-<p>InvalidOperationException(“EA not installed.”);</p>
-</blockquote>
-<p>app = (EA.App)Activator.CreateInstance(t)!;</p>
-<p>if (!options.ShowUI) app.Visible = false;</p>
-<p>System.Threading.Thread.Sleep(options.StartupWaitMs);</p>
-<p>}</p>
-<p>if (app == null) throw new InvalidOperationException(</p>
-<blockquote class="blockquote">
-<p>“Unable to connect to EA.”);</p>
-</blockquote>
-<p>EA.Repository repo = app.Repository;</p>
-<p>// Poll until repository becomes available</p>
-<p>int polls = 0;</p>
-<p>while (repo == null &amp;&amp; polls &lt; options.RepoPollMax)</p>
-<p>{</p>
-<p>System.Threading.Thread.Sleep(options.RepoPollMs);</p>
-<p>repo = app.Repository;</p>
-<p>polls++;</p>
-<p>}</p>
-<p>if (repo == null) throw new InvalidOperationException(”</p>
-<blockquote class="blockquote">
-<p>EA.Repository did not initialise.”);</p>
-</blockquote>
-<p>if (!string.IsNullOrWhiteSpace(options.ModelPath) &amp;&amp;</p>
-<blockquote class="blockquote">
-<p>string.IsNullOrWhiteSpace(repo.ConnectionString))</p>
-</blockquote>
-<p>repo.OpenFile(options.ModelPath);</p>
-<p>return new Session(app, repo);</p>
-<p>}</p>
-<p>// Result container</p>
-<p>public sealed class Result</p>
-<p>{</p>
-<p>public int UpdatedCount { get; init; }</p>
-<p>public string Summary { get; init; } = ““;</p>
-<p>public string? LogPath { get; init; }</p>
-<p>public string? ElementGuid { get; init; }</p>
-<p>}</p>
-<p>// Add a new element safely</p>
-<p>public static Result AddElement(Repository repo,</p>
-<blockquote class="blockquote">
-<p>Package targetPackage,</p>
-<p>string name,</p>
-<p>string type,</p>
-<p>string? notes, bool dryRun = true, CsvLogger? logger = null)</p>
-</blockquote>
-<p>{</p>
-<p>var el = (Element)targetPackage.Elements.AddNew(name, type);</p>
-<p>if (!string.IsNullOrWhiteSpace(notes)) el.Notes = notes;</p>
-<p>if (dryRun)</p>
-<p>{</p>
-<p>logger?.WriteRow(DateTime.Now, “DRYRUN”,</p>
-<blockquote class="blockquote">
-<p>targetPackage.PackageID,</p>
-<p>““, name, type, notes ??”“);</p>
-</blockquote>
-<p>return new Result { UpdatedCount = 0,</p>
-<blockquote class="blockquote">
-<p>Summary = $“[DRYRUN] Would create: {name} ({type})” };</p>
-</blockquote>
-<p>}</p>
-<p>if (!el.Update())</p>
-<p>throw new InvalidOperationException(</p>
-<blockquote class="blockquote">
-<p>“Element.Update() failed.”);</p>
-</blockquote>
-<p>repo.RefreshModelView(targetPackage.PackageID);</p>
-<p>logger?.WriteRow(DateTime.Now, “CREATE”,</p>
-<blockquote class="blockquote">
-<p>targetPackage.PackageID,</p>
-<p>el.ElementGUID, name, type, notes ?? ““);</p>
-</blockquote>
-<p>return new Result</p>
-<p>{</p>
-<p>UpdatedCount = 1,</p>
-<p>Summary = $“Created element: {name} ({type})”,</p>
-<p>ElementGuid = el.ElementGUID,</p>
-<p>LogPath = logger?.Path</p>
-<p>};</p>
-<p>}</p>
-<p>// CSV logger</p>
-<p>public sealed class CsvLogger : IDisposable</p>
-<p>{</p>
-<p>private readonly StreamWriter _writer;</p>
-<p>public string Path { get; }</p>
-<p>private CsvLogger(string path)</p>
-<p>{</p>
-<p>Path = path;</p>
-<p>_writer = new StreamWriter(path, append: false,</p>
-<blockquote class="blockquote">
-<p>System.Text.Encoding.UTF8);</p>
-</blockquote>
-<p>}</p>
-<p>public static CsvLogger Open(string path) =&gt;</p>
-<blockquote class="blockquote">
-<p>new CsvLogger(path);</p>
-</blockquote>
-<p>public void WriteHeader(string header) =&gt;</p>
-<p>_writer.WriteLine(header);</p>
-<p>public void WriteRow(params object?[] cols)</p>
-<p>=&gt; _writer.WriteLine(string.Join(“,”,</p>
-<blockquote class="blockquote">
-<p>Array.ConvertAll(cols, c =&gt; c?.ToString() ?? ““)));</p>
-</blockquote>
-<p>public void Close() =&gt; _writer.Flush();</p>
-<p>public void Dispose() =&gt; _writer.Dispose();</p>
-<p>}</p>
-<p>}</p>
-<p>}</p>
-<pre><code>
-## E.4 Configuration &amp; Setup
+<section id="stathread" class="level3">
+<h3 class="anchored" data-anchor-id="stathread">STAThread</h3>
+<ul>
+<li>COM automation requires [STAThread] on your entry point.</li>
+</ul>
+</section>
+<section id="model-files" class="level3">
+<h3 class="anchored" data-anchor-id="model-files">Model Files</h3>
+<ul>
+<li><p>Use .qea / .qeax / .eapx.</p></li>
+<li><p>Options.ModelPath can auto-open a file if none is open.</p></li>
+</ul>
+</section>
+<section id="dry-run-logging" class="level3">
+<h3 class="anchored" data-anchor-id="dry-run-logging">Dry Run &amp; Logging</h3>
+<ul>
+<li><p>Always start in dryRun = true.</p></li>
+<li><p>Review the generated CSV log before committing real updates.</p></li>
+</ul>
+</section>
+<section id="distribution" class="level3">
+<h3 class="anchored" data-anchor-id="distribution">Distribution</h3>
+<ul>
+<li><p>Package as a console utility or integrate into CI/CD.</p></li>
+<li><p>Keep EAConnect.cs in a shared library for consistency.</p></li>
+</ul>
 
-### Bitness
 
-- EA 16+ is usually **64-bit**.
+<!-- -->
 
-- Match your project’s \&lt;PlatformTarget\&gt; to EA’s bitness (x64 or x86).
-
-### Interop.EA.dll
-
-- Found in EA install folder.
-
-- Add as a reference in your .NET project.
-
-### STAThread
-
-- COM automation requires \[STAThread\] on your entry point.
-
-### Model Files
-
-- Use .qea / .qeax / .eapx.
-
-- Options.ModelPath can auto-open a file if none is open.
-
-### Dry Run &amp; Logging
-
-- Always start in dryRun = true.
-
-- Review the generated CSV log before committing real updates.
-
-### Distribution
-
-- Package as a console utility or integrate into CI/CD.
-
-- Keep EAConnect.cs in a shared library for consistency.</code></pre>
-<p>:::</p>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1525,7 +1315,498 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
   <div class="nav-page nav-page-next">
   </div>
-</nav>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu"># Appendix E: External Automation Setup</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>This appendix provides the reusable EAConnect helper class plus the</span>
+<span id="cb3-4"><a href="#cb3-4"></a>configuration details required to build external automation tools</span>
+<span id="cb3-5"><a href="#cb3-5"></a>against Enterprise Architect (EA). It is intended as the “plumbing”</span>
+<span id="cb3-6"><a href="#cb3-6"></a>layer behind the example in **Chapter 6 – External Automation**.</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="fu">## E.1 Purpose</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a>The EAConnect helper abstracts the complexities of EA’s COM interface</span>
+<span id="cb3-11"><a href="#cb3-11"></a>and standardises safety practices:</span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="ss">- </span>Attaching to or launching EA consistently</span>
+<span id="cb3-14"><a href="#cb3-14"></a></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="ss">- </span>Waiting for the Repository to become available</span>
+<span id="cb3-16"><a href="#cb3-16"></a></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="ss">- </span>Opening models automatically if needed</span>
+<span id="cb3-18"><a href="#cb3-18"></a></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="ss">- </span>Handling bitness and Interop.EA.dll</span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="ss">- </span>Providing safe wrappers for common tasks (find package, add element,</span>
+<span id="cb3-22"><a href="#cb3-22"></a>  add tagged value)</span>
+<span id="cb3-23"><a href="#cb3-23"></a></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="ss">- </span>Enforcing **dry-run by default**</span>
+<span id="cb3-25"><a href="#cb3-25"></a></span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="ss">- </span>Writing CSV audit logs with auto-derived filenames</span>
+<span id="cb3-27"><a href="#cb3-27"></a></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="ss">- </span>Refreshing EA’s UI at sensible points</span>
+<span id="cb3-29"><a href="#cb3-29"></a></span>
+<span id="cb3-30"><a href="#cb3-30"></a>With this helper, your utilities focus on intent rather than</span>
+<span id="cb3-31"><a href="#cb3-31"></a>boilerplate.</span>
+<span id="cb3-32"><a href="#cb3-32"></a></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="fu">## E.2 Usage</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a></span>
+<span id="cb3-35"><a href="#cb3-35"></a>A minimal program using the helper:</span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="in">```csharp</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="kw">using</span> System<span class="op">;</span></span>
+<span id="cb3-39"><a href="#cb3-39"></a></span>
+<span id="cb3-40"><a href="#cb3-40"></a><span class="kw">using</span> EA<span class="op">;</span></span>
+<span id="cb3-41"><a href="#cb3-41"></a></span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="kw">using</span> EA<span class="op">.</span><span class="fu">Automation</span><span class="op">;</span> <span class="co">// the helper namespace</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a></span>
+<span id="cb3-44"><a href="#cb3-44"></a><span class="kw">class</span> Program</span>
+<span id="cb3-45"><a href="#cb3-45"></a></span>
+<span id="cb3-46"><a href="#cb3-46"></a><span class="op">{</span></span>
+<span id="cb3-47"><a href="#cb3-47"></a></span>
+<span id="cb3-48"><a href="#cb3-48"></a>\<span class="op">[</span>STAThread\<span class="op">]</span></span>
+<span id="cb3-49"><a href="#cb3-49"></a></span>
+<span id="cb3-50"><a href="#cb3-50"></a><span class="kw">static</span> <span class="dt">void</span> <span class="fu">Main</span><span class="op">(</span><span class="dt">string</span>\<span class="op">[</span>\<span class="op">]</span> args<span class="op">)</span></span>
+<span id="cb3-51"><a href="#cb3-51"></a></span>
+<span id="cb3-52"><a href="#cb3-52"></a><span class="op">{</span></span>
+<span id="cb3-53"><a href="#cb3-53"></a></span>
+<span id="cb3-54"><a href="#cb3-54"></a><span class="kw">using</span> <span class="dt">var</span> ea <span class="op">=</span> EAConnect<span class="op">.</span><span class="fu">AttachOrLaunch</span><span class="op">(</span><span class="kw">new</span> EAConnect<span class="op">.</span><span class="fu">Options</span> <span class="op">{</span> ShowUI <span class="op">=</span></span>
+<span id="cb3-55"><a href="#cb3-55"></a><span class="kw">true</span> <span class="op">});</span></span>
+<span id="cb3-56"><a href="#cb3-56"></a></span>
+<span id="cb3-57"><a href="#cb3-57"></a>Package pkg <span class="op">=</span> ea<span class="op">.</span><span class="fu">GetSelectedPackageOrRoot</span><span class="op">();</span></span>
+<span id="cb3-58"><a href="#cb3-58"></a></span>
+<span id="cb3-59"><a href="#cb3-59"></a><span class="dt">var</span> result <span class="op">=</span> EAConnect<span class="op">.</span><span class="fu">AddElement</span><span class="op">(</span>ea<span class="op">.</span><span class="fu">Repo</span><span class="op">,</span> pkg<span class="op">,</span> <span class="st">"DemoClass"</span><span class="op">,</span> <span class="st">"Class"</span><span class="op">,</span></span>
+<span id="cb3-60"><a href="#cb3-60"></a></span>
+<span id="cb3-61"><a href="#cb3-61"></a><span class="st">"Created by EAConnect."</span><span class="op">,</span> dryRun<span class="op">:</span> <span class="kw">true</span><span class="op">);</span></span>
+<span id="cb3-62"><a href="#cb3-62"></a></span>
+<span id="cb3-63"><a href="#cb3-63"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>result<span class="op">.</span><span class="fu">Summary</span><span class="op">);</span></span>
+<span id="cb3-64"><a href="#cb3-64"></a></span>
+<span id="cb3-65"><a href="#cb3-65"></a><span class="op">}</span></span>
+<span id="cb3-66"><a href="#cb3-66"></a></span>
+<span id="cb3-67"><a href="#cb3-67"></a><span class="op">}</span></span>
+<span id="cb3-68"><a href="#cb3-68"></a><span class="in">```</span></span>
+<span id="cb3-69"><a href="#cb3-69"></a></span>
+<span id="cb3-70"><a href="#cb3-70"></a>This pattern keeps the Program.cs short and declarative. All detailed</span>
+<span id="cb3-71"><a href="#cb3-71"></a>logic resides in the helper.</span>
+<span id="cb3-72"><a href="#cb3-72"></a></span>
+<span id="cb3-73"><a href="#cb3-73"></a><span class="fu">## E.3 The EAConnect Helper Class</span></span>
+<span id="cb3-74"><a href="#cb3-74"></a><span class="in">```csharp</span></span>
+<span id="cb3-75"><a href="#cb3-75"></a><span class="co">//</span></span>
+<span id="cb3-76"><a href="#cb3-76"></a><span class="op">=======================================================================</span></span>
+<span id="cb3-77"><a href="#cb3-77"></a></span>
+<span id="cb3-78"><a href="#cb3-78"></a><span class="co">// File: EAConnect.cs</span></span>
+<span id="cb3-79"><a href="#cb3-79"></a></span>
+<span id="cb3-80"><a href="#cb3-80"></a><span class="co">// Project: EA Automation Helper</span></span>
+<span id="cb3-81"><a href="#cb3-81"></a></span>
+<span id="cb3-82"><a href="#cb3-82"></a><span class="co">// Author: \&lt;Your Name\&gt;</span></span>
+<span id="cb3-83"><a href="#cb3-83"></a></span>
+<span id="cb3-84"><a href="#cb3-84"></a><span class="co">// Created: 2025-08-31</span></span>
+<span id="cb3-85"><a href="#cb3-85"></a></span>
+<span id="cb3-86"><a href="#cb3-86"></a><span class="co">// Last Update: 2025-08-31</span></span>
+<span id="cb3-87"><a href="#cb3-87"></a></span>
+<span id="cb3-88"><a href="#cb3-88"></a><span class="co">//</span></span>
+<span id="cb3-89"><a href="#cb3-89"></a></span>
+<span id="cb3-90"><a href="#cb3-90"></a><span class="co">// PURPOSE</span></span>
+<span id="cb3-91"><a href="#cb3-91"></a></span>
+<span id="cb3-92"><a href="#cb3-92"></a><span class="co">// -------</span></span>
+<span id="cb3-93"><a href="#cb3-93"></a></span>
+<span id="cb3-94"><a href="#cb3-94"></a><span class="co">// Provides a safe, reusable abstraction over EA’s COM automation API.</span></span>
+<span id="cb3-95"><a href="#cb3-95"></a></span>
+<span id="cb3-96"><a href="#cb3-96"></a><span class="co">// Handles: attach/launch, repository polling, model open, package</span></span>
+<span id="cb3-97"><a href="#cb3-97"></a></span>
+<span id="cb3-98"><a href="#cb3-98"></a><span class="co">// resolution,</span></span>
+<span id="cb3-99"><a href="#cb3-99"></a></span>
+<span id="cb3-100"><a href="#cb3-100"></a><span class="co">// element creation, tagged value creation, CSV logging, and UI refresh.</span></span>
+<span id="cb3-101"><a href="#cb3-101"></a></span>
+<span id="cb3-102"><a href="#cb3-102"></a><span class="co">//</span></span>
+<span id="cb3-103"><a href="#cb3-103"></a></span>
+<span id="cb3-104"><a href="#cb3-104"></a><span class="co">// USAGE</span></span>
+<span id="cb3-105"><a href="#cb3-105"></a></span>
+<span id="cb3-106"><a href="#cb3-106"></a><span class="co">// -----</span></span>
+<span id="cb3-107"><a href="#cb3-107"></a></span>
+<span id="cb3-108"><a href="#cb3-108"></a><span class="co">// using var ea = EAConnect.AttachOrLaunch(new EAConnect.Options {</span></span>
+<span id="cb3-109"><a href="#cb3-109"></a></span>
+<span id="cb3-110"><a href="#cb3-110"></a><span class="co">// ShowUI = true });</span></span>
+<span id="cb3-111"><a href="#cb3-111"></a></span>
+<span id="cb3-112"><a href="#cb3-112"></a><span class="co">// var pkg = ea.GetSelectedPackageOrRoot();</span></span>
+<span id="cb3-113"><a href="#cb3-113"></a></span>
+<span id="cb3-114"><a href="#cb3-114"></a><span class="co">// var result = EAConnect.AddElement(ea.Repo, pkg, "NewClass", "Class",</span></span>
+<span id="cb3-115"><a href="#cb3-115"></a></span>
+<span id="cb3-116"><a href="#cb3-116"></a><span class="co">// "Notes", true);</span></span>
+<span id="cb3-117"><a href="#cb3-117"></a></span>
+<span id="cb3-118"><a href="#cb3-118"></a><span class="co">// Console.WriteLine(result.Summary);</span></span>
+<span id="cb3-119"><a href="#cb3-119"></a></span>
+<span id="cb3-120"><a href="#cb3-120"></a><span class="co">//</span></span>
+<span id="cb3-121"><a href="#cb3-121"></a></span>
+<span id="cb3-122"><a href="#cb3-122"></a><span class="co">// ASSUMPTIONS</span></span>
+<span id="cb3-123"><a href="#cb3-123"></a></span>
+<span id="cb3-124"><a href="#cb3-124"></a><span class="co">// -----------</span></span>
+<span id="cb3-125"><a href="#cb3-125"></a></span>
+<span id="cb3-126"><a href="#cb3-126"></a><span class="co">// - EA is installed and COM-registered (ProgID = "EA.App").</span></span>
+<span id="cb3-127"><a href="#cb3-127"></a></span>
+<span id="cb3-128"><a href="#cb3-128"></a><span class="co">// - Interop.EA.dll referenced (from EA install folder).</span></span>
+<span id="cb3-129"><a href="#cb3-129"></a></span>
+<span id="cb3-130"><a href="#cb3-130"></a><span class="co">// - Bitness of project matches EA (x64 for EA 64-bit; x86 for 32-bit).</span></span>
+<span id="cb3-131"><a href="#cb3-131"></a></span>
+<span id="cb3-132"><a href="#cb3-132"></a><span class="co">// - .NET project marked \[STAThread\] on entry point.</span></span>
+<span id="cb3-133"><a href="#cb3-133"></a></span>
+<span id="cb3-134"><a href="#cb3-134"></a><span class="co">//</span></span>
+<span id="cb3-135"><a href="#cb3-135"></a></span>
+<span id="cb3-136"><a href="#cb3-136"></a><span class="co">// SAFETY</span></span>
+<span id="cb3-137"><a href="#cb3-137"></a></span>
+<span id="cb3-138"><a href="#cb3-138"></a><span class="co">// ------</span></span>
+<span id="cb3-139"><a href="#cb3-139"></a></span>
+<span id="cb3-140"><a href="#cb3-140"></a><span class="co">// - Dry-run enabled by default in sample programs.</span></span>
+<span id="cb3-141"><a href="#cb3-141"></a></span>
+<span id="cb3-142"><a href="#cb3-142"></a><span class="co">// - CSV audit logging for all writes.</span></span>
+<span id="cb3-143"><a href="#cb3-143"></a></span>
+<span id="cb3-144"><a href="#cb3-144"></a><span class="co">// - UI refresh at batch boundaries only.</span></span>
+<span id="cb3-145"><a href="#cb3-145"></a></span>
+<span id="cb3-146"><a href="#cb3-146"></a><span class="co">//</span></span>
+<span id="cb3-147"><a href="#cb3-147"></a></span>
+<span id="cb3-148"><a href="#cb3-148"></a><span class="co">// DEPENDENCIES</span></span>
+<span id="cb3-149"><a href="#cb3-149"></a></span>
+<span id="cb3-150"><a href="#cb3-150"></a><span class="co">// ------------</span></span>
+<span id="cb3-151"><a href="#cb3-151"></a></span>
+<span id="cb3-152"><a href="#cb3-152"></a><span class="co">// - System.Runtime.InteropServices (Marshal.GetActiveObject).</span></span>
+<span id="cb3-153"><a href="#cb3-153"></a></span>
+<span id="cb3-154"><a href="#cb3-154"></a><span class="co">// - Interop.EA.dll.</span></span>
+<span id="cb3-155"><a href="#cb3-155"></a></span>
+<span id="cb3-156"><a href="#cb3-156"></a><span class="co">//</span></span>
+<span id="cb3-157"><a href="#cb3-157"></a></span>
+<span id="cb3-158"><a href="#cb3-158"></a><span class="co">// UPDATE HISTORY</span></span>
+<span id="cb3-159"><a href="#cb3-159"></a></span>
+<span id="cb3-160"><a href="#cb3-160"></a><span class="co">// --------------</span></span>
+<span id="cb3-161"><a href="#cb3-161"></a></span>
+<span id="cb3-162"><a href="#cb3-162"></a><span class="co">// - 2025-08-31: Initial helper version.</span></span>
+<span id="cb3-163"><a href="#cb3-163"></a></span>
+<span id="cb3-164"><a href="#cb3-164"></a><span class="co">//</span></span>
+<span id="cb3-165"><a href="#cb3-165"></a><span class="op">=======================================================================</span></span>
+<span id="cb3-166"><a href="#cb3-166"></a></span>
+<span id="cb3-167"><a href="#cb3-167"></a><span class="kw">using</span> System<span class="op">;</span></span>
+<span id="cb3-168"><a href="#cb3-168"></a></span>
+<span id="cb3-169"><a href="#cb3-169"></a><span class="kw">using</span> System<span class="op">.</span><span class="fu">IO</span><span class="op">;</span></span>
+<span id="cb3-170"><a href="#cb3-170"></a></span>
+<span id="cb3-171"><a href="#cb3-171"></a><span class="kw">using</span> System<span class="op">.</span><span class="fu">Runtime</span><span class="op">.</span><span class="fu">InteropServices</span><span class="op">;</span></span>
+<span id="cb3-172"><a href="#cb3-172"></a></span>
+<span id="cb3-173"><a href="#cb3-173"></a><span class="kw">using</span> EA<span class="op">;</span></span>
+<span id="cb3-174"><a href="#cb3-174"></a></span>
+<span id="cb3-175"><a href="#cb3-175"></a><span class="kw">namespace</span> EA<span class="op">.</span><span class="fu">Automation</span></span>
+<span id="cb3-176"><a href="#cb3-176"></a></span>
+<span id="cb3-177"><a href="#cb3-177"></a><span class="op">{</span></span>
+<span id="cb3-178"><a href="#cb3-178"></a></span>
+<span id="cb3-179"><a href="#cb3-179"></a><span class="kw">public</span> <span class="kw">static</span> <span class="kw">class</span> EAConnect</span>
+<span id="cb3-180"><a href="#cb3-180"></a></span>
+<span id="cb3-181"><a href="#cb3-181"></a><span class="op">{</span></span>
+<span id="cb3-182"><a href="#cb3-182"></a></span>
+<span id="cb3-183"><a href="#cb3-183"></a><span class="co">// Encapsulates a connected EA session</span></span>
+<span id="cb3-184"><a href="#cb3-184"></a></span>
+<span id="cb3-185"><a href="#cb3-185"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> Session <span class="op">:</span> IDisposable</span>
+<span id="cb3-186"><a href="#cb3-186"></a></span>
+<span id="cb3-187"><a href="#cb3-187"></a><span class="op">{</span></span>
+<span id="cb3-188"><a href="#cb3-188"></a></span>
+<span id="cb3-189"><a href="#cb3-189"></a><span class="kw">public</span> EA<span class="op">.</span><span class="fu">App</span> App <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-190"><a href="#cb3-190"></a></span>
+<span id="cb3-191"><a href="#cb3-191"></a><span class="kw">public</span> EA<span class="op">.</span><span class="fu">Repository</span> Repo <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-192"><a href="#cb3-192"></a></span>
+<span id="cb3-193"><a href="#cb3-193"></a><span class="kw">internal</span> <span class="fu">Session</span><span class="op">(</span>EA<span class="op">.</span><span class="fu">App</span> app<span class="op">,</span> EA<span class="op">.</span><span class="fu">Repository</span> repo<span class="op">)</span></span>
+<span id="cb3-194"><a href="#cb3-194"></a></span>
+<span id="cb3-195"><a href="#cb3-195"></a><span class="op">{</span></span>
+<span id="cb3-196"><a href="#cb3-196"></a></span>
+<span id="cb3-197"><a href="#cb3-197"></a>App <span class="op">=</span> app<span class="op">;</span></span>
+<span id="cb3-198"><a href="#cb3-198"></a></span>
+<span id="cb3-199"><a href="#cb3-199"></a>Repo <span class="op">=</span> repo<span class="op">;</span></span>
+<span id="cb3-200"><a href="#cb3-200"></a></span>
+<span id="cb3-201"><a href="#cb3-201"></a><span class="op">}</span></span>
+<span id="cb3-202"><a href="#cb3-202"></a></span>
+<span id="cb3-203"><a href="#cb3-203"></a><span class="kw">public</span> Package <span class="fu">GetSelectedPackageOrRoot</span><span class="op">()</span></span>
+<span id="cb3-204"><a href="#cb3-204"></a></span>
+<span id="cb3-205"><a href="#cb3-205"></a><span class="op">{</span></span>
+<span id="cb3-206"><a href="#cb3-206"></a></span>
+<span id="cb3-207"><a href="#cb3-207"></a>Package<span class="op">?</span> pkg <span class="op">=</span> Repo<span class="op">.</span><span class="fu">GetTreeSelectedPackage</span><span class="op">();</span></span>
+<span id="cb3-208"><a href="#cb3-208"></a></span>
+<span id="cb3-209"><a href="#cb3-209"></a><span class="kw">if</span> <span class="op">(</span>pkg <span class="op">!=</span> <span class="kw">null</span><span class="op">)</span> <span class="kw">return</span> pkg<span class="op">;</span></span>
+<span id="cb3-210"><a href="#cb3-210"></a></span>
+<span id="cb3-211"><a href="#cb3-211"></a><span class="kw">if</span> <span class="op">(</span>Repo<span class="op">.</span><span class="fu">Models</span><span class="op">.</span><span class="fu">Count</span> \<span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="kw">return</span></span>
+<span id="cb3-212"><a href="#cb3-212"></a></span>
+<span id="cb3-213"><a href="#cb3-213"></a><span class="op">&gt;</span> <span class="op">(</span>Package<span class="op">)</span>Repo<span class="op">.</span><span class="fu">Models</span><span class="op">.</span><span class="fu">GetAt</span><span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb3-214"><a href="#cb3-214"></a></span>
+<span id="cb3-215"><a href="#cb3-215"></a><span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span></span>
+<span id="cb3-216"><a href="#cb3-216"></a></span>
+<span id="cb3-217"><a href="#cb3-217"></a><span class="op">&gt;</span> <span class="st">"No package available in repository."</span><span class="op">);</span></span>
+<span id="cb3-218"><a href="#cb3-218"></a></span>
+<span id="cb3-219"><a href="#cb3-219"></a><span class="op">}</span></span>
+<span id="cb3-220"><a href="#cb3-220"></a></span>
+<span id="cb3-221"><a href="#cb3-221"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">Dispose</span><span class="op">()</span></span>
+<span id="cb3-222"><a href="#cb3-222"></a></span>
+<span id="cb3-223"><a href="#cb3-223"></a><span class="op">{</span></span>
+<span id="cb3-224"><a href="#cb3-224"></a></span>
+<span id="cb3-225"><a href="#cb3-225"></a><span class="co">// Release COM references cleanly</span></span>
+<span id="cb3-226"><a href="#cb3-226"></a></span>
+<span id="cb3-227"><a href="#cb3-227"></a>Marshal<span class="op">.</span><span class="fu">ReleaseComObject</span><span class="op">(</span>Repo<span class="op">);</span></span>
+<span id="cb3-228"><a href="#cb3-228"></a></span>
+<span id="cb3-229"><a href="#cb3-229"></a>Marshal<span class="op">.</span><span class="fu">ReleaseComObject</span><span class="op">(</span>App<span class="op">);</span></span>
+<span id="cb3-230"><a href="#cb3-230"></a></span>
+<span id="cb3-231"><a href="#cb3-231"></a><span class="op">}</span></span>
+<span id="cb3-232"><a href="#cb3-232"></a></span>
+<span id="cb3-233"><a href="#cb3-233"></a><span class="op">}</span></span>
+<span id="cb3-234"><a href="#cb3-234"></a></span>
+<span id="cb3-235"><a href="#cb3-235"></a><span class="co">// Options for attaching or launching EA</span></span>
+<span id="cb3-236"><a href="#cb3-236"></a></span>
+<span id="cb3-237"><a href="#cb3-237"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> Options</span>
+<span id="cb3-238"><a href="#cb3-238"></a></span>
+<span id="cb3-239"><a href="#cb3-239"></a><span class="op">{</span></span>
+<span id="cb3-240"><a href="#cb3-240"></a></span>
+<span id="cb3-241"><a href="#cb3-241"></a><span class="kw">public</span> <span class="dt">bool</span> PreferAttach <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-242"><a href="#cb3-242"></a></span>
+<span id="cb3-243"><a href="#cb3-243"></a><span class="kw">public</span> <span class="dt">bool</span> LaunchIfNotRunning <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-244"><a href="#cb3-244"></a></span>
+<span id="cb3-245"><a href="#cb3-245"></a><span class="kw">public</span> <span class="dt">string</span><span class="op">?</span> ModelPath <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-246"><a href="#cb3-246"></a></span>
+<span id="cb3-247"><a href="#cb3-247"></a><span class="kw">public</span> <span class="dt">bool</span> ShowUI <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-248"><a href="#cb3-248"></a></span>
+<span id="cb3-249"><a href="#cb3-249"></a><span class="kw">public</span> <span class="dt">int</span> StartupWaitMs <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="dv">1500</span><span class="op">;</span></span>
+<span id="cb3-250"><a href="#cb3-250"></a></span>
+<span id="cb3-251"><a href="#cb3-251"></a><span class="kw">public</span> <span class="dt">int</span> RepoPollMs <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="dv">100</span><span class="op">;</span></span>
+<span id="cb3-252"><a href="#cb3-252"></a></span>
+<span id="cb3-253"><a href="#cb3-253"></a><span class="kw">public</span> <span class="dt">int</span> RepoPollMax <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="kw">set</span><span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="dv">50</span><span class="op">;</span></span>
+<span id="cb3-254"><a href="#cb3-254"></a></span>
+<span id="cb3-255"><a href="#cb3-255"></a><span class="op">}</span></span>
+<span id="cb3-256"><a href="#cb3-256"></a></span>
+<span id="cb3-257"><a href="#cb3-257"></a><span class="co">// Attach to EA or launch new instance</span></span>
+<span id="cb3-258"><a href="#cb3-258"></a></span>
+<span id="cb3-259"><a href="#cb3-259"></a><span class="kw">public</span> <span class="kw">static</span> Session <span class="fu">AttachOrLaunch</span><span class="op">(</span>Options<span class="op">?</span> options <span class="op">=</span> <span class="kw">null</span><span class="op">)</span></span>
+<span id="cb3-260"><a href="#cb3-260"></a></span>
+<span id="cb3-261"><a href="#cb3-261"></a><span class="op">{</span></span>
+<span id="cb3-262"><a href="#cb3-262"></a></span>
+<span id="cb3-263"><a href="#cb3-263"></a>options <span class="op">??=</span> <span class="kw">new</span> <span class="fu">Options</span><span class="op">();</span></span>
+<span id="cb3-264"><a href="#cb3-264"></a></span>
+<span id="cb3-265"><a href="#cb3-265"></a>EA<span class="op">.</span><span class="fu">App</span><span class="op">?</span> app <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb3-266"><a href="#cb3-266"></a></span>
+<span id="cb3-267"><a href="#cb3-267"></a><span class="kw">if</span> <span class="op">(</span>options<span class="op">.</span><span class="fu">PreferAttach</span><span class="op">)</span></span>
+<span id="cb3-268"><a href="#cb3-268"></a></span>
+<span id="cb3-269"><a href="#cb3-269"></a><span class="op">{</span></span>
+<span id="cb3-270"><a href="#cb3-270"></a></span>
+<span id="cb3-271"><a href="#cb3-271"></a><span class="kw">try</span> <span class="op">{</span> app <span class="op">=</span> <span class="op">(</span>EA<span class="op">.</span><span class="fu">App</span><span class="op">)</span>Marshal<span class="op">.</span><span class="fu">GetActiveObject</span><span class="op">(</span><span class="st">"EA.App"</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb3-272"><a href="#cb3-272"></a></span>
+<span id="cb3-273"><a href="#cb3-273"></a><span class="kw">catch</span> <span class="op">{</span> <span class="op">/</span>\<span class="op">*</span> none running \<span class="op">*/</span> <span class="op">}</span></span>
+<span id="cb3-274"><a href="#cb3-274"></a></span>
+<span id="cb3-275"><a href="#cb3-275"></a><span class="op">}</span></span>
+<span id="cb3-276"><a href="#cb3-276"></a></span>
+<span id="cb3-277"><a href="#cb3-277"></a><span class="kw">if</span> <span class="op">(</span>app <span class="op">==</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> options<span class="op">.</span><span class="fu">LaunchIfNotRunning</span><span class="op">)</span></span>
+<span id="cb3-278"><a href="#cb3-278"></a></span>
+<span id="cb3-279"><a href="#cb3-279"></a><span class="op">{</span></span>
+<span id="cb3-280"><a href="#cb3-280"></a></span>
+<span id="cb3-281"><a href="#cb3-281"></a><span class="op">&gt;</span> Type t <span class="op">=</span> Type<span class="op">.</span><span class="fu">GetTypeFromProgID</span><span class="op">(</span><span class="st">"EA.App"</span><span class="op">)</span> <span class="op">??</span> <span class="kw">throw</span> <span class="kw">new</span></span>
+<span id="cb3-282"><a href="#cb3-282"></a><span class="op">&gt;</span></span>
+<span id="cb3-283"><a href="#cb3-283"></a><span class="op">&gt;</span> <span class="fu">InvalidOperationException</span><span class="op">(</span><span class="st">"EA not installed."</span><span class="op">);</span></span>
+<span id="cb3-284"><a href="#cb3-284"></a></span>
+<span id="cb3-285"><a href="#cb3-285"></a>app <span class="op">=</span> <span class="op">(</span>EA<span class="op">.</span><span class="fu">App</span><span class="op">)</span>Activator<span class="op">.</span><span class="fu">CreateInstance</span><span class="op">(</span>t<span class="op">)!;</span></span>
+<span id="cb3-286"><a href="#cb3-286"></a></span>
+<span id="cb3-287"><a href="#cb3-287"></a><span class="kw">if</span> <span class="op">(!</span>options<span class="op">.</span><span class="fu">ShowUI</span><span class="op">)</span> app<span class="op">.</span><span class="fu">Visible</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb3-288"><a href="#cb3-288"></a></span>
+<span id="cb3-289"><a href="#cb3-289"></a>System<span class="op">.</span><span class="fu">Threading</span><span class="op">.</span><span class="fu">Thread</span><span class="op">.</span><span class="fu">Sleep</span><span class="op">(</span>options<span class="op">.</span><span class="fu">StartupWaitMs</span><span class="op">);</span></span>
+<span id="cb3-290"><a href="#cb3-290"></a></span>
+<span id="cb3-291"><a href="#cb3-291"></a><span class="op">}</span></span>
+<span id="cb3-292"><a href="#cb3-292"></a></span>
+<span id="cb3-293"><a href="#cb3-293"></a><span class="kw">if</span> <span class="op">(</span>app <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span></span>
+<span id="cb3-294"><a href="#cb3-294"></a></span>
+<span id="cb3-295"><a href="#cb3-295"></a><span class="op">&gt;</span> <span class="st">"Unable to connect to EA."</span><span class="op">);</span></span>
+<span id="cb3-296"><a href="#cb3-296"></a></span>
+<span id="cb3-297"><a href="#cb3-297"></a>EA<span class="op">.</span><span class="fu">Repository</span> repo <span class="op">=</span> app<span class="op">.</span><span class="fu">Repository</span><span class="op">;</span></span>
+<span id="cb3-298"><a href="#cb3-298"></a></span>
+<span id="cb3-299"><a href="#cb3-299"></a><span class="co">// Poll until repository becomes available</span></span>
+<span id="cb3-300"><a href="#cb3-300"></a></span>
+<span id="cb3-301"><a href="#cb3-301"></a><span class="dt">int</span> polls <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-302"><a href="#cb3-302"></a></span>
+<span id="cb3-303"><a href="#cb3-303"></a><span class="kw">while</span> <span class="op">(</span>repo <span class="op">==</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> polls \<span class="op">&lt;</span> options<span class="op">.</span><span class="fu">RepoPollMax</span><span class="op">)</span></span>
+<span id="cb3-304"><a href="#cb3-304"></a></span>
+<span id="cb3-305"><a href="#cb3-305"></a><span class="op">{</span></span>
+<span id="cb3-306"><a href="#cb3-306"></a></span>
+<span id="cb3-307"><a href="#cb3-307"></a>System<span class="op">.</span><span class="fu">Threading</span><span class="op">.</span><span class="fu">Thread</span><span class="op">.</span><span class="fu">Sleep</span><span class="op">(</span>options<span class="op">.</span><span class="fu">RepoPollMs</span><span class="op">);</span></span>
+<span id="cb3-308"><a href="#cb3-308"></a></span>
+<span id="cb3-309"><a href="#cb3-309"></a>repo <span class="op">=</span> app<span class="op">.</span><span class="fu">Repository</span><span class="op">;</span></span>
+<span id="cb3-310"><a href="#cb3-310"></a></span>
+<span id="cb3-311"><a href="#cb3-311"></a>polls<span class="op">++;</span></span>
+<span id="cb3-312"><a href="#cb3-312"></a></span>
+<span id="cb3-313"><a href="#cb3-313"></a><span class="op">}</span></span>
+<span id="cb3-314"><a href="#cb3-314"></a></span>
+<span id="cb3-315"><a href="#cb3-315"></a><span class="kw">if</span> <span class="op">(</span>repo <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span><span class="st">"</span></span>
+<span id="cb3-316"><a href="#cb3-316"></a></span>
+<span id="cb3-317"><a href="#cb3-317"></a><span class="op">&gt;</span> EA<span class="op">.</span><span class="fu">Repository</span> did not initialise<span class="op">.</span><span class="st">");</span></span>
+<span id="cb3-318"><a href="#cb3-318"></a></span>
+<span id="cb3-319"><a href="#cb3-319"></a><span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>options<span class="op">.</span><span class="fu">ModelPath</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span id="cb3-320"><a href="#cb3-320"></a></span>
+<span id="cb3-321"><a href="#cb3-321"></a><span class="op">&gt;</span> <span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>repo<span class="op">.</span><span class="fu">ConnectionString</span><span class="op">))</span></span>
+<span id="cb3-322"><a href="#cb3-322"></a></span>
+<span id="cb3-323"><a href="#cb3-323"></a>repo<span class="op">.</span><span class="fu">OpenFile</span><span class="op">(</span>options<span class="op">.</span><span class="fu">ModelPath</span><span class="op">);</span></span>
+<span id="cb3-324"><a href="#cb3-324"></a></span>
+<span id="cb3-325"><a href="#cb3-325"></a><span class="kw">return</span> <span class="kw">new</span> <span class="fu">Session</span><span class="op">(</span>app<span class="op">,</span> repo<span class="op">);</span></span>
+<span id="cb3-326"><a href="#cb3-326"></a></span>
+<span id="cb3-327"><a href="#cb3-327"></a><span class="op">}</span></span>
+<span id="cb3-328"><a href="#cb3-328"></a></span>
+<span id="cb3-329"><a href="#cb3-329"></a><span class="co">// Result container</span></span>
+<span id="cb3-330"><a href="#cb3-330"></a></span>
+<span id="cb3-331"><a href="#cb3-331"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> Result</span>
+<span id="cb3-332"><a href="#cb3-332"></a></span>
+<span id="cb3-333"><a href="#cb3-333"></a><span class="op">{</span></span>
+<span id="cb3-334"><a href="#cb3-334"></a></span>
+<span id="cb3-335"><a href="#cb3-335"></a><span class="kw">public</span> <span class="dt">int</span> UpdatedCount <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-336"><a href="#cb3-336"></a></span>
+<span id="cb3-337"><a href="#cb3-337"></a><span class="kw">public</span> <span class="dt">string</span> Summary <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span> <span class="op">=</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb3-338"><a href="#cb3-338"></a></span>
+<span id="cb3-339"><a href="#cb3-339"></a><span class="kw">public</span> <span class="dt">string</span><span class="op">?</span> LogPath <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-340"><a href="#cb3-340"></a></span>
+<span id="cb3-341"><a href="#cb3-341"></a><span class="kw">public</span> <span class="dt">string</span><span class="op">?</span> ElementGuid <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> init<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-342"><a href="#cb3-342"></a></span>
+<span id="cb3-343"><a href="#cb3-343"></a><span class="op">}</span></span>
+<span id="cb3-344"><a href="#cb3-344"></a></span>
+<span id="cb3-345"><a href="#cb3-345"></a><span class="co">// Add a new element safely</span></span>
+<span id="cb3-346"><a href="#cb3-346"></a></span>
+<span id="cb3-347"><a href="#cb3-347"></a><span class="kw">public</span> <span class="kw">static</span> Result <span class="fu">AddElement</span><span class="op">(</span>Repository repo<span class="op">,</span></span>
+<span id="cb3-348"><a href="#cb3-348"></a></span>
+<span id="cb3-349"><a href="#cb3-349"></a><span class="op">&gt;</span> Package targetPackage<span class="op">,</span></span>
+<span id="cb3-350"><a href="#cb3-350"></a><span class="op">&gt;</span></span>
+<span id="cb3-351"><a href="#cb3-351"></a><span class="op">&gt;</span> <span class="dt">string</span> name<span class="op">,</span></span>
+<span id="cb3-352"><a href="#cb3-352"></a><span class="op">&gt;</span></span>
+<span id="cb3-353"><a href="#cb3-353"></a><span class="op">&gt;</span> <span class="dt">string</span> type<span class="op">,</span></span>
+<span id="cb3-354"><a href="#cb3-354"></a><span class="op">&gt;</span></span>
+<span id="cb3-355"><a href="#cb3-355"></a><span class="op">&gt;</span> <span class="dt">string</span><span class="op">?</span> notes<span class="op">,</span> <span class="dt">bool</span> dryRun <span class="op">=</span> <span class="kw">true</span><span class="op">,</span> CsvLogger<span class="op">?</span> logger <span class="op">=</span> <span class="kw">null</span><span class="op">)</span></span>
+<span id="cb3-356"><a href="#cb3-356"></a></span>
+<span id="cb3-357"><a href="#cb3-357"></a><span class="op">{</span></span>
+<span id="cb3-358"><a href="#cb3-358"></a></span>
+<span id="cb3-359"><a href="#cb3-359"></a><span class="dt">var</span> el <span class="op">=</span> <span class="op">(</span>Element<span class="op">)</span>targetPackage<span class="op">.</span><span class="fu">Elements</span><span class="op">.</span><span class="fu">AddNew</span><span class="op">(</span>name<span class="op">,</span> type<span class="op">);</span></span>
+<span id="cb3-360"><a href="#cb3-360"></a></span>
+<span id="cb3-361"><a href="#cb3-361"></a><span class="kw">if</span> <span class="op">(!</span><span class="dt">string</span><span class="op">.</span><span class="fu">IsNullOrWhiteSpace</span><span class="op">(</span>notes<span class="op">))</span> el<span class="op">.</span><span class="fu">Notes</span> <span class="op">=</span> notes<span class="op">;</span></span>
+<span id="cb3-362"><a href="#cb3-362"></a></span>
+<span id="cb3-363"><a href="#cb3-363"></a><span class="kw">if</span> <span class="op">(</span>dryRun<span class="op">)</span></span>
+<span id="cb3-364"><a href="#cb3-364"></a></span>
+<span id="cb3-365"><a href="#cb3-365"></a><span class="op">{</span></span>
+<span id="cb3-366"><a href="#cb3-366"></a></span>
+<span id="cb3-367"><a href="#cb3-367"></a>logger<span class="op">?.</span><span class="fu">WriteRow</span><span class="op">(</span>DateTime<span class="op">.</span><span class="fu">Now</span><span class="op">,</span> <span class="st">"DRYRUN"</span><span class="op">,</span></span>
+<span id="cb3-368"><a href="#cb3-368"></a></span>
+<span id="cb3-369"><a href="#cb3-369"></a><span class="op">&gt;</span> targetPackage<span class="op">.</span><span class="fu">PackageID</span><span class="op">,</span></span>
+<span id="cb3-370"><a href="#cb3-370"></a><span class="op">&gt;</span></span>
+<span id="cb3-371"><a href="#cb3-371"></a><span class="op">&gt;</span> <span class="st">""</span><span class="op">,</span> name<span class="op">,</span> type<span class="op">,</span> notes <span class="op">??</span> <span class="st">""</span><span class="op">);</span></span>
+<span id="cb3-372"><a href="#cb3-372"></a></span>
+<span id="cb3-373"><a href="#cb3-373"></a><span class="kw">return</span> <span class="kw">new</span> Result <span class="op">{</span> UpdatedCount <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb3-374"><a href="#cb3-374"></a></span>
+<span id="cb3-375"><a href="#cb3-375"></a><span class="op">&gt;</span> Summary <span class="op">=</span> \$<span class="st">"\[DRYRUN\] Would create: {name} ({type})"</span> <span class="op">};</span></span>
+<span id="cb3-376"><a href="#cb3-376"></a></span>
+<span id="cb3-377"><a href="#cb3-377"></a><span class="op">}</span></span>
+<span id="cb3-378"><a href="#cb3-378"></a></span>
+<span id="cb3-379"><a href="#cb3-379"></a><span class="kw">if</span> <span class="op">(!</span>el<span class="op">.</span><span class="fu">Update</span><span class="op">())</span></span>
+<span id="cb3-380"><a href="#cb3-380"></a></span>
+<span id="cb3-381"><a href="#cb3-381"></a><span class="kw">throw</span> <span class="kw">new</span> <span class="fu">InvalidOperationException</span><span class="op">(</span></span>
+<span id="cb3-382"><a href="#cb3-382"></a></span>
+<span id="cb3-383"><a href="#cb3-383"></a><span class="op">&gt;</span> <span class="st">"Element.Update() failed."</span><span class="op">);</span></span>
+<span id="cb3-384"><a href="#cb3-384"></a></span>
+<span id="cb3-385"><a href="#cb3-385"></a>repo<span class="op">.</span><span class="fu">RefreshModelView</span><span class="op">(</span>targetPackage<span class="op">.</span><span class="fu">PackageID</span><span class="op">);</span></span>
+<span id="cb3-386"><a href="#cb3-386"></a></span>
+<span id="cb3-387"><a href="#cb3-387"></a>logger<span class="op">?.</span><span class="fu">WriteRow</span><span class="op">(</span>DateTime<span class="op">.</span><span class="fu">Now</span><span class="op">,</span> <span class="st">"CREATE"</span><span class="op">,</span></span>
+<span id="cb3-388"><a href="#cb3-388"></a></span>
+<span id="cb3-389"><a href="#cb3-389"></a><span class="op">&gt;</span> targetPackage<span class="op">.</span><span class="fu">PackageID</span><span class="op">,</span></span>
+<span id="cb3-390"><a href="#cb3-390"></a><span class="op">&gt;</span></span>
+<span id="cb3-391"><a href="#cb3-391"></a><span class="op">&gt;</span> el<span class="op">.</span><span class="fu">ElementGUID</span><span class="op">,</span> name<span class="op">,</span> type<span class="op">,</span> notes <span class="op">??</span> <span class="st">""</span><span class="op">);</span></span>
+<span id="cb3-392"><a href="#cb3-392"></a></span>
+<span id="cb3-393"><a href="#cb3-393"></a><span class="kw">return</span> <span class="kw">new</span> Result</span>
+<span id="cb3-394"><a href="#cb3-394"></a></span>
+<span id="cb3-395"><a href="#cb3-395"></a><span class="op">{</span></span>
+<span id="cb3-396"><a href="#cb3-396"></a></span>
+<span id="cb3-397"><a href="#cb3-397"></a>UpdatedCount <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb3-398"><a href="#cb3-398"></a></span>
+<span id="cb3-399"><a href="#cb3-399"></a>Summary <span class="op">=</span> \$<span class="st">"Created element: {name} ({type})"</span><span class="op">,</span></span>
+<span id="cb3-400"><a href="#cb3-400"></a></span>
+<span id="cb3-401"><a href="#cb3-401"></a>ElementGuid <span class="op">=</span> el<span class="op">.</span><span class="fu">ElementGUID</span><span class="op">,</span></span>
+<span id="cb3-402"><a href="#cb3-402"></a></span>
+<span id="cb3-403"><a href="#cb3-403"></a>LogPath <span class="op">=</span> logger<span class="op">?.</span><span class="fu">Path</span></span>
+<span id="cb3-404"><a href="#cb3-404"></a></span>
+<span id="cb3-405"><a href="#cb3-405"></a><span class="op">};</span></span>
+<span id="cb3-406"><a href="#cb3-406"></a></span>
+<span id="cb3-407"><a href="#cb3-407"></a><span class="op">}</span></span>
+<span id="cb3-408"><a href="#cb3-408"></a></span>
+<span id="cb3-409"><a href="#cb3-409"></a><span class="co">// CSV logger</span></span>
+<span id="cb3-410"><a href="#cb3-410"></a></span>
+<span id="cb3-411"><a href="#cb3-411"></a><span class="kw">public</span> <span class="kw">sealed</span> <span class="kw">class</span> CsvLogger <span class="op">:</span> IDisposable</span>
+<span id="cb3-412"><a href="#cb3-412"></a></span>
+<span id="cb3-413"><a href="#cb3-413"></a><span class="op">{</span></span>
+<span id="cb3-414"><a href="#cb3-414"></a></span>
+<span id="cb3-415"><a href="#cb3-415"></a><span class="kw">private</span> <span class="kw">readonly</span> StreamWriter \_writer<span class="op">;</span></span>
+<span id="cb3-416"><a href="#cb3-416"></a></span>
+<span id="cb3-417"><a href="#cb3-417"></a><span class="kw">public</span> <span class="dt">string</span> Path <span class="op">{</span> <span class="kw">get</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-418"><a href="#cb3-418"></a></span>
+<span id="cb3-419"><a href="#cb3-419"></a><span class="kw">private</span> <span class="fu">CsvLogger</span><span class="op">(</span><span class="dt">string</span> path<span class="op">)</span></span>
+<span id="cb3-420"><a href="#cb3-420"></a></span>
+<span id="cb3-421"><a href="#cb3-421"></a><span class="op">{</span></span>
+<span id="cb3-422"><a href="#cb3-422"></a></span>
+<span id="cb3-423"><a href="#cb3-423"></a>Path <span class="op">=</span> path<span class="op">;</span></span>
+<span id="cb3-424"><a href="#cb3-424"></a></span>
+<span id="cb3-425"><a href="#cb3-425"></a>\_writer <span class="op">=</span> <span class="kw">new</span> <span class="fu">StreamWriter</span><span class="op">(</span>path<span class="op">,</span> append<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb3-426"><a href="#cb3-426"></a></span>
+<span id="cb3-427"><a href="#cb3-427"></a><span class="op">&gt;</span> System<span class="op">.</span><span class="fu">Text</span><span class="op">.</span><span class="fu">Encoding</span><span class="op">.</span><span class="fu">UTF8</span><span class="op">);</span></span>
+<span id="cb3-428"><a href="#cb3-428"></a></span>
+<span id="cb3-429"><a href="#cb3-429"></a><span class="op">}</span></span>
+<span id="cb3-430"><a href="#cb3-430"></a></span>
+<span id="cb3-431"><a href="#cb3-431"></a><span class="kw">public</span> <span class="kw">static</span> CsvLogger <span class="fu">Open</span><span class="op">(</span><span class="dt">string</span> path<span class="op">)</span> <span class="op">=</span>\<span class="op">&gt;</span></span>
+<span id="cb3-432"><a href="#cb3-432"></a></span>
+<span id="cb3-433"><a href="#cb3-433"></a><span class="op">&gt;</span> <span class="kw">new</span> <span class="fu">CsvLogger</span><span class="op">(</span>path<span class="op">);</span></span>
+<span id="cb3-434"><a href="#cb3-434"></a></span>
+<span id="cb3-435"><a href="#cb3-435"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">WriteHeader</span><span class="op">(</span><span class="dt">string</span> header<span class="op">)</span> <span class="op">=</span>\<span class="op">&gt;</span></span>
+<span id="cb3-436"><a href="#cb3-436"></a></span>
+<span id="cb3-437"><a href="#cb3-437"></a>\_writer<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>header<span class="op">);</span></span>
+<span id="cb3-438"><a href="#cb3-438"></a></span>
+<span id="cb3-439"><a href="#cb3-439"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">WriteRow</span><span class="op">(</span><span class="kw">params</span> <span class="dt">object</span><span class="op">?</span>\<span class="op">[</span>\<span class="op">]</span> cols<span class="op">)</span></span>
+<span id="cb3-440"><a href="#cb3-440"></a></span>
+<span id="cb3-441"><a href="#cb3-441"></a><span class="op">=</span>\<span class="op">&gt;</span> \_writer<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="dt">string</span><span class="op">.</span><span class="fu">Join</span><span class="op">(</span><span class="st">","</span><span class="op">,</span></span>
+<span id="cb3-442"><a href="#cb3-442"></a></span>
+<span id="cb3-443"><a href="#cb3-443"></a><span class="op">&gt;</span> Array<span class="op">.</span><span class="fu">ConvertAll</span><span class="op">(</span>cols<span class="op">,</span> c <span class="op">=</span>\<span class="op">&gt;</span> c<span class="op">?.</span><span class="fu">ToString</span><span class="op">()</span> <span class="op">??</span> <span class="st">""</span><span class="op">)));</span></span>
+<span id="cb3-444"><a href="#cb3-444"></a></span>
+<span id="cb3-445"><a href="#cb3-445"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">Close</span><span class="op">()</span> <span class="op">=</span>\<span class="op">&gt;</span> \_writer<span class="op">.</span><span class="fu">Flush</span><span class="op">();</span></span>
+<span id="cb3-446"><a href="#cb3-446"></a></span>
+<span id="cb3-447"><a href="#cb3-447"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">Dispose</span><span class="op">()</span> <span class="op">=</span>\<span class="op">&gt;</span> \_writer<span class="op">.</span><span class="fu">Dispose</span><span class="op">();</span></span>
+<span id="cb3-448"><a href="#cb3-448"></a></span>
+<span id="cb3-449"><a href="#cb3-449"></a><span class="op">}</span></span>
+<span id="cb3-450"><a href="#cb3-450"></a></span>
+<span id="cb3-451"><a href="#cb3-451"></a><span class="op">}</span></span>
+<span id="cb3-452"><a href="#cb3-452"></a></span>
+<span id="cb3-453"><a href="#cb3-453"></a><span class="op">}</span></span>
+<span id="cb3-454"><a href="#cb3-454"></a>```</span>
+<span id="cb3-455"><a href="#cb3-455"></a></span>
+<span id="cb3-456"><a href="#cb3-456"></a>## E<span class="fl">.4</span> Configuration <span class="op">&amp;</span> Setup</span>
+<span id="cb3-457"><a href="#cb3-457"></a></span>
+<span id="cb3-458"><a href="#cb3-458"></a>### Bitness</span>
+<span id="cb3-459"><a href="#cb3-459"></a></span>
+<span id="cb3-460"><a href="#cb3-460"></a><span class="op">-</span> EA <span class="dv">16</span><span class="op">+</span> <span class="kw">is</span> usually <span class="op">**</span><span class="dv">64</span><span class="op">-</span>bit<span class="op">**.</span></span>
+<span id="cb3-461"><a href="#cb3-461"></a></span>
+<span id="cb3-462"><a href="#cb3-462"></a><span class="op">-</span> Match your project’s \<span class="op">&lt;</span>PlatformTarget\<span class="op">&gt;</span> to EA’s <span class="fu">bitness</span> <span class="op">(</span>x64 or x86<span class="op">).</span></span>
+<span id="cb3-463"><a href="#cb3-463"></a></span>
+<span id="cb3-464"><a href="#cb3-464"></a>### Interop<span class="op">.</span><span class="fu">EA</span><span class="op">.</span><span class="fu">dll</span></span>
+<span id="cb3-465"><a href="#cb3-465"></a></span>
+<span id="cb3-466"><a href="#cb3-466"></a><span class="op">-</span> Found <span class="kw">in</span> EA install folder<span class="op">.</span></span>
+<span id="cb3-467"><a href="#cb3-467"></a></span>
+<span id="cb3-468"><a href="#cb3-468"></a><span class="op">-</span> Add <span class="kw">as</span> a reference <span class="kw">in</span> your <span class="op">.</span><span class="fu">NET</span> project<span class="op">.</span></span>
+<span id="cb3-469"><a href="#cb3-469"></a></span>
+<span id="cb3-470"><a href="#cb3-470"></a>### STAThread</span>
+<span id="cb3-471"><a href="#cb3-471"></a></span>
+<span id="cb3-472"><a href="#cb3-472"></a><span class="op">-</span> COM automation requires \<span class="op">[</span>STAThread\<span class="op">]</span> on your entry point<span class="op">.</span></span>
+<span id="cb3-473"><a href="#cb3-473"></a></span>
+<span id="cb3-474"><a href="#cb3-474"></a>### Model Files</span>
+<span id="cb3-475"><a href="#cb3-475"></a></span>
+<span id="cb3-476"><a href="#cb3-476"></a><span class="op">-</span> Use <span class="op">.</span><span class="fu">qea</span> <span class="op">/</span> <span class="op">.</span><span class="fu">qeax</span> <span class="op">/</span> <span class="op">.</span><span class="fu">eapx</span><span class="op">.</span></span>
+<span id="cb3-477"><a href="#cb3-477"></a></span>
+<span id="cb3-478"><a href="#cb3-478"></a><span class="op">-</span> Options<span class="op">.</span><span class="fu">ModelPath</span> can auto<span class="op">-</span>open a file <span class="kw">if</span> none <span class="kw">is</span> open<span class="op">.</span></span>
+<span id="cb3-479"><a href="#cb3-479"></a></span>
+<span id="cb3-480"><a href="#cb3-480"></a>### Dry Run <span class="op">&amp;</span> Logging</span>
+<span id="cb3-481"><a href="#cb3-481"></a></span>
+<span id="cb3-482"><a href="#cb3-482"></a><span class="op">-</span> Always start <span class="kw">in</span> dryRun <span class="op">=</span> <span class="kw">true</span><span class="op">.</span></span>
+<span id="cb3-483"><a href="#cb3-483"></a></span>
+<span id="cb3-484"><a href="#cb3-484"></a><span class="op">-</span> Review the generated CSV log before committing real updates<span class="op">.</span></span>
+<span id="cb3-485"><a href="#cb3-485"></a></span>
+<span id="cb3-486"><a href="#cb3-486"></a>### Distribution</span>
+<span id="cb3-487"><a href="#cb3-487"></a></span>
+<span id="cb3-488"><a href="#cb3-488"></a><span class="op">-</span> Package <span class="kw">as</span> a console utility or integrate into CI<span class="op">/</span>CD<span class="op">.</span></span>
+<span id="cb3-489"><a href="#cb3-489"></a></span>
+<span id="cb3-490"><a href="#cb3-490"></a><span class="op">-</span> Keep EAConnect<span class="op">.</span><span class="fu">cs</span> <span class="kw">in</span> a shared library <span class="kw">for</span> consistency<span class="op">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

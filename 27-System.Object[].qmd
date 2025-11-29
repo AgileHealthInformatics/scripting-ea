@@ -33,6 +33,7 @@ boilerplate.
 ## E.2 Usage
 
 A minimal program using the helper:
+```csharp
 
 using System;
 
@@ -64,12 +65,13 @@ Console.WriteLine(result.Summary);
 }
 
 }
+```
 
 This pattern keeps the Program.cs short and declarative. All detailed
 logic resides in the helper.
 
 ## E.3 The EAConnect Helper Class
-
+```csharp
 //
 =======================================================================
 
@@ -449,6 +451,7 @@ public void Dispose() =\> \_writer.Dispose();
 }
 
 }
+```
 
 ## E.4 Configuration & Setup
 
