@@ -47,6 +47,7 @@ number-sections: false
 
 format:
   html:
+    google-analytics: "G-B63WMQH4CK"
     theme: cosmo
     toc: true
     toc-depth: 3
