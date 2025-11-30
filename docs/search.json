@@ -1974,7 +1974,7 @@
     "href": "22-System.Object[].html#summary",
     "title": "Chapter 21: Reference",
     "section": "Summary",
-    "text": "Summary\nThis reference chapter gives you the essentials at a glance:\n\nThe object model map.\nSQL query patterns.\nStandard headers.\nLogging helper.\nCommon ObjectTypes and errors.\n\nKeep it open as your daily cheat-sheet: it saves time, avoids mistakes, and makes your scripts consistent.** **",
+    "text": "Summary\nThis reference chapter gives you the essentials at a glance:\n\nThe object model map.\nSQL query patterns.\nStandard headers.\nLogging helper.\nCommon ObjectTypes and errors.\n\nKeep it open as your daily cheat-sheet: it saves time, avoids mistakes, and makes your scripts consistent.",
     "crumbs": [
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>Chapter 21: Reference</span>"
     ]
