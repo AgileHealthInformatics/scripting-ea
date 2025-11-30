@@ -219,4 +219,3 @@ This reference chapter gives you the **essentials at a glance**:
 Keep it open as your **daily cheat-sheet**: it saves time, avoids
 mistakes, and makes your scripts consistent.**  **
 
-Appendices

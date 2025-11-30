@@ -258,7 +258,7 @@ external utilities for integrations and heavy lifting; add-ins for
 stable, menu-driven capabilities. With EAConnect, you keep examples
 concise while centralising boilerplate and sharp edges in one place.
 
-See **Appendix A – EAConnect Helper & Setup** for the full helper class
+See **Appendix E – External Automation Setup** for the full helper class
 (verbose header, usage, assumptions, dependencies, and update history),
 plus environment notes (Interop.EA.dll, bitness, COM), optional
 “directory-only” output pickers, CSV logging utilities, a

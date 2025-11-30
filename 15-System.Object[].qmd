@@ -433,7 +433,7 @@ you ensure the generated scripts run correctly in EA. AI will often
 hallucinate modern JS features; your job is to correct them
 systematically using the patterns in this chapter.
 
-In the next chapter, we’ll explore **Chapter 14 – AI as a Refactoring
+In the next chapter, we’ll explore **Chapter 15 – AI Refactoring
 Partner**: using AI to *improve existing scripts* by converting between
 languages, adding documentation headers, or reorganising code for
 readability and maintainability.

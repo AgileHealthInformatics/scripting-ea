@@ -602,12 +602,12 @@ main();
 
 ## What to use when (cheat-sheet)
 
-- **Apply a profile stereotype** to many items → Example 9.1.
+- **Apply a profile stereotype** to many items → Example 10.1.
 
-- **Report MDG drift** (tags/names/stereos) → Example 9.3 (linter).
+- **Report MDG drift** (tags/names/stereos) → Example 10.3 (linter).
 
-- **Fix drift** with defaults and renaming → Example 9.4 (repairer).
+- **Fix drift** with defaults and renaming → Example 10.4 (repairer).
 
-- **Enforce relationships** between MDG types → 9.5 extension.
+- **Enforce relationships** between MDG types → 10.5 extension.
 
-- **Huge repositories** → 9.6 SQL pre-filter + API verification.
+- **Huge repositories** → 10.6 SQL pre-filter + API verification.

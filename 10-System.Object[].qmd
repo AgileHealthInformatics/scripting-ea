@@ -683,13 +683,13 @@ function between(h, a, b){
 
 ## What to use when
 
-- Quick exports for review → CSV export (8.1.1).
+- Quick exports for review → CSV export (9.1).
 
-- Curated updates → CSV apply (8.1.2) or Python CSV/JSON importer
-  (8.3.2).
+- Curated updates → CSV apply (9.2) or Python CSV/JSON importer
+  (9.5).
 
-- Stakeholder-friendly spreadsheet → Excel export (8.2.1).
+- Stakeholder-friendly spreadsheet → Excel export (9.3).
 
-- Dev pipelines / Git → JSON export (8.3.1) + Python importer (8.3.2).
+- Dev pipelines / Git → JSON export (9.4) + Python importer (9.5).
 
 - Strong identity → prefer GUIDs or your own ExternalID tagged value.

@@ -407,6 +407,6 @@ AI is a powerful refactoring partner:
 You remain in control: AI does the heavy lifting, but you apply
 corrections to keep everything **valid for EA’s JScript ES3 runtime**.
 
-In the next chapter, we’ll explore **Chapter 15 – AI in Daily
+In the next chapter, we’ll explore **Chapter 16 – AI in Daily
 Workflow**, showing how to build a *prompt library* and integrate
 AI-assisted scripting into your modelling practice.

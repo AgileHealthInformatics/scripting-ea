@@ -296,7 +296,7 @@ function main() {
 }
 
 main();
-
+```
 
 ### List Elements by Stereotype
 ```{.js filename="Example 12.5 - ListByStereotype.js – JScript (ES3)"}
@@ -483,13 +483,13 @@ main();
 
 This cookbook chapter delivers **ready-to-use recipes**:
 
-- Bulk editing (11.1, 11.2, 11.9, 11.10).
+- Bulk editing (12.1, 12.2, 12.9, 12.10).
 
-- Reporting (11.4, 11.5, 11.7, 11.8).
+- Reporting (12.4, 12.5, 12.7, 12.8).
 
-- Traceability utilities (11.6).
+- Traceability utilities (12.6).
 
-- Import/export utilities (11.3).
+- Import/export utilities (12.3).
 
 Each follows the **constraints of EA’s JScript engine** (ES3 only,
 ActiveX for files, .Count/.GetAt() for collections).

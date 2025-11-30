@@ -289,6 +289,5 @@ and automating repetitive refactors. But the constraints of EA’s JScript
 runtime mean you must always **review, test, and correct** AI outputs.
 Use AI as an assistant, not an autopilot.
 
-In the next chapter we’ll move to **Chapter 13 – Prompt Engineering for
-EA Scripting**, where we’ll learn how to craft precise prompts that
+In the next chapter we’ll move to **Chapter 14 – Prompt Engineering**, where we’ll learn how to craft precise prompts that
 yield safe, useful code for EA.

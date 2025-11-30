@@ -224,7 +224,7 @@ main();
 ```
 
 ### Model Smells
-```{.js filename="Example 11.1 - Gov_NamingConvention.js – JScript (ES3)"}
+```{.js filename="Example 11.2 - Gov_NamingConvention.js – JScript (ES3)"}
 // -------------------------------------------------------
 // Example 11.2 - Gov_ModelSmells_Orphans.js – JScript (ES3)
 // Purpose: Find elements without any connectors (orphans)
@@ -412,14 +412,14 @@ main();
 
 Governance scripts are simple but powerful. They let you:
 
-- Enforce naming standards (Example 10.1).
+- Enforce naming standards (Example 11.1).
 
-- Detect structural smells like orphans and duplicates (Examples 10.2 &
-  10.3).
+- Detect structural smells like orphans and duplicates (Examples 11.2 &
+  11.3).
 
-- Check coverage and traceability (Example 10.4).
+- Check coverage and traceability (Example 11.4).
 
-- Export reports for human review (Example 10.5).
+- Export reports for human review (Example 11.5).
 
 Together, these create a **living quality gate** for your repository —
 fast, repeatable, and objective.
