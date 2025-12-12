@@ -7,6 +7,9 @@ project:
   resources:
     - images/**
 
+website:
+  google-analytics: "G-B63WMQH4CK"
+
 book:
   title: "Scripting Sparx Enterprise Architect: A Practical Handbook"
   author: "Tito Castillo"
